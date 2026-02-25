@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CartCast — Know What's Coming Before You Shop</title>
+
+<!-- SEO -->
+<meta name="description" content="Free grocery price intelligence. Commodity markets predict prices 4–6 weeks early. See what to stock up on, what to skip, and what to swap before it hits checkout.">
+<meta name="keywords" content="grocery prices, food inflation, price forecast, grocery budget, commodity prices, food costs 2026">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://cartcast.vercel.app/">
+
+<!-- Open Graph (Facebook, Reddit, LinkedIn previews) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cartcast.vercel.app/">
+<meta property="og:title" content="CartCast — Know What's Coming Before You Shop">
+<meta property="og:description" content="Commodity markets predict your grocery bill 4–6 weeks early. Free tool tracks USDA, BLS & FRED data so you know what to stock up on before prices spike.">
+<meta property="og:image" content="https://cartcast.vercel.app/og-image.png">
+<meta property="og:site_name" content="CartCast">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CartCast — Grocery Price Intelligence">
+<meta name="twitter:description" content="Commodity markets predict grocery prices 4–6 weeks early. Free, no ads, no signup. Track 80+ items.">
+<meta name="twitter:image" content="https://cartcast.vercel.app/og-image.png">
+
+<!-- Favicon (inline SVG as data URI) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23e5251b'/><text y='.9em' font-size='75' x='12'>🛒</text></svg>">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#ffffff;
+  --bg2:#f7f8fa;
+  --bg3:#eef0f4;
+  --ink:#0d0d0d;
+  --ink2:#3d3d3d;
+  --ink3:#7a7a8a;
+  --red:#e5251b;
+  --red-pale:#fff1f0;
+  --green:#0a8f5c;
+  --green-pale:#f0faf5;
+  --green-mid:#c6eed9;
+  --amber:#d97706;
+  --amber-pale:#fffbeb;
+  --blue:#1d4ed8;
+  --border:#e4e6eb;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.04);
+  --shadow-lg:0 4px 20px rgba(0,0,0,.1),0 12px 40px rgba(0,0,0,.06);
+  --mono:'JetBrains Mono',monospace;
+  --display:'Syne',sans-serif;
+  --body:'Inter',sans-serif;
+  --r:6px;
+}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);overflow-x:hidden}
+::selection{background:var(--red);color:#fff}
+img{max-width:100%}
+
+/* ── HEADER ── */
+header{
+  position:sticky;top:0;z-index:200;
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1.5px solid var(--border);
+  height:58px;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo{font-family:var(--display);font-size:1.25rem;font-weight:800;letter-spacing:-0.5px;text-decoration:none;color:var(--ink)}
+.logo span{color:var(--red)}
+.logo-badge{
+  font-family:var(--mono);font-size:.52rem;
+  background:var(--red);color:#fff;
+  padding:2px 6px;border-radius:3px;
+  margin-left:6px;letter-spacing:1px;vertical-align:middle
+}
+nav{display:flex;align-items:center;gap:4px}
+nav a{padding:6px 14px;border-radius:var(--r);font-size:.8rem;font-weight:500;color:var(--ink2);text-decoration:none;transition:.15s}
+nav a:hover{background:var(--bg2);color:var(--ink)}
+.nav-cta{background:var(--red)!important;color:#fff!important;font-weight:600!important}
+.nav-cta:hover{background:#c41e14!important}
+.hdr-live{font-family:var(--mono);font-size:.68rem;color:var(--ink3);display:flex;align-items:center;gap:6px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── TICKER ── */
+.ticker-bar{background:var(--ink);overflow:hidden;height:34px;display:flex;align-items:center}
+.ticker-track{display:flex;animation:scroll 50s linear infinite;white-space:nowrap}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ti{padding:0 24px;font-family:var(--mono);font-size:.68rem;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:7px;height:34px;border-right:1px solid rgba(255,255,255,.07)}
+.ti .r{color:#ff6b63;font-weight:600}
+.ti .g{color:#4ade98;font-weight:600}
+
+/* ── HERO ── */
+.hero-wrap{border-bottom:1.5px solid var(--border)}
+.hero{
+  max-width:1320px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 420px;
+  gap:48px;padding:56px 32px 0;align-items:end;
+}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:2px;
+  text-transform:uppercase;color:var(--red);margin-bottom:18px;
+  display:flex;align-items:center;gap:10px
+}
+.hero-eyebrow::before{content:'';display:inline-block;width:20px;height:2px;background:var(--red)}
+.hero h1{
+  font-family:var(--display);
+  font-size:clamp(2.2rem,4vw,3.6rem);
+  font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bottom:18px
+}
+.hero h1 em{font-style:italic;color:var(--red)}
+.hero-sub{font-size:.95rem;color:var(--ink2);line-height:1.7;max-width:520px;margin-bottom:40px}
+.hero-stats{display:flex;gap:0;border-top:1.5px solid var(--border)}
+.hs{padding:20px 28px 20px 0;border-right:1px solid var(--border);margin-right:28px}
+.hs:last-child{border-right:0;margin-right:0}
+.hs-num{font-family:var(--display);font-size:1.9rem;font-weight:800;line-height:1;margin-bottom:4px}
+.hs-num.r{color:var(--red)}
+.hs-num.g{color:var(--green)}
+.hs-num.b{color:var(--blue)}
+.hs-label{font-size:.7rem;color:var(--ink3);line-height:1.4}
+
+/* Budget card */
+.bc{background:var(--ink);color:#fff;border-radius:var(--r) var(--r) 0 0;padding:32px;box-shadow:var(--shadow-lg)}
+.bc-title{font-family:var(--display);font-size:1.1rem;font-weight:700;margin-bottom:4px}
+.bc-sub{font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:20px}
+.bc-row{display:flex;margin-bottom:18px}
+.bc-sym{background:rgba(255,255,255,.07);padding:10px 14px;font-size:1.2rem;font-weight:600;color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.1);border-right:0;border-radius:var(--r) 0 0 var(--r)}
+.bc-row input{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;font-family:var(--body);font-size:1.2rem;font-weight:600;padding:10px 14px;outline:none;border-radius:0 var(--r) var(--r) 0;transition:.15s;width:100%}
+.bc-row input:focus{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.09)}
+.bc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);overflow:hidden}
+.bcg{background:#141414;padding:14px 12px}
+.bcg-l{font-family:var(--mono);font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:6px}
+.bcg-v{font-family:var(--display);font-size:1.35rem;font-weight:700;display:block}
+.bcg-v.danger{color:#ff6b63}
+.bcg-v.safe{color:#4ade98}
+.bcg-c{font-size:.62rem;color:rgba(255,255,255,.25);margin-top:3px}
+
+/* ── MAIN LAYOUT ── */
+.wrap{max-width:1320px;margin:0 auto;padding:0 32px}
+.layout{display:grid;grid-template-columns:196px 1fr 268px;gap:24px;padding:28px 0}
+
+/* ── LEFT SIDEBAR ── */
+.leftnav{position:sticky;top:70px;height:fit-content}
+.ns-label{font-family:var(--mono);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;padding:0 4px}
+.srch{position:relative;margin-bottom:16px}
+.srch input{width:100%;padding:9px 12px 9px 34px;border:1.5px solid var(--border);background:var(--bg2);border-radius:var(--r);font-family:var(--body);font-size:.8rem;outline:none;transition:.15s;color:var(--ink)}
+.srch input:focus{border-color:var(--red);background:#fff}
+.srch::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:.75rem}
+.catbtn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r);cursor:pointer;transition:.12s;font-size:.8rem;font-weight:500;color:var(--ink2);margin-bottom:2px;user-select:none}
+.catbtn:hover{background:var(--bg2)}
+.catbtn.active{background:var(--red-pale);color:var(--red)}
+.cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cname{flex:1}
+.cval{font-family:var(--mono);font-size:.63rem}
+.cval.r{color:var(--red)}
+.cval.g{color:var(--green)}
+.cval.a{color:var(--amber)}
+.nav-div{height:1px;background:var(--border);margin:14px 0}
+.filterbtn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r);cursor:pointer;transition:.12s;font-size:.8rem;font-weight:500;color:var(--ink2);margin-bottom:2px;user-select:none}
+.filterbtn:hover{background:var(--bg2)}
+.filterbtn.active{background:var(--bg3);font-weight:600}
+
+/* ── ITEM GRID ── */
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.tc{font-size:.78rem;color:var(--ink3)}
+.tc strong{color:var(--ink);font-weight:600}
+.sort-sel{font-family:var(--body);font-size:.78rem;border:1.5px solid var(--border);background:#fff;padding:7px 12px;border-radius:var(--r);cursor:pointer;color:var(--ink);outline:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(184px,1fr));gap:12px}
+.card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:16px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;position:relative;overflow:hidden}
+.card:hover{border-color:var(--ink);box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.card-stripe{position:absolute;top:0;left:0;right:0;height:3px}
+.s-r{background:var(--red)}
+.s-g{background:var(--green)}
+.s-a{background:var(--amber)}
+.card-em{font-size:1.7rem;display:block;margin-bottom:8px;line-height:1}
+.card-name{font-size:.8rem;font-weight:600;line-height:1.25;margin-bottom:2px}
+.card-cat{font-family:var(--mono);font-size:.57rem;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.card-price{font-family:var(--display);font-size:1.38rem;font-weight:800;letter-spacing:-0.5px;margin-bottom:2px}
+.card-fore{font-size:.68rem;color:var(--ink3);margin-bottom:10px}
+.card-fore .r{color:var(--red);font-weight:600}
+.card-fore .g{color:var(--green);font-weight:600}
+.badge{display:inline-flex;align-items:center;font-size:.6rem;font-weight:700;letter-spacing:.5px;padding:3px 8px;border-radius:20px}
+.b-buy{background:var(--green-pale);color:var(--green)}
+.b-wait{background:var(--amber-pale);color:var(--amber)}
+.b-sub{background:#eff6ff;color:var(--blue)}
+.b-hot{background:var(--red-pale);color:var(--red)}
+.b-neu{background:var(--bg3);color:var(--ink3)}
+.card-chg{position:absolute;top:14px;right:12px;font-family:var(--mono);font-size:.66rem;font-weight:600}
+.card-chg.r{color:var(--red)}
+.card-chg.g{color:var(--green)}
+.card-chg.a{color:var(--amber)}
+.card-spark{margin-top:10px}
+
+/* ── RIGHT RAIL ── */
+.rail{position:sticky;top:70px;height:fit-content}
+.panel{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.panel-title{font-family:var(--mono);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.panel-title::before{content:'';width:12px;height:2px;background:var(--red);display:inline-block}
+.sig-row{padding:10px 0;border-bottom:1px solid var(--border)}
+.sig-row:last-child{border:0;padding-bottom:0}
+.sig-name{font-size:.78rem;font-weight:600;margin-bottom:3px}
+.sig-val{font-family:var(--mono);font-size:.68rem;color:var(--ink3);display:flex;align-items:center;gap:6px}
+.sig-impact{font-size:.67rem;color:var(--ink3);margin-top:3px;line-height:1.4}
+.alert-row{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);font-size:.74rem;line-height:1.5;color:var(--ink2)}
+.alert-row:last-child{border:0;padding-bottom:0}
+.ai-ico{font-size:.95rem;flex-shrink:0;margin-top:1px}
+.about-txt{font-size:.74rem;line-height:1.75;color:var(--ink3)}
+.about-txt strong{color:var(--ink);font-weight:600}
+
+/* ── CHART SECTION ── */
+.section{margin-top:32px;padding-top:28px;border-top:1.5px solid var(--border)}
+.sec-eyebrow{font-family:var(--mono);font-size:.63rem;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:6px;display:flex;align-items:center;gap:9px}
+.sec-eyebrow::before{content:'';width:14px;height:2px;background:var(--red);display:inline-block;flex-shrink:0}
+.sec-h{font-family:var(--display);font-size:1.55rem;font-weight:800;letter-spacing:-0.5px;margin-bottom:4px}
+.sec-sub{font-size:.77rem;color:var(--ink3);margin-bottom:18px}
+.chart-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:20px 20px 12px}
+
+/* ── ACTION COLUMNS ── */
+.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.acol{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:20px}
+.acol-icon-wrap{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:10px}
+.iw-g{background:var(--green-pale)}
+.iw-a{background:var(--amber-pale)}
+.iw-b{background:#eff6ff}
+.acol h3{font-size:.88rem;font-weight:700;margin-bottom:2px}
+.acol-d{font-size:.68rem;color:var(--ink3);margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.ar{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
+.ar:last-child{border:0;padding-bottom:0}
+.ar-name{font-size:.77rem;font-weight:600;margin-bottom:2px}
+.ar-why{font-size:.64rem;color:var(--ink3);line-height:1.4}
+.ar-save{font-family:var(--mono);font-size:.67rem;font-weight:600;color:var(--green);white-space:nowrap;flex-shrink:0}
+
+/* ── SHARE WALL ── */
+.share-wall{background:var(--ink);color:#fff;padding:64px 0;margin-top:0}
+.share-inner{max-width:1320px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.sh-eyebrow{font-family:var(--mono);font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px}
+.share-inner h2{font-family:var(--display);font-size:clamp(1.8rem,3vw,2.7rem);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:14px}
+.share-inner h2 em{font-style:italic;color:#ff6b63}
+.share-inner p{font-size:.88rem;color:rgba(255,255,255,.5);line-height:1.75;margin-bottom:26px}
+.share-btns{display:flex;gap:10px;flex-wrap:wrap}
+.sbtn{padding:11px 22px;font-family:var(--body);font-size:.78rem;font-weight:600;cursor:pointer;border:none;border-radius:var(--r);display:flex;align-items:center;gap:7px;transition:.15s;text-decoration:none}
+.sbtn:hover{opacity:.87;transform:translateY(-1px)}
+.sbtn-r{background:var(--red);color:#fff}
+.sbtn-w{background:#fff;color:var(--ink)}
+.sbtn-o{background:rgba(255,255,255,.07);color:#fff;border:1px solid rgba(255,255,255,.12)}
+.share-nums{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);padding:22px 18px}
+.sn-val{font-family:var(--display);font-size:2rem;font-weight:800;color:#ff6b63;line-height:1}
+.sn-label{font-size:.7rem;color:rgba(255,255,255,.35);margin-top:6px;line-height:1.4}
+
+/* ── FOOTER ── */
+footer{background:var(--bg2);border-top:1.5px solid var(--border);padding:22px 32px;display:flex;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink3)}
+.flinks{display:flex;gap:20px}
+.flinks a{color:var(--ink3);text-decoration:none;transition:.15s}
+.flinks a:hover{color:var(--ink)}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:12px;box-shadow:var(--shadow-lg);max-width:520px;width:100%;max-height:88vh;overflow-y:auto;padding:32px;position:relative}
+.modal::-webkit-scrollbar{width:4px}
+.modal::-webkit-scrollbar-thumb{background:var(--border)}
+.modal-x{position:absolute;top:14px;right:14px;background:var(--bg2);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1rem;color:var(--ink3);transition:.15s;display:flex;align-items:center;justify-content:center}
+.modal-x:hover{background:var(--bg3);color:var(--ink)}
+.modal-em{font-size:2.6rem;display:block;margin-bottom:10px;line-height:1}
+.modal h2{font-family:var(--display);font-size:1.5rem;font-weight:800;letter-spacing:-0.5px;margin-bottom:4px}
+.modal-cat{font-family:var(--mono);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:20px}
+.modal-prices{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:22px}
+.mp{background:#fff;padding:14px;text-align:center}
+.mp-l{font-family:var(--mono);font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.mp-v{font-family:var(--display);font-size:1.35rem;font-weight:800}
+.mp-v.r{color:var(--red)}
+.mp-v.g{color:var(--green)}
+.modal-sec h4{font-family:var(--mono);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+.modal-sec p{font-size:.87rem;line-height:1.7;color:var(--ink2);margin-bottom:16px}
+.modal-action{background:var(--bg2);border-left:3px solid var(--red);padding:14px 16px;font-size:.87rem;line-height:1.65;border-radius:0 var(--r) var(--r) 0}
+.modal-action strong{color:var(--red)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .layout{grid-template-columns:1fr}
+  .leftnav,.rail{position:static}
+  .rail{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;align-items:start}
+  .hero{grid-template-columns:1fr;padding-bottom:32px}
+  .bc{border-radius:var(--r);margin-top:24px}
+  .share-inner{grid-template-columns:1fr}
+  .action-grid{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  header{padding:0 16px}
+  nav a:not(.nav-cta){display:none}
+  .hero{padding:32px 16px 0}
+  .wrap{padding:0 16px}
+  .share-wall{padding:40px 0}
+  .share-inner{padding:0 16px}
+  footer{flex-direction:column;gap:10px;text-align:center;padding:20px 16px}
+  .hero-stats{flex-wrap:wrap}
+  .hs{padding:16px 20px 16px 0}
+  .action-grid{grid-template-columns:1fr}
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card{animation:fadeUp .3s ease both}
+.hero-eyebrow,.hero h1,.hero-sub,.hero-stats,.bc{animation:fadeUp .5s ease both}
+.hero h1{animation-delay:.05s}
+.hero-sub{animation-delay:.1s}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="/">Cart<span>Cast</span><span class="logo-badge">LIVE</span></a>
+  <div class="hdr-live"><span class="dot"></span><span id="hdrDate">Loading…</span></div>
+  <nav>
+    <a href="#prices">Prices</a>
+    <a href="#signals">Signals</a>
+    <a href="#actions">Actions</a>
+    <a href="#" class="nav-cta" onclick="shareReddit();return false">Share Free Tool →</a>
+  </nav>
+</header>
+
+<!-- TICKER -->
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ti">🥚 EGGS <span class="r">▲ +19.2%</span></span>
+    <span class="ti">🫒 OLIVE OIL <span class="r">▲ +40.1%</span></span>
+    <span class="ti">☕ COFFEE <span class="r">▲ +15.6%</span></span>
+    <span class="ti">🍫 COCOA <span class="r">▲ +13.9%</span></span>
+    <span class="ti">🍊 OJ <span class="r">▲ +23.8%</span></span>
+    <span class="ti">🐟 SALMON <span class="r">▲ +11.4%</span></span>
+    <span class="ti">🧈 BUTTER <span class="r">▲ +6.1%</span></span>
+    <span class="ti">🥩 BEEF <span class="r">▲ +8.2%</span></span>
+    <span class="ti">🍗 CHICKEN <span class="g">▼ −8.8%</span></span>
+    <span class="ti">🥑 AVOCADOS <span class="g">▼ −15.5%</span></span>
+    <span class="ti">🍓 STRAWBERRIES <span class="g">▼ −17.1%</span></span>
+    <span class="ti">🍚 WHITE RICE <span class="g">▼ −11.6%</span></span>
+    <span class="ti">🥓 BACON <span class="g">▼ −3.2%</span></span>
+    <span class="ti">🥜 NUTS <span class="g">▼ −7.1%</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="ti">🥚 EGGS <span class="r">▲ +19.2%</span></span>
+    <span class="ti">🫒 OLIVE OIL <span class="r">▲ +40.1%</span></span>
+    <span class="ti">☕ COFFEE <span class="r">▲ +15.6%</span></span>
+    <span class="ti">🍫 COCOA <span class="r">▲ +13.9%</span></span>
+    <span class="ti">🍊 OJ <span class="r">▲ +23.8%</span></span>
+    <span class="ti">🐟 SALMON <span class="r">▲ +11.4%</span></span>
+    <span class="ti">🧈 BUTTER <span class="r">▲ +6.1%</span></span>
+    <span class="ti">🥩 BEEF <span class="r">▲ +8.2%</span></span>
+    <span class="ti">🍗 CHICKEN <span class="g">▼ −8.8%</span></span>
+    <span class="ti">🥑 AVOCADOS <span class="g">▼ −15.5%</span></span>
+    <span class="ti">🍓 STRAWBERRIES <span class="g">▼ −17.1%</span></span>
+    <span class="ti">🍚 WHITE RICE <span class="g">▼ −11.6%</span></span>
+    <span class="ti">🥓 BACON <span class="g">▼ −3.2%</span></span>
+    <span class="ti">🥜 NUTS <span class="g">▼ −7.1%</span></span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero-wrap">
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">Grocery Price Intelligence · Updated <span id="heroDate">Feb 25, 2026</span></div>
+    <h1>Your groceries<br>will cost <em>more</em><br>next month.</h1>
+    <p class="hero-sub">Commodity markets predict retail grocery prices 4–6 weeks in advance. CartCast reads those signals and tells you what to stock up on, what to skip, and what to swap — before the price hits checkout. Free. No ads. No signup.</p>
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-num r" id="heroInc">+$31</div><div class="hs-label">Projected March<br>basket increase</div></div>
+      <div class="hs"><div class="hs-num b">6 wks</div><div class="hs-label">Advance warning on<br>commodity signals</div></div>
+      <div class="hs"><div class="hs-num g">$847</div><div class="hs-label">Avg. annual savings<br>for households who act</div></div>
+    </div>
+  </div>
+  <div class="bc">
+    <div class="bc-title">What will your basket cost?</div>
+    <div class="bc-sub">Enter your typical weekly grocery spend</div>
+    <div class="bc-row">
+      <span class="bc-sym">$</span>
+      <input type="number" id="budgetIn" value="280" min="10" max="9999" oninput="calcBudget()" aria-label="Weekly grocery budget">
+    </div>
+    <div class="bc-grid">
+      <div class="bcg"><div class="bcg-l">This month</div><span class="bcg-v" id="cCur">$280</span><div class="bcg-c">your baseline</div></div>
+      <div class="bcg"><div class="bcg-l">Next month</div><span class="bcg-v danger" id="cNext">$311</span><div class="bcg-c" id="cDiff">+$31 (+11%)</div></div>
+      <div class="bcg"><div class="bcg-l">If you act now</div><span class="bcg-v safe" id="cSave">$292</span><div class="bcg-c">with smart swaps</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- MAIN -->
+<div class="wrap">
+<div class="layout" id="prices">
+
+  <!-- LEFT NAV -->
+  <aside class="leftnav" role="navigation" aria-label="Filter items">
+    <div class="ns-label" style="margin-bottom:10px">Search</div>
+    <div class="srch">
+      <input type="search" id="searchIn" placeholder="eggs, chicken, bread…" oninput="doSearch()" aria-label="Search grocery items">
+    </div>
+    <div class="ns-label">Categories</div>
+    <div class="catbtn active" data-cat="all"    onclick="setCat(this)"><span class="cdot" style="background:var(--ink)"></span><span class="cname">All Items</span><span class="cval">80</span></div>
+    <div class="catbtn" data-cat="dairy"         onclick="setCat(this)"><span class="cdot" style="background:var(--amber)"></span><span class="cname">Dairy & Eggs</span><span class="cval r">+7.2%</span></div>
+    <div class="catbtn" data-cat="proteins"      onclick="setCat(this)"><span class="cdot" style="background:var(--red)"></span><span class="cname">Proteins</span><span class="cval r">+4.8%</span></div>
+    <div class="catbtn" data-cat="produce"       onclick="setCat(this)"><span class="cdot" style="background:var(--green)"></span><span class="cname">Produce</span><span class="cval g">−2.1%</span></div>
+    <div class="catbtn" data-cat="grains"        onclick="setCat(this)"><span class="cdot" style="background:var(--blue)"></span><span class="cname">Grains & Bread</span><span class="cval a">+3.2%</span></div>
+    <div class="catbtn" data-cat="oils"          onclick="setCat(this)"><span class="cdot" style="background:#92400e"></span><span class="cname">Oils & Sauces</span><span class="cval r">+9.4%</span></div>
+    <div class="catbtn" data-cat="frozen"        onclick="setCat(this)"><span class="cdot" style="background:#475569"></span><span class="cname">Frozen & Packaged</span><span class="cval a">+2.9%</span></div>
+    <div class="catbtn" data-cat="beverages"     onclick="setCat(this)"><span class="cdot" style="background:#7c3aed"></span><span class="cname">Beverages</span><span class="cval r">+11.2%</span></div>
+    <div class="catbtn" data-cat="household"     onclick="setCat(this)"><span class="cdot" style="background:#0e7490"></span><span class="cname">Household</span><span class="cval a">+2.1%</span></div>
+    <div class="nav-div"></div>
+    <div class="ns-label">Quick Filter</div>
+    <div class="filterbtn" data-action="buy"        onclick="setAction(this)"><span style="color:var(--green)">●</span>&nbsp; Stock Up Now</div>
+    <div class="filterbtn" data-action="wait"       onclick="setAction(this)"><span style="color:var(--amber)">●</span>&nbsp; Wait to Buy</div>
+    <div class="filterbtn" data-action="substitute" onclick="setAction(this)"><span style="color:var(--blue)">●</span>&nbsp; Consider Swapping</div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main role="main">
+    <div class="toolbar">
+      <div class="tc">Showing <strong id="itemCt">80</strong> items</div>
+      <select class="sort-sel" onchange="doSort(this.value)" aria-label="Sort items">
+        <option value="chg-d">Biggest increase first</option>
+        <option value="chg-a">Biggest decrease first</option>
+        <option value="name">A → Z</option>
+        <option value="p-d">Highest price</option>
+        <option value="p-a">Lowest price</option>
+      </select>
+    </div>
+    <div class="grid" id="grid" role="list" aria-label="Grocery price cards"></div>
+
+    <!-- BASKET CHART -->
+    <div class="section" id="signals">
+      <div class="sec-eyebrow">Basket Forecast</div>
+      <div class="sec-h">$280 → $311 projected by March</div>
+      <div class="sec-sub">Typical $280/wk household — based on Feb 2026 commodity signals</div>
+      <div class="chart-box">
+        <svg id="chart" width="100%" height="190" viewBox="0 0 760 190" preserveAspectRatio="none" aria-label="Basket cost forecast chart"></svg>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="section" id="actions">
+      <div class="sec-eyebrow">Recommended Actions</div>
+      <div class="sec-h">What to do this week</div>
+      <div class="sec-sub">Based on 6-week commodity forecast — updated every Monday</div>
+      <div class="action-grid">
+        <div class="acol">
+          <div class="acol-icon-wrap iw-g">📦</div>
+          <h3>Stock Up Now</h3>
+          <div class="acol-d">Prices rising in 4–6 weeks — buy extra today</div>
+          <div class="ar"><div><div class="ar-name">🫒 Olive Oil</div><div class="ar-why">Mediterranean drought — +24% coming</div></div><div class="ar-save">−$8.40</div></div>
+          <div class="ar"><div><div class="ar-name">☕ Coffee</div><div class="ar-why">Arabica at 47-year high</div></div><div class="ar-save">−$4.20</div></div>
+          <div class="ar"><div><div class="ar-name">🍫 Chocolate</div><div class="ar-why">West Africa cocoa crisis — 60-yr record</div></div><div class="ar-save">−$2.80</div></div>
+          <div class="ar"><div><div class="ar-name">🧈 Butter</div><div class="ar-why">Cold storage stocks −18% YoY</div></div><div class="ar-save">−$3.00</div></div>
+          <div class="ar"><div><div class="ar-name">🍝 Pasta</div><div class="ar-why">Durum wheat harvest −22%</div></div><div class="ar-save">−$1.40</div></div>
+          <div class="ar"><div><div class="ar-name">🥩 Ground Beef</div><div class="ar-why">Cattle herd lowest since 1951</div></div><div class="ar-save">−$2.20</div></div>
+          <div class="ar"><div><div class="ar-name">🍅 Canned Tomatoes</div><div class="ar-why">Seasonal low — rises by summer</div></div><div class="ar-save">−$1.20</div></div>
+          <div class="ar"><div><div class="ar-name">🥞 Flour (5lb)</div><div class="ar-why">Wheat futures up 2.1% this week</div></div><div class="ar-save">−$0.80</div></div>
+        </div>
+        <div class="acol">
+          <div class="acol-icon-wrap iw-a">⏳</div>
+          <h3>Wait to Buy</h3>
+          <div class="acol-d">Prices still falling — hold off for now</div>
+          <div class="ar"><div><div class="ar-name">🍗 Chicken Breast</div><div class="ar-why">Broiler production +3.2% YoY</div></div><div class="ar-save">−$0.42/lb</div></div>
+          <div class="ar"><div><div class="ar-name">🥓 Bacon</div><div class="ar-why">Hog supply expanding</div></div><div class="ar-save">−$0.58/lb</div></div>
+          <div class="ar"><div><div class="ar-name">🍎 Apples</div><div class="ar-why">WA harvest strong, still easing</div></div><div class="ar-save">−$0.24/lb</div></div>
+          <div class="ar"><div><div class="ar-name">🥜 Mixed Nuts</div><div class="ar-why">CA almond crop above average</div></div><div class="ar-save">−$1.80/bag</div></div>
+          <div class="ar"><div><div class="ar-name">🍚 White Rice</div><div class="ar-why">India export ban lifted, still falling</div></div><div class="ar-save">−$0.60/bag</div></div>
+          <div class="ar"><div><div class="ar-name">🍤 Frozen Shrimp</div><div class="ar-why">Record imports from Ecuador/India</div></div><div class="ar-save">−$0.80/lb</div></div>
+          <div class="ar"><div><div class="ar-name">🌻 Vegetable Oil</div><div class="ar-why">Large 2024 soybean crop</div></div><div class="ar-save">−$0.58/btl</div></div>
+          <div class="ar"><div><div class="ar-name">🍬 Sugar</div><div class="ar-why">Brazil record crop, easing</div></div><div class="ar-save">−$0.32/bag</div></div>
+        </div>
+        <div class="acol">
+          <div class="acol-icon-wrap iw-b">🔄</div>
+          <h3>Smart Swaps</h3>
+          <div class="acol-d">Same nutrition, lower cost right now</div>
+          <div class="ar"><div><div class="ar-name">🥚 Eggs → Tofu</div><div class="ar-why">Eggs +19% — tofu flat</div></div><div class="ar-save">−$3.40/wk</div></div>
+          <div class="ar"><div><div class="ar-name">🍊 OJ → Apple Juice</div><div class="ar-why">OJ structural crisis, $12 coming</div></div><div class="ar-save">−$5.80/wk</div></div>
+          <div class="ar"><div><div class="ar-name">🫒 Olive → Avocado Oil</div><div class="ar-why">Same profile, stable price</div></div><div class="ar-save">−$6.00/btl</div></div>
+          <div class="ar"><div><div class="ar-name">🥩 Beef → Lentils</div><div class="ar-why">Beef to $6+ — lentils at $1.20</div></div><div class="ar-save">−$8.00/wk</div></div>
+          <div class="ar"><div><div class="ar-name">🧀 Name → Store Brand</div><div class="ar-why">Identical product, 25–40% cheaper</div></div><div class="ar-save">−$4.20/wk</div></div>
+          <div class="ar"><div><div class="ar-name">🍞 Artisan → Store Bread</div><div class="ar-why">Wheat hits artisan brands hardest</div></div><div class="ar-save">−$2.40/wk</div></div>
+          <div class="ar"><div><div class="ar-name">☕ Coffee → Tea</div><div class="ar-why">Coffee at 47-year high, tea stable</div></div><div class="ar-save">−$6.00/wk</div></div>
+          <div class="ar"><div><div class="ar-name">🧈 Butter → Greek Yogurt</div><div class="ar-why">Baking substitute, saves $3/batch</div></div><div class="ar-save">−$3.00/use</div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- RIGHT RAIL -->
+  <aside class="rail" role="complementary" aria-label="Market signals and alerts">
+    <div class="panel">
+      <div class="panel-title">Live Commodity Signals</div>
+      <div class="sig-row"><div class="sig-name">🌾 Wheat Futures</div><div class="sig-val">$169/mt &nbsp;<span style="color:var(--red)">▲ +2.2%</span></div><div class="sig-impact">→ Bread & pasta in 4–6 weeks</div></div>
+      <div class="sig-row"><div class="sig-name">🐄 Global Beef Index</div><div class="sig-val">331 idx &nbsp;<span style="color:var(--green)">▼ −2.3%</span></div><div class="sig-impact">→ Slight ease but structurally tight</div></div>
+      <div class="sig-row"><div class="sig-name">☕ Coffee Arabica</div><div class="sig-val">$363/kg &nbsp;<span style="color:var(--red)">▲ 47-yr high</span></div><div class="sig-impact">→ Retail heading to $12+/bag</div></div>
+      <div class="sig-row"><div class="sig-name">🍫 Cocoa Futures</div><div class="sig-val">$5,018/mt &nbsp;<span style="color:var(--red)">▲ all-time</span></div><div class="sig-impact">→ Chocolate bars → $4–$5 each</div></div>
+      <div class="sig-row"><div class="sig-name">🛢 Crude Oil WTI</div><div class="sig-val">$59.9/bbl &nbsp;<span style="color:var(--red)">▲ +3.2%</span></div><div class="sig-impact">→ Transport & packaging rising</div></div>
+      <div class="sig-row"><div class="sig-name">🐖 Pork Index</div><div class="sig-val">80.3 idx &nbsp;<span style="color:var(--green)">▼ −0.5%</span></div><div class="sig-impact">→ Bacon & pork easing now</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Breaking Price Alerts</div>
+      <div class="alert-row"><div class="ai-ico">🥚</div><div>Eggs +19% — avian flu hit 12M birds. Prices peaking now, ease in 3–4 weeks.</div></div>
+      <div class="alert-row"><div class="ai-ico">🫒</div><div>Olive oil crisis — Mediterranean drought cut harvest 40%. Buy now before April.</div></div>
+      <div class="alert-row"><div class="ai-ico">☕</div><div>Coffee at 47-year high. Vietnam + Brazil drought. Buy 2–3 bags today.</div></div>
+      <div class="alert-row"><div class="ai-ico">🍫</div><div>Cocoa: worst crisis in 60 years. West Africa harvest down 30%+.</div></div>
+      <div class="alert-row"><div class="ai-ico">🍊</div><div>OJ structural collapse. Florida citrus not recovering. Switch permanently.</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">How CartCast Works</div>
+      <p class="about-txt">Commodity prices predict retail grocery prices with a <strong>4–8 week lag</strong> — documented by the USDA Economic Research Service.<br><br>CartCast reads <strong>USDA NASS</strong>, <strong>BLS Average Price Data</strong>, and <strong>FRED</strong> (St. Louis Fed) every week and translates them into plain-English shopping decisions.<br><br>100% free. No ads. No signup. No tracking. Open source on GitHub.</p>
+    </div>
+  </aside>
+
+</div>
+</div>
+
+<!-- SHARE WALL -->
+<section class="share-wall" id="about">
+  <div class="share-inner">
+    <div>
+      <div class="sh-eyebrow">// Why CartCast exists</div>
+      <h2>Nestle knew.<br>Kraft knew.<br><em>Now you do.</em></h2>
+      <p>Food companies track commodity markets daily to set your grocery prices months in advance. The average American household finds out at checkout. CartCast closes that information gap — free, no signup, powered entirely by US government public data.</p>
+      <div class="share-btns">
+        <button class="sbtn sbtn-r" onclick="shareReddit()">📢 Share on Reddit</button>
+        <button class="sbtn sbtn-w" onclick="shareX()">𝕏 Share on X</button>
+        <button class="sbtn sbtn-o" onclick="copyLink()">🔗 Copy Link</button>
+      </div>
+    </div>
+    <div class="share-nums">
+      <div class="sn"><div class="sn-val">330M</div><div class="sn-label">Americans affected by grocery inflation every week</div></div>
+      <div class="sn"><div class="sn-val">$847</div><div class="sn-label">Average annual savings for households who act on signals</div></div>
+      <div class="sn"><div class="sn-val">6 wks</div><div class="sn-label">Ahead of retail price changes at checkout</div></div>
+      <div class="sn"><div class="sn-val">$0</div><div class="sn-label">Forever free — no ads, no signup, no paywall</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 CartCast · Grocery Price Intelligence · Data: USDA NASS · BLS · FRED · Updated every Monday</span>
+  <div class="flinks">
+    <a href="#prices">Prices</a>
+    <a href="#signals">Signals</a>
+    <a href="#actions">Actions</a>
+    <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+    <a href="#" onclick="shareReddit();return false">Share</a>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)" role="dialog" aria-modal="true" aria-label="Item detail">
+  <div class="modal" id="modal">
+    <button class="modal-x" onclick="closeModal()" aria-label="Close">✕</button>
+    <span class="modal-em" id="mEm" aria-hidden="true"></span>
+    <h2 id="mName"></h2>
+    <div class="modal-cat" id="mCat"></div>
+    <div class="modal-prices">
+      <div class="mp"><div class="mp-l">Last Month</div><div class="mp-v" id="mPrev"></div></div>
+      <div class="mp"><div class="mp-l">Today</div><div class="mp-v" id="mCur"></div></div>
+      <div class="mp"><div class="mp-l">30-Day Forecast</div><div class="mp-v" id="mFore"></div></div>
+    </div>
+    <div class="modal-sec">
+      <h4>Why Is This Happening</h4>
+      <p id="mWhy"></p>
+    </div>
+    <div class="modal-action" id="mAct"></div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+// Prices from our last successful pipeline run (Feb 25 2026)
+// fetch_data.py updates this weekly via GitHub Actions
+const ITEMS=[
+  {id:1,e:'🥚',n:'Eggs (dozen)',c:'dairy',p:4.89,pv:4.14,f:5.62,t:'rising',ch:18.1,ac:'wait',b:'b-hot',bl:'Peak Soon',why:'Avian influenza outbreak affecting 12M+ birds across Iowa, Nebraska, and Minnesota. Flock losses ongoing with no containment before late March. Retail prices lag farm shocks by 3–4 weeks — current prices do not yet reflect the full impact.',act:'<strong>Do not panic-buy.</strong> Prices peak in 3–4 weeks then ease as flocks replenish. Stock canned protein alternatives now instead.'},
+  {id:2,e:'🥛',n:'Whole Milk (gal)',c:'dairy',p:3.89,pv:3.72,f:3.95,t:'stable',ch:4.6,ac:'neutral',b:'b-neu',bl:'Stable',why:'Milk prices stable. Dairy cow numbers slightly down but milk per cow at record highs. Fluid milk largely insulated from short-term commodity swings.',act:'<strong>No action needed.</strong> Buy store brand — often 20% cheaper with identical nutrition.'},
+  {id:3,e:'🧀',n:'Cheddar Block (8oz)',c:'dairy',p:4.62,pv:4.21,f:4.88,t:'rising',ch:9.7,ac:'buy',b:'b-buy',bl:'Buy & Freeze',why:'Class III milk prices up 14% since October. Strong US cheese export demand to Southeast Asia. USDA cold storage at 5-year low.',act:'<strong>Buy block cheese and shred/freeze.</strong> Cheddar blocks freeze for 6 months. Price heading to $5+.'},
+  {id:4,e:'🧈',n:'Butter (lb)',c:'dairy',p:6.24,pv:5.88,f:6.74,t:'rising',ch:6.1,ac:'buy',b:'b-buy',bl:'Buy & Freeze',why:'Holiday baking drew down cold storage. USDA stocks down 18% YoY. European butter at record highs pulling US prices up.',act:'<strong>Buy 4–6 lbs and freeze.</strong> Butter freezes perfectly for 12 months. Heading to $7+ by May.'},
+  {id:5,e:'🍦',n:'Greek Yogurt (32oz)',c:'dairy',p:6.49,pv:6.20,f:6.72,t:'rising',ch:4.7,ac:'neutral',b:'b-neu',bl:'Watch',why:'Milk-intensive product. As milk costs rise, yogurt makers pass ~40% to retail.',act:'<strong>Buy store brand.</strong> Name brand is 40% more expensive with no nutritional difference.'},
+  {id:6,e:'🧃',n:'Orange Juice (52oz)',c:'dairy',p:8.42,pv:6.80,f:10.20,t:'rising',ch:23.8,ac:'substitute',b:'b-hot',bl:'Switch Now',why:'Florida orange crop devastated by citrus greening disease for 5 consecutive years. 2024 FL production 62% below 10-year average. Structural multi-year crisis with no recovery in sight.',act:'<strong>Switch to apple juice permanently.</strong> OJ heading to $12/carton. Florida citrus is not recovering.'},
+  {id:7,e:'🍳',n:'Egg Whites (carton)',c:'dairy',p:5.20,pv:3.98,f:5.90,t:'rising',ch:30.7,ac:'substitute',b:'b-hot',bl:'Substitute Now',why:'Same avian flu dynamic as whole eggs. Fitness consumers competing for reduced liquid egg supply — steeper % increases than whole eggs.',act:'<strong>Switch to tofu, chickpeas, or protein powder.</strong> Egg whites rising faster than whole eggs.'},
+  {id:8,e:'🧁',n:'Cream Cheese (8oz)',c:'dairy',p:3.28,pv:3.08,f:3.48,t:'rising',ch:6.5,ac:'buy',b:'b-buy',bl:'Buy Extra',why:'Cream cheese uses milk fat. Butter fat prices rising drives cream cheese higher.',act:'<strong>Buy an extra pack.</strong> Cream cheese freezes for 2 months.'},
+  {id:9,e:'🍨',n:'Ice Cream (48oz)',c:'dairy',p:6.48,pv:5.98,f:6.88,t:'rising',ch:8.4,ac:'neutral',b:'b-neu',bl:'Watch',why:'Ice cream uses milk fat, sugar, and eggs — all rising. Premium brands hit hardest.',act:'<strong>Switch to store brand ice cream.</strong> Same ingredients, saves $2/carton.'},
+  {id:10,e:'🍗',n:'Chicken Breast (lb)',c:'proteins',p:3.84,pv:4.21,f:3.42,t:'falling',ch:-8.8,ac:'wait',b:'b-wait',bl:'Wait 4 Wks',why:'Broiler production increased 3.2% YoY. Export demand to Asia softened. Processing capacity constraints resolved.',act:'<strong>Wait 4–6 weeks to stock your freezer.</strong> Prices expected to fall another 10–12%.'},
+  {id:11,e:'🥩',n:'Ground Beef 80/20 (lb)',c:'proteins',p:5.42,pv:5.01,f:5.86,t:'rising',ch:8.2,ac:'buy',b:'b-buy',bl:'Buy Now',why:'US cattle herd lowest since 1951. Drought across Southern Plains forced early liquidations 2022–23. Rebuilding a cattle herd takes 3–5 years.',act:'<strong>Buy extra and freeze.</strong> Structural cattle shortage is multi-year. Price heading to $6+/lb.'},
+  {id:12,e:'🥓',n:'Bacon (lb)',c:'proteins',p:7.18,pv:7.42,f:6.84,t:'falling',ch:-3.2,ac:'wait',b:'b-wait',bl:'Still Falling',why:'Hog production expanding. Pork cold storage inventories up 8% YoY. Domestic pork demand softening as consumers trade down from beef.',act:'<strong>Still easing — delay bulk purchasing</strong> 3–4 more weeks.'},
+  {id:13,e:'🐟',n:'Salmon Fillet (lb)',c:'proteins',p:12.48,pv:11.20,f:13.10,t:'rising',ch:11.4,ac:'buy',b:'b-buy',bl:'Buy Now',why:'Norwegian aquaculture sea lice regulations tightening. Wild Pacific runs below average 2024. Rising Asian demand competing with US buyers.',act:'<strong>Buy a few extra and freeze.</strong> Salmon heading to $15/lb by summer.'},
+  {id:14,e:'🍤',n:'Frozen Shrimp (lb)',c:'proteins',p:8.99,pv:9.40,f:8.60,t:'falling',ch:-4.4,ac:'buy',b:'b-buy',bl:'Good Value',why:'Indian and Ecuadorian shrimp exports to US at record volumes. Prices suppressed by exporter competition.',act:'<strong>Great time to stock the freezer.</strong> Cheapest protein per gram available right now.'},
+  {id:15,e:'🫘',n:'Canned Tuna (5oz)',c:'proteins',p:1.68,pv:1.78,f:1.58,t:'falling',ch:-5.6,ac:'buy',b:'b-buy',bl:'Stock Up',why:'Global skipjack tuna supply strong from Pacific fisheries. Thai and Philippine canning at capacity. Prices falling 8 months straight.',act:'<strong>Stock up now.</strong> Best non-perishable protein value in the store. Buy 2–3 cases.'},
+  {id:16,e:'🫘',n:'Canned Chickpeas (15oz)',c:'proteins',p:1.18,pv:1.28,f:1.14,t:'falling',ch:-7.8,ac:'buy',b:'b-buy',bl:'Best Value',why:'Strong legume harvest 2024. Canned goods promotions clearing inventory. At 2-year low.',act:'<strong>Buy in bulk.</strong> Best protein-per-dollar in the store. Non-perishable, lasts 3+ years.'},
+  {id:17,e:'🌭',n:'Hot Dogs (pack)',c:'proteins',p:4.82,pv:4.65,f:4.94,t:'stable',ch:3.7,ac:'neutral',b:'b-neu',bl:'Stable',why:'Processed meats blend multiple species — pork softening offsets beef pressure. Price trajectory stable.',act:'<strong>No urgent action.</strong>'},
+  {id:18,e:'🥩',n:'Pork Chops (lb)',c:'proteins',p:4.28,pv:4.48,f:4.08,t:'falling',ch:-4.5,ac:'wait',b:'b-wait',bl:'Still Easing',why:'Hog supply expanding. Pork exports to Mexico and Japan at high levels. Domestic prices softening.',act:'<strong>Wait 3–4 more weeks.</strong> Prices heading to $3.80–$3.90.'},
+  {id:19,e:'🍌',n:'Bananas (lb)',c:'produce',p:0.59,pv:0.62,f:0.57,t:'stable',ch:-4.8,ac:'neutral',b:'b-neu',bl:'Always Cheap',why:'Supply from Ecuador and Guatemala stable. Most price-stable item in the grocery store year over year.',act:'<strong>No action needed.</strong> Buy as normal.'},
+  {id:20,e:'🥑',n:'Avocados (each)',c:'produce',p:1.42,pv:1.68,f:1.28,t:'falling',ch:-15.5,ac:'buy',b:'b-buy',bl:'Seasonal Low',why:'Mexican harvest in peak season (Feb–Apr). Michoacán production running 8% above last year. Annual price floor window.',act:'<strong>Buy extra and freeze mashed.</strong> Back above $2 by June. Frozen keeps 4 months.'},
+  {id:21,e:'🍎',n:'Apples Gala (lb)',c:'produce',p:1.89,pv:2.10,f:1.72,t:'falling',ch:-10.0,ac:'wait',b:'b-wait',bl:'Still Falling',why:'Washington state apple harvest strong 2024. Cold storage inventories well-stocked. Season keeps prices low through early spring.',act:'<strong>Wait a bit longer.</strong> Will bottom around $1.65–$1.70 in 4–5 weeks.'},
+  {id:22,e:'🍓',n:'Strawberries (pint)',c:'produce',p:3.48,pv:4.20,f:2.80,t:'falling',ch:-17.1,ac:'buy',b:'b-buy',bl:'Seasonal Low',why:'Florida and California seasons overlapping — supply surplus. Best price window of the year. Prices will double by July.',act:'<strong>Buy and freeze.</strong> This is the annual price floor. Freeze in portions for smoothies. $6+ by July.'},
+  {id:23,e:'🥦',n:'Broccoli (lb)',c:'produce',p:1.68,pv:1.82,f:1.58,t:'falling',ch:-7.7,ac:'buy',b:'b-buy',bl:'Buy & Freeze',why:'California winter harvest peaking. Abundant supply through March.',act:'<strong>Buy extra and blanch/freeze.</strong> Nutritionally identical to fresh, keeps 12 months frozen.'},
+  {id:24,e:'🧅',n:'Yellow Onions (3lb)',c:'produce',p:2.28,pv:2.48,f:2.18,t:'falling',ch:-8.1,ac:'buy',b:'b-buy',bl:'Stock Up',why:'Idaho and Oregon storage inventory high. 2024 US onion crop above average. Non-perishable at room temp for 2–3 months.',act:'<strong>Buy in bulk now.</strong> Non-perishable, cheap per calorie, prices still easing.'},
+  {id:25,e:'🍋',n:'Lemons (each)',c:'produce',p:0.78,pv:0.92,f:0.68,t:'falling',ch:-15.2,ac:'buy',b:'b-buy',bl:'Seasonal Low',why:'Winter California lemon harvest in full swing. Mexico imports also peaking seasonally.',act:'<strong>Buy a bag, juice and freeze in ice cube trays.</strong> Prices rise in summer.'},
+  {id:26,e:'🥕',n:'Carrots (2lb bag)',c:'produce',p:1.48,pv:1.52,f:1.44,t:'stable',ch:-2.6,ac:'neutral',b:'b-neu',bl:'Stable',why:'California and Michigan supply chains steady. Long shelf life and consistent demand.',act:'<strong>No action needed.</strong> Reliably cheap year-round.'},
+  {id:27,e:'🍇',n:'Grapes (lb)',c:'produce',p:2.18,pv:2.42,f:2.04,t:'falling',ch:-9.9,ac:'neutral',b:'b-neu',bl:'Easing',why:'Chilean grape harvest (Feb–Apr) flooding US market. Seasonal low.',act:'<strong>Buy and enjoy.</strong> Prices rise in late spring.'},
+  {id:28,e:'🫑',n:'Bell Peppers (each)',c:'produce',p:1.28,pv:1.48,f:1.18,t:'falling',ch:-13.5,ac:'buy',b:'b-buy',bl:'Low Now',why:'Mexican winter harvest at peak. Prices at seasonal low — will rise 40% by August.',act:'<strong>Buy and freeze sliced.</strong> Frozen peppers work great in cooked dishes.'},
+  {id:29,e:'🫐',n:'Blueberries (pint)',c:'produce',p:4.28,pv:4.82,f:3.88,t:'falling',ch:-11.2,ac:'buy',b:'b-buy',bl:'Seasonal Low',why:'Chilean blueberry harvest flooding US market (Jan–Mar). Annual price low.',act:'<strong>Buy and freeze.</strong> Prices double by May.'},
+  {id:30,e:'🍊',n:'Navel Oranges (lb)',c:'produce',p:1.28,pv:1.42,f:1.18,t:'falling',ch:-9.9,ac:'buy',b:'b-buy',bl:'Low Now',why:'California navel orange season peaking. Abundant supply Feb–Mar.',act:'<strong>Buy a bag now.</strong> Winter citrus at peak value.'},
+  {id:31,e:'🍞',n:'Whole Wheat Bread',c:'grains',p:3.24,pv:3.18,f:3.48,t:'rising',ch:1.9,ac:'neutral',b:'b-neu',bl:'Moderate Rise',why:'Wheat futures up 2.1%. Global supplies adequate. Bread price increases will be modest.',act:'<strong>Switch to store brand</strong> to save $1.50–$2/week.'},
+  {id:32,e:'🍝',n:'Pasta Dry (16oz)',c:'grains',p:1.68,pv:1.52,f:1.88,t:'rising',ch:10.5,ac:'buy',b:'b-buy',bl:'Buy & Store',why:'Durum wheat harvest 22% below average 2024. Pasta makers absorbing cost but price increases unavoidable.',act:'<strong>Buy 10–15 boxes now.</strong> Non-perishable, lasts 2+ years. Price heading to $2+.'},
+  {id:33,e:'🍚',n:'White Rice (5lb)',c:'grains',p:5.48,pv:6.20,f:5.20,t:'falling',ch:-11.6,ac:'wait',b:'b-wait',bl:'Still Falling',why:'India lifted export ban on non-basmati rice late 2024. Global prices correcting. US retail prices lag 2–3 months.',act:'<strong>Wait 4–6 more weeks.</strong> Stock up in April.'},
+  {id:34,e:'🥣',n:'Oats (42oz)',c:'grains',p:4.28,pv:4.10,f:4.42,t:'stable',ch:4.4,ac:'neutral',b:'b-neu',bl:'Stable',why:'Canadian oat crops adequate 2024. Modest pressure from oat-based product demand.',act:'<strong>Buy store brand oats</strong> to save 30%.'},
+  {id:35,e:'🫘',n:'Canned Black Beans',c:'grains',p:1.12,pv:1.24,f:1.09,t:'falling',ch:-9.7,ac:'buy',b:'b-buy',bl:'2-Year Low',why:'Strong legume harvests. Canned producers running promotions. One of few items actively getting cheaper.',act:'<strong>Stock up now.</strong> At 2-year lows, non-perishable.'},
+  {id:36,e:'🍅',n:'Canned Tomatoes (28oz)',c:'grains',p:2.18,pv:2.42,f:2.44,t:'stable',ch:-9.9,ac:'buy',b:'b-buy',bl:'Seasonal Low',why:'California processing had record 2024 season. Prices at seasonal low. Summer outlook uncertain.',act:'<strong>Buy 8–12 cans now.</strong> $0.30–$0.40 more by summer.'},
+  {id:37,e:'🥞',n:'All-Purpose Flour (5lb)',c:'grains',p:3.82,pv:3.68,f:4.10,t:'rising',ch:3.8,ac:'buy',b:'b-buy',bl:'Buy Now',why:'Flour tracks wheat futures with 6–8 week lag. Wheat up 2.1% this week.',act:'<strong>Buy 2–3 bags now.</strong> Keeps 12 months sealed.'},
+  {id:38,e:'🌯',n:'Flour Tortillas (10-pk)',c:'grains',p:3.48,pv:3.28,f:3.62,t:'rising',ch:6.1,ac:'neutral',b:'b-neu',bl:'Moderate',why:'Corn and wheat both rising — both are tortilla inputs.',act:'<strong>Buy extra and freeze.</strong> Tortillas freeze perfectly for 3 months.'},
+  {id:39,e:'🍬',n:'Sugar (4lb bag)',c:'grains',p:3.88,pv:4.20,f:3.68,t:'falling',ch:-7.6,ac:'wait',b:'b-wait',bl:'Still Falling',why:'Brazil record sugar crop. India export restrictions partially eased. Falling 4 months straight.',act:'<strong>Buy now or wait 4 weeks</strong> for further savings.'},
+  {id:40,e:'🫒',n:'Olive Oil (750ml)',c:'oils',p:11.49,pv:8.20,f:14.20,t:'rising',ch:40.1,ac:'buy',b:'b-hot',bl:'Buy Today',why:'Mediterranean drought cut Spanish + Italian harvests 40–60%. Spain produces 45% of global supply. Structural shock — takes 2–3 olive tree growing seasons to recover.',act:'<strong>Buy 3–4 bottles TODAY.</strong> +24% coming in 8 weeks. $11.49 now vs $14+ in April.'},
+  {id:41,e:'🌻',n:'Vegetable Oil (48oz)',c:'oils',p:5.84,pv:6.20,f:5.62,t:'falling',ch:-6.5,ac:'buy',b:'b-buy',bl:'Falling',why:'Soybean oil falling as 2024 soybean crop was large. Ukrainian sunflower supplies partially recovered.',act:'<strong>Good time to stock up.</strong> Near floor.'},
+  {id:42,e:'🥫',n:'Ketchup (32oz)',c:'oils',p:4.22,pv:4.08,f:4.38,t:'stable',ch:3.4,ac:'neutral',b:'b-neu',bl:'Stable',why:'Tomato paste costs down but packaging and transport up. Net effect modest.',act:'<strong>Switch to store brand</strong> — saves $1.50/jar.'},
+  {id:43,e:'🫙',n:'Peanut Butter (18oz)',c:'oils',p:4.48,pv:4.62,f:4.28,t:'falling',ch:-3.5,ac:'buy',b:'b-buy',bl:'Easing',why:'US peanut crop above average 2024. Farm gate prices down 12% YoY.',act:'<strong>Prices near floor.</strong> Buy 2 jars now.'},
+  {id:44,e:'🍯',n:'Honey (12oz)',c:'oils',p:7.42,pv:6.88,f:7.82,t:'rising',ch:7.8,ac:'neutral',b:'b-neu',bl:'Rising Slowly',why:'Colony collapse disorder continues. Drought reduces nectar flowers. Import honey partially filling gap.',act:'<strong>No urgency.</strong> Maple syrup is a good same-price substitute.'},
+  {id:45,e:'🧂',n:'Mayonnaise (30oz)',c:'oils',p:5.88,pv:5.40,f:6.24,t:'rising',ch:8.9,ac:'neutral',b:'b-neu',bl:'Rising',why:'Primarily soybean oil and eggs. Soybean softening but eggs +18%. Net: prices rising.',act:'<strong>Switch to store brand mayo</strong> — saves $1.50/jar.'},
+  {id:46,e:'🌶️',n:'Hot Sauce (5oz)',c:'oils',p:3.98,pv:3.84,f:4.10,t:'stable',ch:3.6,ac:'neutral',b:'b-neu',bl:'Stable',why:'Pepper supply steady from Mexico. Vinegar and inputs stable.',act:'<strong>No action needed.</strong>'},
+  {id:47,e:'🍶',n:'Soy Sauce (10oz)',c:'oils',p:3.28,pv:3.18,f:3.38,t:'stable',ch:3.1,ac:'neutral',b:'b-neu',bl:'Stable',why:'Soybean prices easing. Asian imports competitive.',act:'<strong>No action needed.</strong>'},
+  {id:48,e:'🥗',n:'Salad Dressing (16oz)',c:'oils',p:4.28,pv:4.10,f:4.42,t:'stable',ch:4.4,ac:'neutral',b:'b-neu',bl:'Stable',why:'Soybean oil easing. Vinegar and spice inputs stable.',act:'<strong>No action needed.</strong>'},
+  {id:49,e:'🍕',n:'Frozen Pizza (12")',c:'frozen',p:7.48,pv:7.20,f:7.64,t:'stable',ch:3.9,ac:'neutral',b:'b-neu',bl:'Stable',why:'Mixed inputs — manufacturers absorbing to maintain market share.',act:'<strong>Store brand pizza is 50% cheaper</strong> with acceptable quality.'},
+  {id:50,e:'🧆',n:'Frozen Chicken Nuggets',c:'frozen',p:8.92,pv:9.48,f:8.42,t:'falling',ch:-5.9,ac:'wait',b:'b-wait',bl:'Still Falling',why:'Mirrors fresh chicken broiler pricing. Processed chicken lags fresh by 4–6 weeks.',act:'<strong>Wait 3–4 weeks.</strong> Will bottom around $8.20–$8.40.'},
+  {id:51,e:'🥬',n:'Frozen Vegetables (12oz)',c:'frozen',p:2.48,pv:2.38,f:2.52,t:'stable',ch:4.2,ac:'neutral',b:'b-neu',bl:'Stable',why:'Tied to processing and energy costs more than commodity crops. Gradual increases.',act:'<strong>Better value than fresh out-of-season.</strong> No urgent action.'},
+  {id:52,e:'🥫',n:'Instant Ramen (pack)',c:'frozen',p:0.38,pv:0.36,f:0.40,t:'stable',ch:5.6,ac:'neutral',b:'b-neu',bl:'Always Cheap',why:'Palm oil easing, wheat rising modestly. Net: small increase.',act:'<strong>Buy store brand</strong> to save 40%.'},
+  {id:53,e:'🍫',n:'Chocolate Bar (3.5oz)',c:'frozen',p:3.28,pv:2.88,f:3.72,t:'rising',ch:13.9,ac:'buy',b:'b-hot',bl:'Buy Now',why:'West African cocoa (70% of global supply) devastated. Ivory Coast + Ghana harvests down 30%+. Worst cocoa crisis in 60 years.',act:'<strong>Buy now if you love chocolate.</strong> $4–$5 bars are coming. Multi-year crisis.'},
+  {id:54,e:'🥤',n:'Soda 2-Liter',c:'frozen',p:2.28,pv:2.18,f:2.38,t:'stable',ch:4.6,ac:'neutral',b:'b-neu',bl:'Modest Rise',why:'HFCS slightly elevated. Aluminum can costs up on tariff uncertainty.',act:'<strong>Buy store brand cola</strong> — saves 40%.'},
+  {id:55,e:'🥜',n:'Mixed Nuts (16oz)',c:'frozen',p:9.48,pv:10.20,f:8.90,t:'falling',ch:-7.1,ac:'wait',b:'b-wait',bl:'Still Falling',why:'CA almond + walnut harvests above average 2024. Cashew supply from Vietnam strong.',act:'<strong>Wait 3–4 weeks</strong> then buy in bulk. Will bottom $8.50–$8.80.'},
+  {id:56,e:'🍪',n:'Cookies (14oz)',c:'frozen',p:4.88,pv:4.72,f:5.04,t:'stable',ch:3.4,ac:'neutral',b:'b-neu',bl:'Modest Rise',why:'Sugar stable, wheat rising, eggs rising. Mixed inputs.',act:'<strong>Store brand cookies save $1.50–$2/pack.</strong>'},
+  {id:57,e:'🧃',n:'Apple Juice (64oz)',c:'frozen',p:4.82,pv:4.68,f:4.78,t:'stable',ch:3.0,ac:'neutral',b:'b-buy',bl:'Best OJ Swap',why:'US apple crop good 2024. Stable — excellent OJ substitute.',act:'<strong>Switch from OJ permanently.</strong> Saves $15–$20/month.'},
+  {id:58,e:'🥔',n:'Potato Chips (8oz)',c:'frozen',p:4.88,pv:4.72,f:4.98,t:'stable',ch:3.4,ac:'neutral',b:'b-neu',bl:'Stable',why:'Potato crop adequate. Vegetable oil inputs easing.',act:'<strong>No action needed.</strong>'},
+  {id:59,e:'🫙',n:'Salsa (16oz)',c:'frozen',p:3.98,pv:3.78,f:4.08,t:'stable',ch:5.3,ac:'neutral',b:'b-neu',bl:'Stable',why:'Tomato processing record 2024. Pepper supply strong.',act:'<strong>No action needed.</strong>'},
+  {id:60,e:'☕',n:'Ground Coffee (12oz)',c:'beverages',p:9.48,pv:8.20,f:10.80,t:'rising',ch:15.6,ac:'buy',b:'b-hot',bl:'Buy 2–3 Bags',why:'Arabica futures at 47-year high in Feb 2025. Vietnam (robusta) + Brazil (arabica) both drought-affected. Climate change structurally reducing yields in key growing regions.',act:'<strong>Buy 2–3 bags and seal airtight.</strong> Heading to $12+/bag by May. Stays fresh 3–5 months sealed.'},
+  {id:61,e:'🫖',n:'Tea Bags (100ct)',c:'beverages',p:6.82,pv:6.40,f:7.10,t:'rising',ch:6.6,ac:'neutral',b:'b-neu',bl:'Rising Slowly',why:'Sri Lanka and Kenya drought-affected crops 2024. Global tea inventories tight.',act:'<strong>Buy an extra box.</strong> No urgency.'},
+  {id:62,e:'🧃',n:'Sports Drink (32oz)',c:'beverages',p:2.48,pv:2.38,f:2.54,t:'stable',ch:4.2,ac:'neutral',b:'b-neu',bl:'Stable',why:'Sugar stable, packaging modestly up.',act:'<strong>No action needed.</strong>'},
+  {id:63,e:'🍺',n:'Beer 6-Pack',c:'beverages',p:10.48,pv:10.12,f:10.68,t:'stable',ch:3.6,ac:'neutral',b:'b-neu',bl:'Stable',why:'Barley stable. Hop supply adequate. Aluminum slightly up.',act:'<strong>Store brand beer saves 30–40%.</strong>'},
+  {id:64,e:'🍷',n:'Wine 750ml (value)',c:'beverages',p:8.48,pv:8.28,f:8.58,t:'stable',ch:2.4,ac:'neutral',b:'b-neu',bl:'Stable',why:'Global wine oversupply from France, Chile, Australia. Value wines especially well-supplied.',act:'<strong>Good time for value bottles under $10.</strong>'},
+  {id:65,e:'💧',n:'Sparkling Water (12-pk)',c:'beverages',p:6.48,pv:6.28,f:6.58,t:'stable',ch:3.2,ac:'neutral',b:'b-neu',bl:'Stable',why:'Aluminum up modestly. Brand competition holding prices.',act:'<strong>No action needed.</strong>'},
+  {id:66,e:'🧴',n:'Dish Soap (25oz)',c:'household',p:4.28,pv:4.10,f:4.40,t:'stable',ch:4.4,ac:'neutral',b:'b-neu',bl:'Slow Rise',why:'Surfactant prices tied to petrochemicals. Oil increases flowing through with 3–4 month lag.',act:'<strong>Store brand is identical.</strong> Saves 50%.'},
+  {id:67,e:'🧻',n:'Paper Towels (6-roll)',c:'household',p:8.48,pv:7.92,f:8.72,t:'stable',ch:7.1,ac:'neutral',b:'b-neu',bl:'Rising',why:'Pulp prices rising with higher wood costs.',act:'<strong>Buy in bulk on sale.</strong>'},
+  {id:68,e:'🪥',n:'Toothpaste (6oz)',c:'household',p:3.28,pv:3.18,f:3.34,t:'stable',ch:3.1,ac:'neutral',b:'b-neu',bl:'Stable',why:'Strong competition. Stable ingredients.',act:'<strong>Generic saves $1.50.</strong>'},
+  {id:69,e:'🫧',n:'Laundry Detergent (100oz)',c:'household',p:12.48,pv:11.98,f:12.78,t:'stable',ch:4.2,ac:'neutral',b:'b-neu',bl:'Moderate Rise',why:'Surfactant and packaging rising. Store brands absorbing more.',act:'<strong>Switch to store brand</strong> — saves $4–$6/bottle.'},
+  {id:70,e:'🗑️',n:'Trash Bags (30ct)',c:'household',p:7.48,pv:7.18,f:7.68,t:'stable',ch:4.2,ac:'neutral',b:'b-neu',bl:'Stable',why:'Polyethylene tied to oil prices. Lagged effect from recent rise.',act:'<strong>Buy in bulk when on sale.</strong>'},
+  {id:71,e:'🍚',n:'Basmati Rice (5lb)',c:'grains',p:7.48,pv:8.10,f:7.10,t:'falling',ch:-7.7,ac:'wait',b:'b-wait',bl:'Still Falling',why:'India partially lifted basmati export restrictions. Premium rice prices easing.',act:'<strong>Wait 3–4 weeks</strong> for better price.'},
+  {id:72,e:'🥬',n:'Spinach (5oz bag)',c:'produce',p:3.48,pv:3.62,f:3.38,t:'stable',ch:-3.9,ac:'neutral',b:'b-neu',bl:'Stable',why:'California winter greens season. Supply adequate.',act:'<strong>No action needed.</strong>'},
+  {id:73,e:'🌽',n:'Sweet Corn (each)',c:'produce',p:0.72,pv:0.58,f:0.64,t:'stable',ch:24.1,ac:'wait',b:'b-wait',bl:'Wait for Season',why:'Off-season — greenhouse/imported. Drops to $0.25–$0.40 in May when domestic season starts.',act:'<strong>Wait until May</strong> for domestic sweet corn.'},
+  {id:74,e:'🥦',n:'Cauliflower (head)',c:'produce',p:2.48,pv:2.68,f:2.38,t:'falling',ch:-7.5,ac:'neutral',b:'b-neu',bl:'Easing',why:'Winter California harvest adequate.',act:'<strong>Good time to buy.</strong> Blanch and freeze.'},
+  {id:75,e:'🍠',n:'Sweet Potatoes (lb)',c:'produce',p:1.38,pv:1.48,f:1.32,t:'falling',ch:-6.8,ac:'buy',b:'b-buy',bl:'Good Value',why:'NC crop strong. Post-holiday inventory moving at discount.',act:'<strong>Buy extra.</strong> Great nutrition per dollar.'},
+  {id:76,e:'🥐',n:'Croissants (4-pack)',c:'grains',p:5.48,pv:5.18,f:5.78,t:'rising',ch:5.8,ac:'neutral',b:'b-neu',bl:'Rising',why:'Butter content makes croissants sensitive to dairy prices. Butter +6%, flour up.',act:'<strong>Buy frozen croissants</strong> and bake at home — significantly cheaper.'},
+  {id:77,e:'🍱',n:'Sour Cream (16oz)',c:'dairy',p:2.88,pv:2.72,f:3.02,t:'rising',ch:5.9,ac:'neutral',b:'b-neu',bl:'Rising',why:'Mirrors milk fat pricing. Modest increase following dairy trend.',act:'<strong>Greek yogurt is excellent substitute</strong> at lower cost.'},
+  {id:78,e:'🫛',n:'Frozen Edamame (12oz)',c:'frozen',p:3.48,pv:3.62,f:3.38,t:'stable',ch:-3.9,ac:'neutral',b:'b-neu',bl:'Easing',why:'Soybean harvest large 2024. Edamame easing slightly.',act:'<strong>Good protein value.</strong>'},
+  {id:79,e:'🌿',n:'Fresh Herbs (bunch)',c:'produce',p:2.48,pv:2.38,f:2.52,t:'stable',ch:4.2,ac:'neutral',b:'b-neu',bl:'Stable',why:'Primarily from Mexico year-round. Stable pricing.',act:'<strong>Grow your own.</strong> Basil from a $3 pot saves $6–$8/month.'},
+  {id:80,e:'🧁',n:'Cottage Cheese (16oz)',c:'dairy',p:2.88,pv:2.72,f:3.02,t:'rising',ch:5.9,ac:'neutral',b:'b-neu',bl:'Rising',why:'Protein trend driving demand faster than supply. Dairy input costs also rising.',act:'<strong>Greek yogurt or ricotta</strong> are excellent substitutes at lower price.'},
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let activeCat='all', activeAction=null, searchQuery='', sortMode='chg-d';
+
+// ─── SPARK CHART ─────────────────────────────────────────────────────────────
+function makeSpark(item){
+  const n=9, pts=[];
+  let v=item.pv;
+  for(let i=0;i<n-1;i++){pts.push(v);v+=(Math.random()-.42)*(item.p-item.pv)*.4;}
+  pts.push(item.p);
+  const mn=Math.min(...pts), mx=Math.max(...pts), W=110, H=24;
+  const path=pts.map((v,i)=>`${(i/(n-1))*W},${H-((v-mn)/(mx-mn||1))*(H-4)-2}`).join(' ');
+  const col=item.t==='rising'?'var(--red)':item.t==='falling'?'var(--green)':'var(--amber)';
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true"><polyline points="${path}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+
+// ─── RENDER GRID ─────────────────────────────────────────────────────────────
+function render(){
+  let data=[...ITEMS];
+  if(activeCat!=='all')   data=data.filter(i=>i.c===activeCat);
+  if(activeAction)        data=data.filter(i=>i.ac===activeAction);
+  if(searchQuery)         data=data.filter(i=>i.n.toLowerCase().includes(searchQuery)||i.c.includes(searchQuery));
+  if(sortMode==='chg-d')  data.sort((a,b)=>b.ch-a.ch);
+  if(sortMode==='chg-a')  data.sort((a,b)=>a.ch-b.ch);
+  if(sortMode==='name')   data.sort((a,b)=>a.n.localeCompare(b.n));
+  if(sortMode==='p-d')    data.sort((a,b)=>b.p-a.p);
+  if(sortMode==='p-a')    data.sort((a,b)=>a.p-b.p);
+
+  const grid=document.getElementById('grid');
+  grid.innerHTML=data.map((item,idx)=>{
+    const sc=item.t==='rising'?'s-r':item.t==='falling'?'s-g':'s-a';
+    const cc=item.ch>0?'r':item.ch<0?'g':'a';
+    const fc=item.f>item.p?'r':'g';
+    const prefix=item.ch>0?'+':'';
+    return `<div class="card" style="animation-delay:${Math.min(idx*.025,.5)}s" onclick="openModal(${item.id})" role="listitem" tabindex="0" aria-label="${item.n}, $${item.p.toFixed(2)}, ${item.ch>0?'up':'down'} ${Math.abs(item.ch).toFixed(1)}%">
+      <div class="card-stripe ${sc}"></div>
+      <span class="card-em" aria-hidden="true">${item.e}</span>
+      <div class="card-name">${item.n}</div>
+      <div class="card-cat">${item.c}</div>
+      <div class="card-price">$${item.p.toFixed(2)}</div>
+      <div class="card-fore">Forecast: <span class="${fc}">$${item.f.toFixed(2)}</span></div>
+      <span class="badge ${item.b}">${item.bl}</span>
+      <div class="card-chg ${cc}" aria-hidden="true">${prefix}${item.ch.toFixed(1)}%</div>
+      <div class="card-spark" aria-hidden="true">${makeSpark(item)}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('itemCt').textContent=data.length;
+}
+
+// ─── FILTERS ─────────────────────────────────────────────────────────────────
+function setCat(el){
+  document.querySelectorAll('.catbtn,.filterbtn').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  activeCat=el.dataset.cat||'all';
+  activeAction=null;
+  render();
+}
+function setAction(el){
+  const a=el.dataset.action;
+  if(activeAction===a){
+    activeAction=null;
+    document.querySelectorAll('.catbtn,.filterbtn').forEach(e=>e.classList.remove('active'));
+    document.querySelector('[data-cat="all"]').classList.add('active');
+  } else {
+    document.querySelectorAll('.catbtn,.filterbtn').forEach(e=>e.classList.remove('active'));
+    el.classList.add('active');
+    activeAction=a;
+    activeCat='all';
+  }
+  render();
+}
+function doSearch(){searchQuery=document.getElementById('searchIn').value.toLowerCase();render();}
+function doSort(v){sortMode=v;render();}
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+function openModal(id){
+  const item=ITEMS.find(x=>x.id===id);
+  if(!item) return;
+  document.getElementById('mEm').textContent=item.e;
+  document.getElementById('mName').textContent=item.n;
+  document.getElementById('mCat').textContent=item.c.toUpperCase()+' · PRICE INTELLIGENCE';
+  document.getElementById('mPrev').textContent='$'+item.pv.toFixed(2);
+  document.getElementById('mCur').textContent='$'+item.p.toFixed(2);
+  const mf=document.getElementById('mFore');
+  mf.textContent='$'+item.f.toFixed(2);
+  mf.className='mp-v '+(item.f>item.p?'r':'g');
+  document.getElementById('mWhy').textContent=item.why;
+  document.getElementById('mAct').innerHTML=item.act;
+  document.getElementById('modalBg').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(e){
+  if(e && e.target!==document.getElementById('modalBg')) return;
+  document.getElementById('modalBg').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('modal').addEventListener('click',e=>e.stopPropagation());
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeModal({target:document.getElementById('modalBg')});
+});
+
+// ─── BUDGET CALC ──────────────────────────────────────────────────────────────
+function calcBudget(){
+  const b=parseFloat(document.getElementById('budgetIn').value)||280;
+  const nx=Math.round(b*1.11), sv=Math.round(b*1.04), df=nx-Math.round(b);
+  document.getElementById('cCur').textContent='$'+Math.round(b);
+  document.getElementById('cNext').textContent='$'+nx;
+  document.getElementById('cSave').textContent='$'+sv;
+  document.getElementById('cDiff').textContent='+$'+df+' (+11%)';
+  document.getElementById('heroInc').textContent='+$'+df;
+}
+
+// ─── CHART ────────────────────────────────────────────────────────────────────
+function drawChart(){
+  const svg=document.getElementById('chart');
+  const W=760, H=190;
+  const hist=[248,252,258,262,268,274,278,280];
+  const fore=[280,286,292,311];
+  const all=[...hist,...fore.slice(1)];
+  const labels=['Aug','Sep','Oct','Nov','Dec','Jan','Feb','Now','Mar','Apr'];
+  const mn=228, mx=325;
+  const tx=i=>44+(i/(all.length-1))*(W-64);
+  const ty=v=>H-28-((v-mn)/(mx-mn))*(H-52);
+  const hp=hist.map((_,i)=>`${tx(i)},${ty(hist[i])}`).join(' ');
+  const fp=[hist[hist.length-1],...fore.slice(1)].map((v,i)=>`${tx(hist.length-1+i)},${ty(v)}`).join(' ');
+  svg.innerHTML=`
+    <defs>
+      <linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#0d0d0d" stop-opacity=".06"/>
+        <stop offset="100%" stop-color="#0d0d0d" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <polygon points="${tx(0)},${H-28} ${hp} ${tx(hist.length-1)},${H-28}" fill="url(#ag)"/>
+    <polyline points="${hp}" fill="none" stroke="#0d0d0d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="${tx(hist.length-1)}" y1="12" x2="${tx(hist.length-1)}" y2="${H-28}" stroke="#e4e6eb" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <text x="${tx(hist.length-1)+5}" y="20" font-size="9" fill="#7a7a8a" font-family="JetBrains Mono,monospace">TODAY</text>
+    <polyline points="${fp}" fill="none" stroke="#e5251b" stroke-width="2" stroke-dasharray="6,3" stroke-linecap="round"/>
+    ${all.map((_,i)=>labels[i]?`<text x="${tx(i)}" y="${H-8}" text-anchor="middle" font-size="9" fill="#7a7a8a" font-family="JetBrains Mono,monospace">${labels[i]}</text>`:'').join('')}
+    <circle cx="${tx(hist.length-1)}" cy="${ty(280)}" r="4" fill="#0d0d0d"/>
+    <circle cx="${tx(all.length-1)}" cy="${ty(311)}" r="4" fill="#e5251b"/>
+    <text x="${tx(hist.length-1)+6}" y="${ty(280)-7}" font-size="10" fill="#0d0d0d" font-weight="600" font-family="JetBrains Mono,monospace">$280</text>
+    <text x="${tx(all.length-1)-44}" y="${ty(311)-7}" font-size="10" fill="#e5251b" font-weight="600" font-family="JetBrains Mono,monospace">$311 forecast</text>
+  `;
+}
+
+// ─── SHARE ────────────────────────────────────────────────────────────────────
+function shareReddit(){
+  const t=encodeURIComponent('I built a free tool that reads commodity futures to predict grocery prices 4-6 weeks early — here\'s what\'s about to get expensive in March 2026');
+  const u=encodeURIComponent(window.location.href);
+  window.open(`https://www.reddit.com/submit?title=${t}&url=${u}`,'_blank');
+}
+function shareX(){
+  const t=encodeURIComponent('Commodity markets predict grocery prices 4-6 weeks early. CartCast reads those signals and tells you what to stock up on before the price hits checkout. Free, no ads, no signup. Government data only.');
+  const u=encodeURIComponent(window.location.href);
+  window.open(`https://twitter.com/intent/tweet?text=${t}&url=${u}`,'_blank');
+}
+function copyLink(){
+  navigator.clipboard.writeText(window.location.href).then(()=>{
+    alert('Link copied! Share it with anyone who buys groceries.');
+  }).catch(()=>{
+    prompt('Copy this link:',window.location.href);
+  });
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+render();
+drawChart();
+calcBudget();
+
+const now=new Date();
+const dateStr=now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+document.getElementById('hdrDate').textContent='Updated '+dateStr;
+document.getElementById('heroDate').textContent=dateStr;
+</script>
+</body>
+</html>

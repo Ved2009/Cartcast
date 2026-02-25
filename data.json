@@ -1,0 +1,306 @@
+{
+  "generated_at": "2026-02-25T23:21:28.431056",
+  "last_updated": "February 25, 2026",
+  "data_sources": {
+    "retail_prices": "BLS Average Price Data",
+    "farm_prices": "USDA NASS Quick Stats API",
+    "commodity": "FRED St. Louis Federal Reserve",
+    "methodology": "USDA ERS commodity-retail price transmission lag model"
+  },
+  "retail_prices": {
+    "eggs_dozen": {
+      "current": 4.89,
+      "previous": 4.14,
+      "spark": [
+        3.6,
+        3.72,
+        3.88,
+        4.02,
+        4.14,
+        4.89
+      ]
+    },
+    "milk_gallon": {
+      "current": 3.89,
+      "previous": 3.72,
+      "spark": [
+        3.62,
+        3.68,
+        3.7,
+        3.72,
+        3.8,
+        3.89
+      ]
+    },
+    "butter_lb": {
+      "current": 6.24,
+      "previous": 5.88,
+      "spark": [
+        5.4,
+        5.52,
+        5.68,
+        5.8,
+        5.88,
+        6.24
+      ]
+    },
+    "bread_loaf": {
+      "current": 3.24,
+      "previous": 3.18,
+      "spark": [
+        3.08,
+        3.1,
+        3.12,
+        3.16,
+        3.18,
+        3.24
+      ]
+    },
+    "ground_beef_lb": {
+      "current": 5.42,
+      "previous": 5.01,
+      "spark": [
+        4.8,
+        4.88,
+        4.96,
+        5.01,
+        5.2,
+        5.42
+      ]
+    },
+    "chicken_breast_lb": {
+      "current": 3.84,
+      "previous": 4.21,
+      "spark": [
+        4.4,
+        4.3,
+        4.25,
+        4.21,
+        4.02,
+        3.84
+      ]
+    },
+    "coffee_lb": {
+      "current": 9.48,
+      "previous": 8.2,
+      "spark": [
+        7.2,
+        7.6,
+        7.9,
+        8.2,
+        8.8,
+        9.48
+      ]
+    },
+    "sugar_lb": {
+      "current": 3.88,
+      "previous": 4.2,
+      "spark": [
+        4.4,
+        4.32,
+        4.28,
+        4.2,
+        4.02,
+        3.88
+      ]
+    },
+    "bacon_lb": {
+      "current": 7.18,
+      "previous": 7.42,
+      "spark": [
+        7.6,
+        7.52,
+        7.48,
+        7.42,
+        7.3,
+        7.18
+      ]
+    },
+    "cheddar_lb": {
+      "current": 4.62,
+      "previous": 4.21,
+      "spark": [
+        3.92,
+        4.02,
+        4.1,
+        4.21,
+        4.42,
+        4.62
+      ]
+    },
+    "peanut_butter_lb": {
+      "current": 4.48,
+      "previous": 4.62,
+      "spark": [
+        4.72,
+        4.68,
+        4.66,
+        4.62,
+        4.55,
+        4.48
+      ]
+    },
+    "oranges_lb": {
+      "current": 1.28,
+      "previous": 1.42,
+      "spark": [
+        1.52,
+        1.48,
+        1.46,
+        1.42,
+        1.34,
+        1.28
+      ]
+    },
+    "apples_lb": {
+      "current": 1.89,
+      "previous": 2.1,
+      "spark": [
+        2.2,
+        2.16,
+        2.12,
+        2.1,
+        2.0,
+        1.89
+      ]
+    },
+    "bananas_lb": {
+      "current": 0.59,
+      "previous": 0.62,
+      "spark": [
+        0.62,
+        0.61,
+        0.61,
+        0.62,
+        0.6,
+        0.59
+      ]
+    },
+    "potatoes_lb": {
+      "current": 1.48,
+      "previous": 1.52,
+      "spark": [
+        1.56,
+        1.54,
+        1.52,
+        1.52,
+        1.5,
+        1.48
+      ]
+    }
+  },
+  "farm_prices": {
+    "cattle": {
+      "price": 367.0,
+      "year": "2025",
+      "month": "DECEMBER"
+    },
+    "hogs": {
+      "price": 80.3,
+      "year": "2025",
+      "month": "DECEMBER"
+    },
+    "chickens": {
+      "price": 0.98,
+      "year": "2025",
+      "month": "DECEMBER"
+    },
+    "milk": {
+      "price": 21.4,
+      "year": "2025",
+      "month": "DECEMBER"
+    },
+    "eggs_farm": {
+      "price": 3.24,
+      "year": "2025",
+      "month": "DECEMBER"
+    },
+    "wheat": {
+      "price": 5.62,
+      "year": "2025",
+      "month": "DECEMBER"
+    },
+    "corn": {
+      "price": 4.29,
+      "year": "2025",
+      "month": "DECEMBER"
+    },
+    "soybeans": {
+      "price": 9.88,
+      "year": "2025",
+      "month": "DECEMBER"
+    }
+  },
+  "commodity_signals": [
+    {
+      "name": "Wheat",
+      "value": "169.3 $/mt",
+      "change": "\u25b2 +2.2%",
+      "direction": "rising",
+      "affects": "bread & pasta"
+    },
+    {
+      "name": "Beef",
+      "value": "331 index",
+      "change": "\u25bc \u22122.3%",
+      "direction": "falling",
+      "affects": "ground beef & steak"
+    },
+    {
+      "name": "Coffee",
+      "value": "363.9 $/kg",
+      "change": "\u25b2 +4.1%",
+      "direction": "rising",
+      "affects": "ground coffee & pods"
+    },
+    {
+      "name": "Cocoa",
+      "value": "5018 $/mt",
+      "change": "\u25b2 +8.2%",
+      "direction": "rising",
+      "affects": "chocolate & cocoa"
+    },
+    {
+      "name": "Oil WTI",
+      "value": "59.9 $/bbl",
+      "change": "\u25b2 +3.2%",
+      "direction": "rising",
+      "affects": "transport & packaging"
+    },
+    {
+      "name": "Pork",
+      "value": "80.3 index",
+      "change": "\u25bc \u22120.5%",
+      "direction": "falling",
+      "affects": "bacon & pork chops"
+    },
+    {
+      "name": "Soybeans",
+      "value": "378 $/mt",
+      "change": "\u25bc \u22121.8%",
+      "direction": "falling",
+      "affects": "vegetable oil & tofu"
+    },
+    {
+      "name": "Corn",
+      "value": "171 $/mt",
+      "change": "\u2192 +0.8%",
+      "direction": "stable",
+      "affects": "chips, tortillas, HFCS"
+    }
+  ],
+  "forecasts": {
+    "bread_loaf": 3.48,
+    "ground_beef_lb": 5.86,
+    "chicken_breast_lb": 3.42,
+    "coffee_lb": 10.8,
+    "butter_lb": 6.74,
+    "bacon_lb": 6.84,
+    "eggs_dozen": 5.62
+  },
+  "summary": {
+    "items_fetched": 15,
+    "farm_fetched": 8,
+    "signals_fetched": 8
+  }
+}
