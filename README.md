@@ -1,125 +1,87 @@
-# 🛒 CartCast — Grocery Price Intelligence
+# CartCast — Real Price Intelligence for Every American
 
-**Free tool that reads commodity futures to predict grocery prices 4–6 weeks before they hit checkout.**
+> Food companies have tracked commodity futures for decades to set your prices. Now you can too. Free. No ads. No signup. Powered by USDA + BLS + FRED + EIA + HUD + Census.
 
-👉 **Live site:** [cartcast.vercel.app](https://cartcast.vercel.app)
-
----
-
-## What it does
-
-Commodity markets predict retail grocery prices. USDA Economic Research Service has documented a 4–8 week lag between commodity price moves and retail shelf prices. Food companies know this. CartCast makes it public.
-
-**80 grocery items** tracked with:
-- Current retail price vs. last month
-- 30-day forecast based on commodity signals
-- Action recommendation: Stock Up / Wait / Swap
-- Live commodity signals: wheat, beef, coffee, cocoa, oil, pork
+**Live site:** [cartcast.vercel.app](https://cartcast.vercel.app)
 
 ---
 
-## Data sources
+## What It Tracks
 
-| Source | Data | Endpoint |
-|--------|------|----------|
-| **BLS** | US retail average prices (APU series) | api.bls.gov/publicAPI/v2 |
-| **USDA NASS** | Farm-level commodity prices | quickstats.nass.usda.gov/api |
-| **FRED** | Global commodity futures | fred.stlouisfed.org |
+| Category | Data Source | Coverage |
+|----------|------------|----------|
+| 🛒 Groceries | BLS + USDA NASS + FRED | 55+ items, national + by state |
+| ⛽ Gas Prices | EIA Weekly | 50 states + 50 cities |
+| 💊 Medicine | OpenFDA + NLM RxNorm | 120+ OTC + Rx drugs |
+| 🏠 Housing / Rent | HUD FMR + Rentcast | 25 major metros |
+| ⚡ Utilities | EIA + state averages | All 50 states |
+| 📱 Electronics | Aggregated retail | 60+ products |
+| 🏛️ State Taxes | Tax Foundation 2025 | All 50 states |
 
-All free US government APIs. No scraping. No paid data.
+## How It Works
 
----
+1. **Government data APIs** (USDA, BLS, EIA, HUD, Census) pull real price data weekly
+2. **Commodity signals** from FRED identify price direction 4–8 weeks ahead of retail
+3. **State-level adjustment** factors apply regional cost-of-living differences
+4. **Static frontend** (single `index.html`) displays everything — no backend server needed
 
-## Run it locally
+## Data Sources
+
+- **[BLS Average Price Survey](https://www.bls.gov/data/)**
+- **[USDA NASS Quick Stats](https://quickstats.nass.usda.gov/)**
+- **[FRED — St. Louis Fed](https://fred.stlouisfed.org/)**
+- **[EIA — Energy Information Administration](https://www.eia.gov/opendata/)**
+- **[HUD Fair Market Rents](https://www.huduser.gov/portal/datasets/fmr.html)**
+- **[Census Bureau API](https://api.census.gov/)**
+- **[OpenFDA](https://open.fda.gov/)**
+- **[Rentcast](https://rentcast.io/)**
+
+## Setup / Run Locally
 
 ```bash
-# 1. Clone this repo
-git clone https://github.com/YOUR_USERNAME/cartcast.git
-cd cartcast
+# Install dependencies
+pip install requests pandas
 
-# 2. Install dependency
-pip install requests
+# Set environment variables (or paste keys directly in fetch_data.py for local use)
+export BLS_API_KEY="your-key"
+export USDA_API_KEY="your-key"
+export FRED_API_KEY="your-key"
+export EIA_API_KEY="your-key"
 
-# 3. Run the data pipeline (generates data.json)
+# Fetch data
 python fetch_data.py
 
-# 4. Open in browser
+# Open the site
 open index.html
 ```
 
----
+## Deploying to Vercel (Free)
 
-## Auto-updates via GitHub Actions
+1. Push all files to a public GitHub repo
+2. Go to [vercel.com](https://vercel.com) → Import → select your repo
+3. Click Deploy — live in 60 seconds
+4. Add API keys as **GitHub Secrets** (see below)
+5. The GitHub Action auto-updates `data.json` every Monday at 9am
 
-Prices update **every Monday at 9am UTC** automatically.
+### GitHub Secrets to Add
 
-**Setup (one time):**
-1. Go to your GitHub repo
-2. Click **Settings** → **Secrets and variables** → **Actions**
-3. Add three secrets:
+In your repo → **Settings → Secrets and variables → Actions**:
 
-| Secret name | Value |
-|-------------|-------|
-| `BLS_API_KEY` | Your BLS v2 key from [bls.gov/developers](https://www.bls.gov/developers/) |
-| `USDA_API_KEY` | Your USDA key from [quickstats.nass.usda.gov/api](https://quickstats.nass.usda.gov/api) |
-| `FRED_API_KEY` | Your FRED key from [fredaccount.stlouisfed.org](https://fredaccount.stlouisfed.org/) |
-
-To trigger manually: **Actions** tab → **Update Prices** → **Run workflow**
-
----
-
-## Deploy to Vercel (free)
-
-1. Push this repo to GitHub
-2. Go to [vercel.com](https://vercel.com) → **Add New Project**
-3. Import your `cartcast` GitHub repo
-4. Click **Deploy**
-5. Live in 60 seconds at `cartcast.vercel.app`
-
-Vercel auto-deploys every time GitHub Actions pushes updated `data.json`.
-
----
-
-## Forecast methodology
-
-```
-retail_forecast = current_price × (1 + commodity_change × transmission_coefficient)
-```
-
-Transmission coefficients (from USDA ERS research):
-- Wheat → bread/pasta: 42% over 6–8 weeks
-- Cattle → beef: 58% over 4–6 weeks
-- Coffee commodity → retail: 68% over 4–8 weeks
-- Oil → packaged goods: 28% over 8–12 weeks
-
-Back-tested directional accuracy: ~68–74% at 6-week horizon (2019–2024 data).
-
----
-
-## Tech stack
-
-- Pure HTML/CSS/JS — zero dependencies, zero build step
-- Single file (`index.html`) — works offline once loaded
-- GitHub Actions for weekly data updates
-- Vercel for free hosting
-
----
-
-## Roadmap
-
-- [ ] Email alerts for your tracked items
-- [ ] Connect live data.json to index.html dynamically
-- [ ] ZIP code pricing adjustments (BLS metro data)
-- [ ] Restaurant mode (bulk ingredient pricing)
-- [ ] Historical accuracy tracking dashboard
-- [ ] API endpoint for developers
-
----
+| Secret Name | Value |
+|------------|-------|
+| `BLS_API_KEY` | Your BLS key |
+| `USDA_API_KEY` | Your USDA NASS key |
+| `FRED_API_KEY` | Your FRED key |
+| `EIA_API_KEY` | Your EIA key |
+| `OPENFDA_API_KEY` | Your OpenFDA / api.data.gov key |
+| `HUD_API_KEY` | Your HUD JWT token |
+| `CENSUS_API_KEY` | Your Census key |
+| `RENTCAST_API_KEY` | Your Rentcast key |
 
 ## License
 
-MIT — free to use, fork, and build on.
+MIT — free to use, fork, and deploy. Attribution appreciated.
 
 ---
 
-*CartCast is not financial advice. Forecasts are based on historical commodity-retail price transmission patterns and carry uncertainty. Always verify prices at your local store.*
+*Built by a frustrated grocery shopper. Powered by public data your tax dollars already fund.*
