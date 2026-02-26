@@ -1,43 +1,45 @@
-# CartCast — Weekly Price Update
-# Runs every Monday at 9am UTC + can be triggered manually
-# Go to GitHub → Actions → "Update Prices" → Run workflow
-
-name: Update Prices
+name: CartCast Weekly Data Update
 
 on:
   schedule:
-    - cron: "0 9 * * 1"   # Every Monday 9am UTC
-  workflow_dispatch:        # Manual trigger button in GitHub Actions
+    # Every Monday at 9 AM EST (2 PM UTC)
+    - cron: '0 14 * * 1'
+  workflow_dispatch:  # Allows manual trigger from GitHub UI
 
 jobs:
-  update:
+  update-prices:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write       # Needed to push data.json back to repo
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pandas
 
-      - name: Run data pipeline
+      - name: Fetch fresh price data
         env:
-          BLS_API_KEY:  ${{ secrets.BLS_API_KEY }}
-          USDA_API_KEY: ${{ secrets.USDA_API_KEY }}
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          BLS_API_KEY:       ${{ secrets.BLS_API_KEY }}
+          USDA_API_KEY:      ${{ secrets.USDA_API_KEY }}
+          FRED_API_KEY:      ${{ secrets.FRED_API_KEY }}
+          EIA_API_KEY:       ${{ secrets.EIA_API_KEY }}
+          OPENFDA_API_KEY:   ${{ secrets.OPENFDA_API_KEY }}
+          HUD_API_KEY:       ${{ secrets.HUD_API_KEY }}
+          CENSUS_API_KEY:    ${{ secrets.CENSUS_API_KEY }}
+          RENTCAST_API_KEY:  ${{ secrets.RENTCAST_API_KEY }}
         run: python fetch_data.py
 
-      - name: Commit and push updated data.json
+      - name: Commit and push updated data
         run: |
-          git config user.name  "CartCast Bot"
-          git config user.email "bot@cartcast.app"
+          git config --local user.email "cartcast-bot@github-actions.io"
+          git config --local user.name "CartCast Data Bot"
           git add data.json
-          git diff --staged --quiet || git commit -m "Weekly price update — $(date '+%b %d %Y')"
+          git diff --quiet && git diff --staged --quiet || git commit -m "📊 Auto-update: price data $(date +'%Y-%m-%d')"
           git push
