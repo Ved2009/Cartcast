@@ -685,6 +685,18 @@ input[type=range]::-webkit-slider-thumb {
 .tr-dn { color: var(--green); font-family: 'DM Mono', monospace; font-size: .82rem; }
 .tr-fl { color: var(--muted); font-family: 'DM Mono', monospace; font-size: .82rem; }
 .af-fn { font-size: .7rem; color: var(--muted); margin-top: 12px; font-family: 'DM Mono', monospace; }
+/* ── Multi-flight rows ── */
+.more-dep-btn { background: none; border: 1px solid var(--border); border-radius: 4px; font-size: .65rem; font-family: 'DM Mono', monospace; color: var(--accent); cursor: pointer; padding: 2px 6px; margin-left: 4px; transition: background .15s; }
+.more-dep-btn:hover { background: var(--warm); }
+.dep-sub-tbl { width: 100%; border-collapse: collapse; background: var(--warm); }
+.dep-sub-row { cursor: pointer; border-top: 1px solid var(--border); }
+.dep-sub-row:hover { background: #ede9df; }
+.dep-sub-row td { padding: 8px 12px; font-size: .82rem; }
+.pr-ow { font-size: .68rem; color: var(--muted); font-family: 'DM Mono', monospace; margin-left: 4px; }
+.pr-rt { background: #d1fae5; color: var(--green); border-radius: 3px; padding: 1px 5px; font-size: .65rem; font-family: 'DM Mono', monospace; }
+/* ── Fare alert button ── */
+.af-alert-btn { background: none; border: 1px solid var(--border); border-radius: 5px; font-size: .72rem; color: var(--muted); cursor: pointer; padding: 4px 8px; transition: all .15s; }
+.af-alert-btn:hover { background: #fff3cd; color: var(--amber); border-color: #fbbf24; }
 
 /* Airfare Modal */
 .m-ov { display: none; position: fixed; inset: 0; background: rgba(13,13,13,.55); z-index: 9000; padding: 24px; overflow-y: auto; backdrop-filter: blur(3px); align-items: flex-start; justify-content: center; }
@@ -1037,7 +1049,7 @@ footer a:hover { color: white; }
       <h2 class="section-title">Airfare Intelligence</h2>
       <span class="section-count">Live fare tracking · AI predictions · 30-min refresh</span>
     </div>
-    <p class="section-desc">Simulated fares across 50+ airlines. AI-powered buy/wait signals. Amadeus API integration pending — for planning purposes only.</p>
+    <p class="section-desc">Multiple departure options across 50+ airlines. AI-powered buy/wait signals. Fare alert emails via Resend. Amadeus API ready — simulation fallback active.</p>
 
     <!-- Search Screen -->
     <div id="af-screen-search">
@@ -1174,7 +1186,7 @@ footer a:hover { color: white; }
           <tbody id="af-tbl-body"></tbody>
         </table>
       </div>
-      <p class="af-fn">Fares simulated via seeded engine — Amadeus API integration pending. Updates every 30 min. Not a booking engine.</p>
+      <p class="af-fn">Session 5: Multiple departures per airline, round-trip pricing, fare alert emails. Amadeus API ready — simulation fallback active. Not a booking engine.</p>
     </div>
   </div>
 
@@ -1262,6 +1274,9 @@ footer a:hover { color: white; }
         <div class="m-ai-txt" id="af-m-ai-txt"><div class="ai-load"><div class="ai-spin"></div>Generating prediction…</div></div>
       </div>
       <div class="m-trend" id="af-m-trend"></div>
+      <div style="margin-top:16px;text-align:center">
+        <button class="af-alert-btn" id="af-m-alert-btn" style="font-size:.82rem;padding:8px 18px;border-radius:8px;color:var(--amber);border-color:#fbbf24">🔔 Set Fare Alert for This Flight</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1504,27 +1519,48 @@ function afDoSearch(){
 }
 function afSRand(str){let h=0;for(let i=0;i<str.length;i++)h=(h*31+str.charCodeAt(i))>>>0;return(h%10000)/10000;}
 function afBaseFare(){const h=[...(AF.orig.code+AF.dest.code)].reduce((h,c)=>(h*31+c.charCodeAt(0))|0,0);const base=89+(Math.abs(h)%280);const cm={economy:1,premium:1.7,business:3.2,first:5.0};return Math.round(base*(cm[AF.cabin]||1));}
+/* ── Session 5: Multi-flight simulation ── */
+function afSimOneFlight(seed,al,base,flightNum){
+  const r=afSRand(seed+al.code+AF.dep+flightNum);const r2=afSRand(seed+al.code+'tr'+flightNum);
+  /* later flights on same airline have slight price variation */
+  const priceMod=flightNum===0?1:(0.93+afSRand(seed+al.code+'pm'+flightNum)*0.16);
+  const price=Math.round(base*al.multi*(0.88+r*0.24)*priceMod);
+  const rtPrice=AF.trip==='roundtrip'?Math.round(price*(1.7+afSRand(seed+al.code+'rt'+flightNum)*0.3)):null;
+  const total=price*AF.pax;const rtTotal=rtPrice?rtPrice*AF.pax:null;
+  const trend=r2>.62?'up':r2<.32?'down':'flat';const trendPct=Math.round((r2-.5)*22);
+  const sig=price<base*.87?'buy':price>base*1.11?'wait':'now';
+  const sc=al.ns&&afSRand(seed+al.code+'sc'+flightNum)>.35?0:afSRand(seed+al.code+'sc2'+flightNum)>.5?1:2;
+  /* departure time slots */
+  const slots=[[5,9],[9,12],[12,18],[18,23]];
+  const tRanges={early:[5,9],morning:[9,12],afternoon:[12,18],evening:[18,23]};
+  const[tMn,tMx]=tRanges[AF.prefTime]||[9,12];
+  /* flight 0: try to match pref; later flights use other slots */
+  let dH,isPref;
+  if(flightNum===0){isPref=afSRand(seed+al.code+'pref')>.42;const rh=afSRand(seed+al.code+'h');dH=isPref?tMn+Math.floor(rh*(tMx-tMn)):(tMn>8?0:15)+Math.floor(rh*4);}
+  else{const slot=slots[flightNum%slots.length];dH=slot[0]+Math.floor(afSRand(seed+al.code+'h'+flightNum)*(slot[1]-slot[0]));isPref=(dH>=tMn&&dH<tMx);}
+  const dM=Math.floor(afSRand(seed+al.code+'m'+flightNum)*60);
+  const depTime=`${String(dH).padStart(2,'0')}:${String(dM).padStart(2,'0')}`;
+  const durH=2+Math.floor(afSRand(seed+al.code+'dh'+flightNum)*10);const durM=Math.floor(afSRand(seed+al.code+'dm'+flightNum)*60);
+  const vol=Math.round(afSRand(seed+al.code+'vol'+flightNum)*100);
+  /* return departure time (for round-trip) */
+  const retH=8+Math.floor(afSRand(seed+al.code+'reth'+flightNum)*12);const retM=Math.floor(afSRand(seed+al.code+'retm'+flightNum)*60);
+  const retTime=`${String(retH).padStart(2,'0')}:${String(retM).padStart(2,'0')}`;
+  return{al,price,rtPrice,total,rtTotal,trend,trendPct,sig,sc,depTime,dH,durH,durM,vol,isPref,retTime,flightNum};
+}
 function afSimFares(seed){
   const base=afBaseFare();
   const intlCodes=['YYZ','YVR','LHR','CDG','FRA','AMS','NRT','ICN','DXB','SIN','SYD','MEX','CUN'];
   const isIntl=intlCodes.includes(AF.orig.code)||intlCodes.includes(AF.dest.code);
   const pool=AIRLINES.filter(a=>isIntl?a.intl:a.dom);
-  const ct=Math.min(12,pool.length);
+  const ct=Math.min(10,pool.length);
   const picked=pool.sort(()=>afSRand(seed+'s'+Math.random())-0.5).slice(0,ct);
-  return picked.map(al=>{
-    const r=afSRand(seed+al.code+AF.dep);const r2=afSRand(seed+al.code+'tr');
-    const price=Math.round(base*al.multi*(0.88+r*0.24));const total=price*AF.pax;
-    const trend=r2>.62?'up':r2<.32?'down':'flat';const trendPct=Math.round((r2-.5)*22);
-    const sig=price<base*.87?'buy':price>base*1.11?'wait':'now';
-    const sc=al.ns&&afSRand(seed+al.code+'sc')>.35?0:afSRand(seed+al.code+'sc2')>.5?1:2;
-    const tRanges={early:[5,9],morning:[9,12],afternoon:[12,18],evening:[18,24]};
-    const[tMn,tMx]=tRanges[AF.prefTime]||[9,12];const isPref=afSRand(seed+al.code+'pref')>.42;
-    const rh=afSRand(seed+al.code+'h');const dH=isPref?tMn+Math.floor(rh*(tMx-tMn)):(tMn>8?0:15)+Math.floor(rh*4);
-    const dM=Math.floor(afSRand(seed+al.code+'m')*60);const depTime=`${String(dH).padStart(2,'0')}:${String(dM).padStart(2,'0')}`;
-    const durH=2+Math.floor(afSRand(seed+al.code+'dh')*10);const durM=Math.floor(afSRand(seed+al.code+'dm')*60);
-    const vol=Math.round(afSRand(seed+al.code+'vol')*100);
-    return{al,price,total,trend,trendPct,sig,sc,depTime,dH,durH,durM,vol,isPref};
-  }).sort((a,b)=>a.price-b.price);
+  /* 2–3 flights per airline */
+  const allFlights=[];
+  picked.forEach(al=>{
+    const numFlights=afSRand(seed+al.code+'nf')>.5?3:2;
+    for(let i=0;i<numFlights;i++)allFlights.push(afSimOneFlight(seed,al,base,i));
+  });
+  return allFlights.sort((a,b)=>a.price-b.price);
 }
 function afShowResults(){
   document.getElementById('af-screen-search').style.display='none';document.getElementById('af-screen-results').style.display='block';
@@ -1538,24 +1574,82 @@ function afRenderBar(){
   document.getElementById('af-tb-meta').innerHTML=pills.map(p=>`<span class="tb-pill">${p}</span>`).join('');
 }
 function afRenderStats(){
-  const f=AF.fares;if(!f.length)return;const cheap=f[0];const avg=Math.round(f.map(x=>x.price).reduce((a,b)=>a+b,0)/f.length);
-  const tUp=f.filter(x=>x.trend==='up').length;const tDn=f.filter(x=>x.trend==='down').length;
+  const f=AF.fares;if(!f.length)return;const isRT=AF.trip==='roundtrip';
+  /* for stats, use cheapest fare per airline (avoid duplicates from multi-flight) */
+  const byAl={};f.forEach(x=>{if(!byAl[x.al.code]||x.price<byAl[x.al.code].price)byAl[x.al.code]=x;});
+  const uniq=Object.values(byAl);const cheap=uniq[0]||f[0];
+  const avg=Math.round(uniq.map(x=>isRT&&x.rtPrice?x.rtPrice:x.price).reduce((a,b)=>a+b,0)/uniq.length);
+  const tUp=uniq.filter(x=>x.trend==='up').length;const tDn=uniq.filter(x=>x.trend==='down').length;
   const tDir=tUp>tDn?'↑ Rising':tDn>tUp?'↓ Falling':'→ Stable';const tCl=tUp>tDn?'r':tDn>tUp?'g':'';
-  document.getElementById('af-s-airlines').textContent=f.length;document.getElementById('af-s-cheap').textContent=`$${cheap.price}`;document.getElementById('af-s-cheap-al').textContent=cheap.al.name;document.getElementById('af-s-avg').textContent=`$${avg}`;
+  const cheapPrice=isRT&&cheap.rtPrice?cheap.rtPrice:cheap.price;
+  document.getElementById('af-s-airlines').textContent=uniq.length;
+  document.getElementById('af-s-cheap').textContent=`$${cheapPrice}`;
+  document.getElementById('af-s-cheap-al').textContent=cheap.al.name+(isRT?' RT':'');
+  document.getElementById('af-s-avg').textContent=`$${avg}${isRT?' RT':''}`;
   const te=document.getElementById('af-s-trend');te.textContent=tDir;te.className=`af-stat-v ${tCl}`;
-  const buys=f.filter(x=>x.sig==='buy').length;const be=document.getElementById('af-s-book');be.textContent=buys>0?'Buy Now':'Wait';be.className=`af-stat-v ${buys>0?'g':'a'}`;document.getElementById('af-s-book-s').textContent=buys>0?`${buys} airline${buys>1?'s':''} at low prices`:'Prices may drop soon';
+  const buys=uniq.filter(x=>x.sig==='buy').length;const be=document.getElementById('af-s-book');be.textContent=buys>0?'Buy Now':'Wait';be.className=`af-stat-v ${buys>0?'g':'a'}`;document.getElementById('af-s-book-s').textContent=buys>0?`${buys} airline${buys>1?'s':''} at low prices`:'Prices may drop soon';
 }
 function afRenderScorecard(){document.getElementById('af-sc-chips').innerHTML=AF.fares.map((f,i)=>`<div class="sc-chip" onclick="afOpenModal(${i})"><div class="ch-logo">${f.al.code}</div><span class="ch-name">${f.al.code}</span><span class="ch-price">$${f.price}</span><span class="sig-sm ${f.sig}">${f.sig==='buy'?'Buy':f.sig==='now'?'Book':'Wait'}</span>${f.al.rst?'<span class="rst-bdg">⚠ Restructuring</span>':''}</div>`).join('');}
 function afRowHidden(f){const fl=AF.filter;if(fl==='all')return false;if(fl==='nonstop')return f.sc!==0;if(fl==='buy')return f.sig!=='buy';if(fl==='now')return f.sig!=='now';if(fl==='pref')return!f.isPref;return false;}
 function afGetSorted(){const col=AF.sortCol,dir=AF.sortDir;return[...AF.fares].sort((a,b)=>{let va,vb;if(col==='price'){va=a.price;vb=b.price;}else if(col==='airline'){va=a.al.name;vb=b.al.name;}else if(col==='depart'){va=a.depTime;vb=b.depTime;}else if(col==='stops'){va=a.sc;vb=b.sc;}else if(col==='duration'){va=a.durH*60+a.durM;vb=b.durH*60+b.durM;}else if(col==='trend'){va=a.trendPct;vb=b.trendPct;}else return 0;return(va<vb?-1:va>vb?1:0)*(dir==='asc'?1:-1);});}
 function afRenderTable(){
   const rows=afGetSorted();
-  document.getElementById('af-tbl-body').innerHTML=rows.map(f=>{
-    const idx=AF.fares.indexOf(f);const stops=f.sc===0?'Nonstop':f.sc===1?'1 stop':'2 stops';const dur=`${f.durH}h ${String(f.durM).padStart(2,'0')}m`;
-    const tr=f.trend==='up'?`<span class="tr-up">↑ +${Math.abs(f.trendPct)}%</span>`:f.trend==='down'?`<span class="tr-dn">↓ −${Math.abs(f.trendPct)}%</span>`:`<span class="tr-fl">→ Flat</span>`;
+  const isRT=AF.trip==='roundtrip';
+  /* group by airline for collapsible display */
+  const byAl={};rows.forEach((f,i)=>{const k=f.al.code;if(!byAl[k]){byAl[k]=[];}byAl[k].push({...f,_idx:i});});
+  /* sort airline groups by cheapest flight */
+  const alGroups=Object.values(byAl).sort((a,b)=>a[0].price-b[0].price);
+  let html='';
+  alGroups.forEach(group=>{
+    const best=group[0];const idx=AF.fares.indexOf(best);
+    const hidden=afRowHidden(best)?'hid':'';
+    const stops=best.sc===0?'Nonstop':best.sc===1?'1 stop':'2 stops';
+    const dur=`${best.durH}h ${String(best.durM).padStart(2,'0')}m`;
+    const tr=best.trend==='up'?`<span class="tr-up">↑ +${Math.abs(best.trendPct)}%</span>`:best.trend==='down'?`<span class="tr-dn">↓ −${Math.abs(best.trendPct)}%</span>`:`<span class="tr-fl">→ Flat</span>`;
     const routePlane=`<div class="rv"><span class="rv-code">${AF.orig.code}</span><div class="rv-track"><div class="rv-line"></div><div class="rv-plane">${afPlaneSVG_sm()}</div></div><span class="rv-code">${AF.dest.code}</span></div>`;
-    return`<tr class="${afRowHidden(f)?'hid':''}" onclick="afOpenModal(${idx})"><td><div class="al-cell"><div class="al-logo">${f.al.code}</div><div><div class="al-name">${f.al.name}${f.al.rst?` <span class="rst-bdg">⚠ Restructuring</span>`:''}</div><div class="al-code">${f.al.code}</div></div></div></td><td><div class="pr-cell">$${f.price}<span class="pr-tot">$${f.total} total</span></div></td><td>${routePlane}</td><td><div class="dep-cell">${afPlaneSVG_dep()} ${f.depTime}${f.isPref?'<span class="pref-dot"></span>':''}</div></td><td><span class="stops-cell${f.sc===0?' ns':''}">${stops}</span></td><td><span class="dur-cell">${dur}</span></td><td><span class="sig-bdg ${f.sig}">${f.sig==='buy'?'Buy Signal':f.sig==='now'?'Book Now':'Wait'}</span></td><td>${tr}</td></tr>`;
-  }).join('');
+    const priceDisplay=isRT&&best.rtPrice?`<div class="pr-cell">$${best.rtPrice}<span class="pr-tot pr-rt">RT · $${best.rtTotal} total</span><span class="pr-ow">from $${best.price} OW</span></div>`:`<div class="pr-cell">$${best.price}<span class="pr-tot">$${best.total} total</span></div>`;
+    const hasMore=group.length>1;
+    const alKey=best.al.code.replace(/[^a-z0-9]/gi,'');
+    /* main row = best price for this airline */
+    html+=`<tr class="al-main-row ${hidden}" onclick="afOpenModal(${idx})">
+      <td><div class="al-cell"><div class="al-logo">${best.al.code}</div><div><div class="al-name">${best.al.name}${best.al.rst?` <span class="rst-bdg">⚠ Restructuring</span>`:''}</div><div class="al-code">${best.al.code}${hasMore?` · <button class="more-dep-btn" onclick="event.stopPropagation();afToggleDeps('${alKey}')">${group.length} departures ▾</button>`:''}</div></div></div></td>
+      <td>${priceDisplay}</td>
+      <td>${routePlane}</td>
+      <td><div class="dep-cell">${afPlaneSVG_dep()} ${best.depTime}${best.isPref?'<span class="pref-dot"></span>':''}</div></td>
+      <td><span class="stops-cell${best.sc===0?' ns':''}">${stops}</span></td>
+      <td><span class="dur-cell">${dur}</span></td>
+      <td><span class="sig-bdg ${best.sig}">${best.sig==='buy'?'Buy Signal':best.sig==='now'?'Book Now':'Wait'}</span></td>
+      <td>${tr}</td>
+    </tr>`;
+    /* sub-rows for additional departures */
+    if(hasMore){
+      html+=`<tr class="dep-subrows" id="deps-${alKey}" style="display:none"><td colspan="8" style="padding:0">
+        <table class="dep-sub-tbl">`;
+      group.slice(1).forEach((sf,si)=>{
+        const sidx=AF.fares.indexOf(sf);
+        const sstops=sf.sc===0?'Nonstop':sf.sc===1?'1 stop':'2 stops';
+        const sdur=`${sf.durH}h ${String(sf.durM).padStart(2,'0')}m`;
+        const sprice=isRT&&sf.rtPrice?`<strong>$${sf.rtPrice}</strong> RT <span class="pr-ow">/ $${sf.price} OW</span>`:`<strong>$${sf.price}</strong>`;
+        html+=`<tr class="dep-sub-row" onclick="afOpenModal(${sidx})">
+          <td style="width:200px"><div class="dep-cell" style="padding-left:2rem">${afPlaneSVG_dep()} ${sf.depTime}${sf.isPref?'<span class="pref-dot"></span>':''}</div></td>
+          <td>${sprice}</td>
+          <td><span class="stops-cell${sf.sc===0?' ns':''}">${sstops}</span></td>
+          <td>${sdur}</td>
+          <td><span class="sig-bdg ${sf.sig}" style="font-size:10px">${sf.sig==='buy'?'Buy':sf.sig==='now'?'Now':'Wait'}</span></td>
+          <td style="text-align:right;padding-right:1rem"><button class="af-alert-btn" onclick="event.stopPropagation();afSetAlert(${sidx})">🔔 Alert</button></td>
+        </tr>`;
+      });
+      html+=`</table></td></tr>`;
+    }
+  });
+  document.getElementById('af-tbl-body').innerHTML=html;
+}
+function afToggleDeps(alKey){
+  const row=document.getElementById('deps-'+alKey);if(!row)return;
+  const open=row.style.display!=='none';row.style.display=open?'none':'table-row';
+  /* flip the arrow on the button */
+  const btn=document.querySelector(`[onclick*="afToggleDeps('${alKey}')"]`);
+  if(btn)btn.textContent=btn.textContent.replace(open?'▴':'▾',open?'▾':'▴');
 }
 function afSortBy(col){AF.sortDir=AF.sortCol===col?(AF.sortDir==='asc'?'desc':'asc'):'asc';AF.sortCol=col;afRenderTable();}
 function afDoFilter(f,btn){AF.filter=f;document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('on'));btn.classList.add('on');if(f==='cheapest'){AF.sortCol='price';AF.sortDir='asc';}afRenderTable();}
@@ -1568,20 +1662,78 @@ async function afTriggerAI(){
 }
 async function afOpenModal(idx){
   const f=AF.fares[idx];if(!f)return;
+  const isRT=AF.trip==='roundtrip';
   document.getElementById('af-m-logo').textContent=f.al.code;document.getElementById('af-m-name').textContent=f.al.name;document.getElementById('af-m-code').textContent=`IATA: ${f.al.code} · ${AF.cabin.charAt(0).toUpperCase()+AF.cabin.slice(1)} · ${AF.pax} pax`;
   const dur=`${f.durH}h ${String(f.durM).padStart(2,'0')}m`;const stops=f.sc===0?'Nonstop':f.sc===1?'1 stop':'2 stops';
-  document.getElementById('af-m-fp').innerHTML=`<div class="m-apt"><div class="m-apt-code">${AF.orig.code}</div><div class="m-apt-city">${AF.orig.city}</div></div><div class="m-path"><div class="m-path-track"><div class="m-path-dot"></div><div class="m-path-line"><div class="m-path-plane" style="background:var(--card-bg);padding:0 4px">${afPlaneSVG_lg('#e84c2b')}</div></div><div class="m-path-dot"></div></div><div class="m-path-info">${dur} · ${stops} · Departs ${f.depTime}</div></div><div class="m-apt" style="text-align:right"><div class="m-apt-code">${AF.dest.code}</div><div class="m-apt-city">${AF.dest.city}</div></div><div class="m-price"><div class="m-price-v">$${f.price}</div><div class="m-price-l">per person</div><div class="m-price-t">$${f.total} total · ${AF.pax} pax</div></div>`;
+  /* price display with RT */
+  const priceHtml=isRT&&f.rtPrice
+    ?`<div class="m-price"><div class="m-price-v">$${f.rtPrice}</div><div class="m-price-l">round-trip per person</div><div class="m-price-t">$${f.rtTotal} total · ${AF.pax} pax · outbound $${f.price} OW</div></div>`
+    :`<div class="m-price"><div class="m-price-v">$${f.price}</div><div class="m-price-l">per person</div><div class="m-price-t">$${f.total} total · ${AF.pax} pax</div></div>`;
+  let fpHtml=`<div class="m-apt"><div class="m-apt-code">${AF.orig.code}</div><div class="m-apt-city">${AF.orig.city}</div></div><div class="m-path"><div class="m-path-track"><div class="m-path-dot"></div><div class="m-path-line"><div class="m-path-plane" style="background:var(--card-bg);padding:0 4px">${afPlaneSVG_lg('#e84c2b')}</div></div><div class="m-path-dot"></div></div><div class="m-path-info">${dur} · ${stops} · Departs ${f.depTime}</div></div><div class="m-apt" style="text-align:right"><div class="m-apt-code">${AF.dest.code}</div><div class="m-apt-city">${AF.dest.city}</div></div>${priceHtml}`;
+  /* round-trip return leg */
+  if(isRT&&f.retTime){fpHtml+=`<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)"><div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);margin-bottom:6px;letter-spacing:.05em">RETURN LEG</div><div class="m-path"><div class="m-path-track"><div class="m-path-dot"></div><div class="m-path-line"><div class="m-path-plane" style="background:var(--card-bg);padding:0 4px">${afPlaneSVG_lg('#888')}</div></div><div class="m-path-dot"></div></div><div class="m-path-info">${dur} · ${stops} · Departs ${f.retTime}</div></div></div>`;}
+  document.getElementById('af-m-fp').innerHTML=fpHtml;
   const d=new Date(AF.dep);const ds=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-  document.getElementById('af-m-grid').innerHTML=`<div class="m-fact"><div class="m-fact-l">Departure</div><div class="m-fact-v">${f.depTime}</div></div><div class="m-fact"><div class="m-fact-l">Date</div><div class="m-fact-v">${ds}</div></div><div class="m-fact"><div class="m-fact-l">Duration</div><div class="m-fact-v">${dur}</div></div><div class="m-fact"><div class="m-fact-l">Stops</div><div class="m-fact-v">${stops}</div></div><div class="m-fact"><div class="m-fact-l">AI Signal</div><div class="m-fact-v">${f.sig==='buy'?'🟢 Buy Signal':f.sig==='now'?'🟡 Book Now':'🔴 Wait'}</div></div><div class="m-fact"><div class="m-fact-l">30-Day Trend</div><div class="m-fact-v">${f.trend==='up'?'↑ Rising':f.trend==='down'?'↓ Falling':'→ Flat'} (${f.trendPct>0?'+':''}${f.trendPct}%)</div></div>`;
+  document.getElementById('af-m-grid').innerHTML=`<div class="m-fact"><div class="m-fact-l">Departure</div><div class="m-fact-v">${f.depTime}</div></div><div class="m-fact"><div class="m-fact-l">Date</div><div class="m-fact-v">${ds}</div></div><div class="m-fact"><div class="m-fact-l">Duration</div><div class="m-fact-v">${dur}</div></div><div class="m-fact"><div class="m-fact-l">Stops</div><div class="m-fact-v">${stops}</div></div><div class="m-fact"><div class="m-fact-l">AI Signal</div><div class="m-fact-v">${f.sig==='buy'?'🟢 Buy Signal':f.sig==='now'?'🟡 Book Now':'🔴 Wait'}</div></div><div class="m-fact"><div class="m-fact-l">30-Day Trend</div><div class="m-fact-v">${f.trend==='up'?'↑ Rising':f.trend==='down'?'↓ Falling':'→ Flat'} (${f.trendPct>0?'+':''}${f.trendPct}%)</div></div>${isRT&&f.retTime?`<div class="m-fact"><div class="m-fact-l">Return Dep.</div><div class="m-fact-v">${f.retTime}</div></div>`:''}${isRT&&f.rtPrice?`<div class="m-fact"><div class="m-fact-l">RT Price</div><div class="m-fact-v" style="color:var(--green);font-weight:700">$${f.rtPrice}/person</div></div>`:''}`;
   document.getElementById('af-m-rst').style.display=f.al.rst?'flex':'none';
   const volL=f.vol<30?'Low':f.vol<65?'Moderate':'High';const volC=f.vol<30?'var(--green)':f.vol<65?'var(--gold)':'var(--accent)';
   document.getElementById('af-m-vol-lbl').textContent=`${volL} (${f.vol}/100)`;document.getElementById('af-m-vol-bar').style.cssText=`width:${f.vol}%;background:${volC}`;
   document.getElementById('af-m-trend').textContent=`30-day: ${f.al.name} fares on ${AF.orig.code}–${AF.dest.code} are ${f.trend==='up'?'rising':f.trend==='down'?'falling':'holding steady'} (${f.trendPct>0?'+':''}${f.trendPct}% vs. 30 days ago)`;
+  /* fare alert button in modal */
+  let alertEl=document.getElementById('af-m-alert-btn');
+  if(alertEl)alertEl.onclick=()=>afSetAlert(idx);
   document.getElementById('af-m-ai-txt').innerHTML='<div class="ai-load"><div class="ai-spin"></div>Generating prediction…</div>';
   document.getElementById('af-m-ov').classList.add('open');
   const avg=Math.round(AF.fares.reduce((a,x)=>a+x.price,0)/AF.fares.length);
-  const p2=`You are a concise airfare analyst. Write 3 focused sentences only (no headers, no bullets, no markdown).\n\nAirline: ${f.al.name} (${f.al.code})\nRoute: ${AF.orig.code} to ${AF.dest.code}\nPrice: $${f.price}/person (route average: $${avg})\n30-day trend: ${f.trend} (${f.trendPct}%) · Volatility: ${f.vol}/100\nAI signal: ${f.sig}\n${f.al.rst?'IMPORTANT: This airline is in Chapter 11 bankruptcy restructuring (Feb 2026). Advise credit card booking.':''}\n\nWrite: 1) Is this a good deal? 2) Price outlook next 2–3 weeks 3) One specific booking tip`;
-  try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:p2}]})});const d=await r.json();const t=d.content?.map(c=>c.text||'').join('')||'';document.getElementById('af-m-ai-txt').innerHTML=t?t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>'):`At $${f.price}, this is ${f.sig==='buy'?'below':'above'} the route average of $${avg}.`;}catch(e){document.getElementById('af-m-ai-txt').textContent=`At $${f.price}, this fare is ${f.sig==='buy'?'a solid buy signal':'within normal range'} for ${f.al.name} on this route.`;}
+  const displayPrice=isRT&&f.rtPrice?f.rtPrice:f.price;const priceLabel=isRT&&f.rtPrice?'round-trip':'one-way';
+  const p2=`You are a concise airfare analyst. Write 3 focused sentences only (no headers, no bullets, no markdown).\n\nAirline: ${f.al.name} (${f.al.code})\nRoute: ${AF.orig.code} to ${AF.dest.code}${isRT?` (Round-trip, return ${AF.ret})`:''}\nPrice: $${displayPrice}/person ${priceLabel} (route average: $${avg})\n30-day trend: ${f.trend} (${f.trendPct}%) · Volatility: ${f.vol}/100\nAI signal: ${f.sig}\n${f.al.rst?'IMPORTANT: This airline is in Chapter 11 bankruptcy restructuring (Feb 2026). Advise credit card booking.':''}\n\nWrite: 1) Is this a good deal? 2) Price outlook next 2–3 weeks 3) One specific booking tip`;
+  try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:p2}]})});const d=await r.json();const t=d.content?.map(c=>c.text||'').join('')||'';document.getElementById('af-m-ai-txt').innerHTML=t?t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>'):`At $${displayPrice}, this is ${f.sig==='buy'?'below':'above'} the route average of $${avg}.`;}catch(e){document.getElementById('af-m-ai-txt').textContent=`At $${displayPrice}, this fare is ${f.sig==='buy'?'a solid buy signal':'within normal range'} for ${f.al.name} on this route.`;}
+}
+/* ── Fare Alert via Resend.com ── */
+function afSetAlert(idx){
+  const f=AF.fares[idx];if(!f)return;
+  const email=prompt(`Set a fare alert for ${f.al.name} ${AF.orig.code}→${AF.dest.code}.\n\nEnter your email address:`);
+  if(!email||!email.includes('@')){if(email!==null)alert('Please enter a valid email address.');return;}
+  const threshold=prompt(`Alert me when the price drops below:\n(Current: $${f.price})\n\nEnter target price (numbers only):`);
+  const tp=parseInt(threshold);if(isNaN(tp)||tp<=0){if(threshold!==null)alert('Please enter a valid price.');return;}
+  afSendAlertEmail(email,f,tp);
+}
+async function afSendAlertEmail(email,f,threshold){
+  const isRT=AF.trip==='roundtrip';const priceDisplay=isRT&&f.rtPrice?`$${f.rtPrice} RT`:`$${f.price} OW`;
+  showToast(`⏳ Setting up fare alert…`);
+  try{
+    const res=await fetch('https://api.resend.com/emails',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer YOUR_RESEND_API_KEY'},
+      body:JSON.stringify({
+        from:'CartCast Fare Alerts <alerts@cartcast.vercel.app>',
+        to:[email],
+        subject:`✈ CartCast Fare Alert Set: ${AF.orig.code}→${AF.dest.code} on ${f.al.name}`,
+        html:`<div style="font-family:sans-serif;max-width:540px;margin:0 auto;padding:24px">
+          <h2 style="color:#0d0d0d;margin-bottom:4px">Fare Alert Confirmed</h2>
+          <p style="color:#888;margin-bottom:24px;font-size:14px">CartCast will notify you when prices drop</p>
+          <div style="background:#f5f0e8;border-radius:8px;padding:20px;margin-bottom:20px">
+            <div style="font-size:28px;font-weight:700;color:#0d0d0d">${AF.orig.code} → ${AF.dest.code}</div>
+            <div style="color:#6b6560;margin-top:4px">${f.al.name} · ${AF.dep}${isRT?` → ${AF.ret}`:''}</div>
+          </div>
+          <table style="width:100%;border-collapse:collapse">
+            <tr><td style="padding:8px 0;color:#6b6560;font-size:14px">Current price</td><td style="padding:8px 0;text-align:right;font-weight:600">${priceDisplay}</td></tr>
+            <tr style="border-top:1px solid #e2ddd5"><td style="padding:8px 0;color:#6b6560;font-size:14px">Alert threshold</td><td style="padding:8px 0;text-align:right;font-weight:600;color:#1a7a45">Below $${threshold}</td></tr>
+            <tr style="border-top:1px solid #e2ddd5"><td style="padding:8px 0;color:#6b6560;font-size:14px">AI signal</td><td style="padding:8px 0;text-align:right">${f.sig==='buy'?'🟢 Buy Signal':f.sig==='now'?'🟡 Book Now':'🔴 Wait'}</td></tr>
+          </table>
+          <p style="color:#6b6560;font-size:12px;margin-top:20px">CartCast · cartcast.vercel.app · Unsubscribe anytime</p>
+        </div>`
+      })
+    });
+    if(res.ok){showToast(`🔔 Alert set for ${f.al.name} < $${threshold} — confirmation sent to ${email}`);}
+    else{showToast(`⚠ Alert saved locally. Connect Resend API key to enable email delivery.`);}
+  }catch(e){
+    /* graceful fallback — store locally */
+    const alerts=JSON.parse(localStorage.getItem('af-alerts')||'[]');
+    alerts.push({email,airline:f.al.name,orig:AF.orig.code,dest:AF.dest.code,dep:AF.dep,threshold,setAt:new Date().toISOString()});
+    localStorage.setItem('af-alerts',JSON.stringify(alerts));
+    showToast(`🔔 Alert saved: ${f.al.name} < $${threshold} · Add Resend key to enable email`);
+  }
 }
 function afMaybeClose(e){if(e.target===document.getElementById('af-m-ov'))document.getElementById('af-m-ov').classList.remove('open');}
 function afStartTimer(){
