@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CartCast — Real Price Intelligence for Every American</title>
+<meta name="theme-color" content="#111118">
 <meta name="description" content="Live prices for groceries, gas, medicine, rent, utilities, airfare and more — by state and city.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,18 +14,20 @@
    CARTCAST CORE VARIABLES & RESET
 ═══════════════════════════════════════════ */
 :root {
-  --ink: #0d0d0d;
-  --paper: #fafaf7;
-  --warm: #f5f0e8;
-  --accent: #e84c2b;
-  --accent2: #2b6de8;
-  --gold: #c9922a;
-  --green: #1a7a45;
-  --muted: #888880;
-  --border: #e2ddd5;
+  --ink: #111118;
+  --paper: #f8f8f5;
+  --warm: #f2ede3;
+  --accent: #d94f2a;
+  --accent2: #2563eb;
+  --gold: #b97d10;
+  --green: #15803d;
+  --muted: #78716c;
+  --border: #e5e0d8;
   --card-bg: #ffffff;
-  --shadow: 0 2px 20px rgba(13,13,13,0.07);
-  --shadow-lg: 0 8px 40px rgba(13,13,13,0.12);
+  --shadow: 0 1px 12px rgba(17,17,24,0.06);
+  --shadow-lg: 0 6px 32px rgba(17,17,24,0.10);
+  --radius: 14px;
+  --radius-sm: 8px;
   /* Airfare palette aliases */
   --cream: #ede9df;
   --amber: #b87a00;
@@ -82,15 +85,16 @@ body {
 header {
   background: rgba(255,255,255,0.95);
   border-bottom: 1px solid var(--border);
-  padding: 0 32px;
+  padding: 0 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 60px;
   position: sticky;
   top: 36px;
   z-index: 99;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.06);
 }
 .logo {
   font-family: 'Fraunces', serif;
@@ -118,15 +122,15 @@ header {
 .nav-tabs { display: flex; gap: 4px; overflow-x: auto; }
 .nav-tab {
   font-family: 'Outfit', sans-serif;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
-  padding: 7px 16px;
-  border-radius: 8px;
+  padding: 6px 14px;
+  border-radius: 7px;
   border: none;
   background: transparent;
   color: var(--muted);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.18s;
   letter-spacing: 0.01em;
   white-space: nowrap;
 }
@@ -267,9 +271,9 @@ input[type=range]::-webkit-slider-thumb {
   margin-bottom: 36px;
 }
 .stat-card {
-  background: var(--card-bg); border: 1px solid var(--border);
-  border-radius: 12px; padding: 20px 22px;
-  display: flex; flex-direction: column; gap: 4px; transition: box-shadow 0.2s;
+  background: var(--card-bg); border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 20px 22px;
+  display: flex; flex-direction: column; gap: 4px; transition: all 0.2s;
 }
 .stat-card:hover { box-shadow: var(--shadow); }
 .stat-num { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 400; letter-spacing: -0.03em; line-height: 1; }
@@ -336,8 +340,8 @@ input[type=range]::-webkit-slider-thumb {
 .signal-val.green { color: var(--green); }
 .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
 .item-card {
-  background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 14px;
-  padding: 18px 20px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
+  background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 16px;
+  padding: 20px 22px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
 }
 .item-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
 .item-card.trend-up::before { background: var(--accent); }
@@ -510,8 +514,8 @@ input[type=range]::-webkit-slider-thumb {
 /* Search card */
 .af-s-card {
   background: var(--card-bg); border: 1.5px solid var(--border);
-  border-radius: 18px; padding: 36px; box-shadow: var(--shadow-lg);
-  max-width: 780px;
+  border-radius: 20px; padding: 40px; box-shadow: 0 4px 40px rgba(17,17,24,0.08);
+  max-width: 820px;
 }
 .af-s-card-title {
   font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 600;
@@ -581,11 +585,12 @@ input[type=range]::-webkit-slider-thumb {
 .tile .tl { font-size: .78rem; font-weight: 600; display: block; }
 .tile .tr { font-size: .66rem; font-family: 'DM Mono', monospace; opacity: .7; }
 .af-s-btn {
-  width: 100%; padding: 16px; background: var(--ink); color: #fff; border: none;
-  border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600;
-  cursor: pointer; transition: background .15s; display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 17px; background: var(--ink); color: #fff; border: none;
+  border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700;
+  cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 10px;
+  letter-spacing: 0.02em; box-shadow: 0 4px 14px rgba(17,17,24,0.18);
 }
-.af-s-btn:hover { background: var(--accent); }
+.af-s-btn:hover { background: var(--accent); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(217,79,42,0.3); }
 .af-s-btn svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .af-err-msg { color: var(--accent); font-size: .82rem; margin-top: 8px; font-weight: 500; display: none; }
 
@@ -649,7 +654,7 @@ input[type=range]::-webkit-slider-thumb {
 .fpill { padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 20px; background: none; font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 500; cursor: pointer; color: var(--muted); transition: all .15s; }
 .fpill:hover { border-color: var(--ink); color: var(--ink); }
 .fpill.on { background: var(--ink); border-color: var(--ink); color: #fff; }
-.tbl-wrap { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; }
+.tbl-wrap { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); }
 .tbl { width: 100%; border-collapse: collapse; }
 .tbl thead tr { background: var(--ink); }
 .tbl th { padding: 12px 16px; font-family: 'DM Mono', monospace; font-size: .66rem; text-transform: uppercase; letter-spacing: .07em; color: rgba(255,255,255,.65); text-align: left; font-weight: 400; cursor: pointer; white-space: nowrap; user-select: none; }
@@ -842,6 +847,274 @@ footer a:hover { color: white; }
   .suggest-form { flex-direction: column; }
   .suggest-section { padding: 24px 20px; }
 }
+
+/* ═══════════════════════════════════════════
+   CARTCAST REDESIGN — ENHANCED STYLES
+═══════════════════════════════════════════ */
+
+/* Better ticker */
+.ticker-wrap {
+  background: linear-gradient(90deg, #111118 0%, #1a1a28 50%, #111118 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.ticker-item { font-size: 11px; letter-spacing: 0.04em; opacity: 0.9; }
+
+/* Polished logo */
+.logo { font-size: 24px; letter-spacing: -0.04em; }
+.logo-badge { font-size: 8px; padding: 2px 5px; border-radius: 4px; }
+
+/* Better nav */
+.nav-tab.active { 
+  background: var(--ink); color: #fff; 
+  box-shadow: 0 2px 8px rgba(17,17,24,0.15);
+}
+.nav-tab:hover { background: var(--warm); color: var(--ink); }
+
+/* Better location bar */
+.location-bar {
+  background: linear-gradient(180deg, #f2ede3 0%, #ede8de 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 28px;
+}
+
+/* Better hero */
+.hero { padding: 40px 28px 28px; }
+.hero-headline { font-size: clamp(28px, 4vw, 50px); }
+
+/* Better stat cards */
+.stat-card { border-radius: 14px; }
+.stat-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+
+/* Better main wrap */
+.main-wrap { padding: 0 28px 80px; }
+
+/* Better section titles */
+.section-title { font-size: 26px; }
+
+/* ─── Airfare Redesign ─── */
+
+/* Beautiful search form */
+.af-s-card-title { font-size: 1.2rem; color: var(--ink); }
+
+/* Cleaner trip type buttons */
+.trip-btn {
+  padding: 9px 20px; border-radius: 10px;
+  font-size: .85rem; font-weight: 600;
+  transition: all .18s;
+}
+.trip-btn.on { 
+  background: var(--ink); color: #fff; border-color: var(--ink);
+  box-shadow: 0 2px 10px rgba(17,17,24,0.2);
+}
+
+/* Input fields */
+.fld-in { border-radius: 10px; font-size: .92rem; }
+.from .fld-in { border-radius: 10px 0 0 10px; }
+.to .fld-in { border-radius: 0 10px 10px 0; }
+
+/* Beautiful time tiles */
+.tile {
+  border-radius: 12px; padding: 14px 10px;
+  transition: all .18s;
+}
+.tile.on {
+  background: var(--ink); border-color: var(--ink);
+  box-shadow: 0 3px 12px rgba(17,17,24,0.2);
+}
+.tile .tl { font-size: .76rem; font-weight: 700; }
+
+/* Autocomplete */
+.ac-list { border-radius: 12px; border: 1.5px solid var(--ink); }
+.ac-item { padding: 11px 14px; }
+.ac-code { border-radius: 5px; font-size: .75rem; }
+
+/* Trip bar */
+.trip-bar { 
+  background: linear-gradient(135deg, #111118 0%, #1c1c2e 100%);
+  border-radius: 16px; 
+  box-shadow: 0 4px 24px rgba(17,17,24,0.2);
+}
+.tb-pill { border-radius: 20px; font-size: .72rem; }
+
+/* Stats row */
+.af-stats { gap: 10px; }
+.af-stat-c { 
+  border-radius: 14px; padding: 18px 16px;
+  transition: all .2s;
+}
+.af-stat-c:hover { 
+  transform: translateY(-2px); 
+  box-shadow: 0 6px 20px rgba(17,17,24,0.08);
+}
+.af-stat-v { font-size: 1.3rem; }
+
+/* AI Banner */
+.ai-ban { 
+  border-radius: 16px; padding: 24px 26px;
+  background: linear-gradient(135deg, #0d0d16 0%, #141428 60%, #0d0d16 100%);
+}
+
+/* Scorecard chips */
+.sc-chip { border-radius: 28px; padding: 8px 14px; gap: 8px; }
+.sc-chip:hover { 
+  border-color: var(--ink); background: var(--cream);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(17,17,24,0.08);
+}
+
+/* Filter pills */
+.fpill { border-radius: 22px; padding: 7px 16px; font-size: .79rem; }
+.fpill.on { 
+  background: var(--ink); color: #fff; border-color: var(--ink);
+  box-shadow: 0 2px 10px rgba(17,17,24,0.2);
+}
+
+/* Table */
+.tbl-wrap { border-radius: 16px; }
+.tbl thead tr { 
+  background: linear-gradient(180deg, #111118 0%, #1a1a26 100%);
+}
+.tbl th { padding: 13px 16px; font-size: .65rem; letter-spacing: .08em; }
+.tbl td { padding: 14px 16px; }
+.tbl tbody tr:hover { background: #f7f3ec; }
+
+/* Airline logo in table */
+.al-logo { 
+  border-radius: 10px; width: 36px; height: 36px;
+  font-size: .75rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--cream), var(--warm));
+  border: 1px solid var(--border);
+}
+.al-name { font-weight: 700; font-size: .88rem; }
+
+/* Price cell */
+.pr-cell { 
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--ink);
+}
+.pr-tot { font-size: .68rem; color: var(--muted); }
+
+/* Signal badges */
+.sig-bdg { 
+  font-size: .66rem; padding: 4px 9px; border-radius: 6px;
+  font-weight: 700; letter-spacing: .04em;
+}
+.sig-bdg.buy { 
+  background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7;
+}
+.sig-bdg.wait { 
+  background: #fef3c7; color: #92400e; border: 1px solid #fde68a;
+}
+.sig-bdg.now { 
+  background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa;
+}
+
+/* Modal improvements */
+.m-card { border-radius: 22px; }
+.m-hdr { 
+  background: linear-gradient(135deg, #111118 0%, #1c1c2e 100%);
+  padding: 24px 26px; border-radius: 22px 22px 0 0;
+}
+.m-logo { border-radius: 12px; width: 48px; height: 48px; font-size: .88rem; font-weight: 800; }
+.m-price-v { font-size: 2.1rem; font-weight: 700; }
+.m-fact { border-radius: 12px; }
+.m-ai { border-radius: 14px; }
+
+/* Multi-departure sub-rows */
+.dep-sub-row { background: #f9f7f3; }
+.dep-sub-row:hover { background: #f2ede3 !important; }
+.dep-sub-row td { padding: 10px 16px 10px 48px !important; font-size: .84rem; }
+.more-dep-btn {
+  font-size: .7rem; font-weight: 700; padding: 3px 9px; border-radius: 6px;
+  background: var(--warm); border: 1px solid var(--border); cursor: pointer;
+  color: var(--ink); font-family: 'DM Mono', monospace; transition: all .15s;
+}
+.more-dep-btn:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+/* Alert button */
+.af-alert-row-btn {
+  font-size: .7rem; font-weight: 600; padding: 4px 9px; border-radius: 6px;
+  background: #fffbeb; border: 1px solid #fbbf24; cursor: pointer;
+  color: #92400e; font-family: 'DM Mono', monospace; transition: all .15s;
+  white-space: nowrap;
+}
+.af-alert-row-btn:hover { background: #fbbf24; color: #78350f; }
+
+/* Restructuring badge */
+.rst-bdg { 
+  font-size: .6rem; background: #fff7ed; color: #c2410c; 
+  border: 1px solid #fed7aa; padding: 2px 6px; border-radius: 4px; 
+  font-family: 'DM Mono', monospace; white-space: nowrap;
+}
+
+/* Better route visualization */
+.rv { gap: 8px; }
+.rv-track { width: 60px; }
+
+/* Toast notification */
+.toast { 
+  border-radius: 12px; 
+  background: linear-gradient(135deg, #111118, #1c1c2e);
+  box-shadow: 0 8px 32px rgba(17,17,24,0.25);
+}
+
+/* Grocery modal improvements */
+.modal { border-radius: 20px; }
+.modal-header { padding: 26px 30px 18px; }
+.modal-body { padding: 22px 30px 30px; }
+
+/* RX table improvements */
+.rx-table-wrap { border-radius: 14px; }
+.rx-table thead { background: linear-gradient(180deg, #111118, #1a1a26); }
+
+/* Housing & Gas cards */
+.housing-card { border-radius: 16px; padding: 24px; }
+.gas-card { border-radius: 14px; }
+.util-card { border-radius: 14px; }
+.elec-card { border-radius: 14px; }
+
+/* Tax table */
+.tax-table-wrap { border-radius: 16px; }
+
+/* Better footer */
+footer { 
+  background: linear-gradient(180deg, #111118 0%, #0a0a12 100%);
+  padding: 28px 32px;
+}
+
+/* Suggest section */
+.suggest-section { 
+  background: linear-gradient(135deg, #111118 0%, #1a1a28 50%, #111118 100%);
+  border-radius: 20px;
+}
+.suggest-btn { border-radius: 10px; }
+.suggest-input { border-radius: 10px; }
+
+/* Responsive improvements */
+@media(max-width:768px){
+  .hero { padding: 20px 16px 14px; }
+  .main-wrap { padding: 0 14px 60px; }
+  .location-bar { padding: 8px 14px; }
+  .af-s-card { padding: 24px 18px; }
+  .af-stats { grid-template-columns: repeat(2,1fr); }
+  .m-grid { grid-template-columns: 1fr 1fr; }
+  .tbl th:nth-child(n+6), .tbl td:nth-child(n+6) { display: none; }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--paper); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* Selection color */
+::selection { background: rgba(217,79,42,0.15); }
+
+/* Focus outlines */
+input:focus, select:focus, button:focus-visible { 
+  outline: 2px solid var(--accent2); outline-offset: 2px; 
+}
+
 </style>
 </head>
 <body>
@@ -888,7 +1161,7 @@ footer a:hover { color: white; }
 <div class="hero">
   <div class="hero-top">
     <div>
-      <h1 class="hero-headline">Know what <em>everything</em> costs before you pay it.</h1>
+      <h1 class="hero-headline">Know what <em>everything</em> costs — before you pay it.</h1>
       <p class="hero-sub">Real government data — USDA, BLS, EIA, HUD, Census — tracking groceries, gas, medicine, rent, utilities, airfare, and more. By your state and city. Updated weekly.</p>
     </div>
     <div class="budget-card">
@@ -1047,7 +1320,7 @@ footer a:hover { color: white; }
   <div class="section-panel" id="section-airfare">
     <div class="section-header">
       <h2 class="section-title">Airfare Intelligence</h2>
-      <span class="section-count">Live fare tracking · AI predictions · 30-min refresh</span>
+      <span class="section-count">200+ airports · 22 airlines · AI predictions · 30-min refresh</span>
     </div>
     <p class="section-desc">Multiple departure options across 50+ airlines. AI-powered buy/wait signals. Fare alert emails via Resend. Amadeus API ready — simulation fallback active.</p>
 
@@ -1289,7 +1562,7 @@ footer a:hover { color: white; }
   <div class="footer-links">
     <a href="#">About</a><a href="#">Methodology</a><a href="#">GitHub</a><a href="#">API</a>
   </div>
-  <span>Data: BLS · USDA · FRED · EIA · HUD · Census · OpenFDA · Rentcast · Simulated Airfare — Updated weekly</span>
+  <span>Data: BLS · USDA · FRED · EIA · HUD · Census · OpenFDA · Rentcast · 200+ airports · Updated weekly</span>
 </footer>
 
 <script>
@@ -1476,7 +1749,357 @@ const GROCERY_DATA=[{id:1,name:"Eggs (1 dozen)",emoji:"🥚",cat:"Dairy & Eggs",
 // ═══════════════════════════════════════════════════════════════
 // AIRFARE — AIRPORTS, AIRLINES, STATE, FARE ENGINE
 // ═══════════════════════════════════════════════════════════════
-const APTS=[{c:'ATL',n:'Hartsfield-Jackson Atlanta Intl',city:'Atlanta, GA'},{c:'LAX',n:'Los Angeles International',city:'Los Angeles, CA'},{c:'ORD',n:"O'Hare International",city:'Chicago, IL'},{c:'DFW',n:'Dallas/Fort Worth International',city:'Dallas, TX'},{c:'DEN',n:'Denver International',city:'Denver, CO'},{c:'JFK',n:'John F. Kennedy International',city:'New York, NY'},{c:'SFO',n:'San Francisco International',city:'San Francisco, CA'},{c:'SEA',n:'Seattle-Tacoma International',city:'Seattle, WA'},{c:'LAS',n:'Harry Reid International',city:'Las Vegas, NV'},{c:'MCO',n:'Orlando International',city:'Orlando, FL'},{c:'EWR',n:'Newark Liberty International',city:'Newark, NJ'},{c:'CLT',n:'Charlotte Douglas International',city:'Charlotte, NC'},{c:'PHX',n:'Phoenix Sky Harbor International',city:'Phoenix, AZ'},{c:'IAH',n:'George Bush Intercontinental',city:'Houston, TX'},{c:'MIA',n:'Miami International',city:'Miami, FL'},{c:'BOS',n:'Logan International',city:'Boston, MA'},{c:'MSP',n:'Minneapolis-St. Paul International',city:'Minneapolis, MN'},{c:'FLL',n:'Fort Lauderdale-Hollywood Intl',city:'Fort Lauderdale, FL'},{c:'PHL',n:'Philadelphia International',city:'Philadelphia, PA'},{c:'SLC',n:'Salt Lake City International',city:'Salt Lake City, UT'},{c:'BWI',n:'Baltimore/Washington International',city:'Baltimore, MD'},{c:'IAD',n:'Dulles International',city:'Washington, DC'},{c:'DCA',n:'Reagan National',city:'Washington, DC'},{c:'MDW',n:'Chicago Midway International',city:'Chicago, IL'},{c:'HNL',n:'Daniel K. Inouye International',city:'Honolulu, HI'},{c:'PDX',n:'Portland International',city:'Portland, OR'},{c:'SAN',n:'San Diego International',city:'San Diego, CA'},{c:'TPA',n:'Tampa International',city:'Tampa, FL'},{c:'RDU',n:'Raleigh-Durham International',city:'Raleigh, NC'},{c:'BNA',n:'Nashville International',city:'Nashville, TN'},{c:'AUS',n:'Austin-Bergstrom International',city:'Austin, TX'},{c:'MSY',n:'Louis Armstrong New Orleans Intl',city:'New Orleans, LA'},{c:'SAT',n:'San Antonio International',city:'San Antonio, TX'},{c:'LHR',n:'London Heathrow',city:'London, UK'},{c:'CDG',n:'Charles de Gaulle',city:'Paris, France'},{c:'FRA',n:'Frankfurt Airport',city:'Frankfurt, Germany'},{c:'AMS',n:'Amsterdam Schiphol',city:'Amsterdam, Netherlands'},{c:'NRT',n:'Tokyo Narita International',city:'Tokyo, Japan'},{c:'ICN',n:'Incheon International',city:'Seoul, South Korea'},{c:'DXB',n:'Dubai International',city:'Dubai, UAE'},{c:'SIN',n:'Changi Airport',city:'Singapore'},{c:'SYD',n:'Kingsford Smith International',city:'Sydney, Australia'},{c:'MEX',n:'Benito Juarez International',city:'Mexico City, Mexico'},{c:'CUN',n:'Cancun International',city:'Cancun, Mexico'},{c:'YYZ',n:'Toronto Pearson International',city:'Toronto, ON'},{c:'YVR',n:'Vancouver International',city:'Vancouver, BC'}];
+const APTS=[
+  // ── Top 50 US Domestic Hubs ──
+  {c:'ATL',n:'Hartsfield-Jackson Atlanta Intl',city:'Atlanta, GA'},
+  {c:'LAX',n:'Los Angeles International',city:'Los Angeles, CA'},
+  {c:'ORD',n:"O'Hare International",city:'Chicago, IL'},
+  {c:'DFW',n:'Dallas/Fort Worth International',city:'Dallas, TX'},
+  {c:'DEN',n:'Denver International',city:'Denver, CO'},
+  {c:'JFK',n:'John F. Kennedy International',city:'New York, NY'},
+  {c:'SFO',n:'San Francisco International',city:'San Francisco, CA'},
+  {c:'SEA',n:'Seattle-Tacoma International',city:'Seattle, WA'},
+  {c:'LAS',n:'Harry Reid International',city:'Las Vegas, NV'},
+  {c:'MCO',n:'Orlando International',city:'Orlando, FL'},
+  {c:'EWR',n:'Newark Liberty International',city:'Newark, NJ'},
+  {c:'CLT',n:'Charlotte Douglas International',city:'Charlotte, NC'},
+  {c:'PHX',n:'Phoenix Sky Harbor International',city:'Phoenix, AZ'},
+  {c:'IAH',n:'George Bush Intercontinental',city:'Houston, TX'},
+  {c:'MIA',n:'Miami International',city:'Miami, FL'},
+  {c:'BOS',n:'Logan International',city:'Boston, MA'},
+  {c:'MSP',n:'Minneapolis-St. Paul International',city:'Minneapolis, MN'},
+  {c:'FLL',n:'Fort Lauderdale-Hollywood Intl',city:'Fort Lauderdale, FL'},
+  {c:'PHL',n:'Philadelphia International',city:'Philadelphia, PA'},
+  {c:'SLC',n:'Salt Lake City International',city:'Salt Lake City, UT'},
+  {c:'BWI',n:'Baltimore/Washington International',city:'Baltimore, MD'},
+  {c:'IAD',n:'Dulles International',city:'Washington, DC'},
+  {c:'DCA',n:'Reagan National',city:'Washington, DC'},
+  {c:'MDW',n:'Chicago Midway International',city:'Chicago, IL'},
+  {c:'HNL',n:'Daniel K. Inouye International',city:'Honolulu, HI'},
+  {c:'PDX',n:'Portland International',city:'Portland, OR'},
+  {c:'SAN',n:'San Diego International',city:'San Diego, CA'},
+  {c:'TPA',n:'Tampa International',city:'Tampa, FL'},
+  {c:'RDU',n:'Raleigh-Durham International',city:'Raleigh, NC'},
+  {c:'BNA',n:'Nashville International',city:'Nashville, TN'},
+  {c:'AUS',n:'Austin-Bergstrom International',city:'Austin, TX'},
+  {c:'MSY',n:'Louis Armstrong New Orleans Intl',city:'New Orleans, LA'},
+  {c:'SAT',n:'San Antonio International',city:'San Antonio, TX'},
+  {c:'OAK',n:'Oakland International',city:'Oakland, CA'},
+  {c:'SJC',n:'San Jose International',city:'San Jose, CA'},
+  {c:'SMF',n:'Sacramento International',city:'Sacramento, CA'},
+  {c:'BUR',n:'Hollywood Burbank Airport',city:'Burbank, CA'},
+  {c:'LGB',n:'Long Beach Airport',city:'Long Beach, CA'},
+  {c:'ONT',n:'Ontario International',city:'Ontario, CA'},
+  {c:'SNA',n:'John Wayne Airport',city:'Santa Ana, CA'},
+  {c:'SBD',n:'San Bernardino International',city:'San Bernardino, CA'},
+  {c:'ABQ',n:'Albuquerque International Sunport',city:'Albuquerque, NM'},
+  {c:'TUC',n:'Tucson International',city:'Tucson, AZ'},
+  {c:'OGG',n:'Kahului Airport',city:'Maui, HI'},
+  {c:'KOA',n:'Kona International',city:'Kona, HI'},
+  {c:'LIH',n:'Lihue Airport',city:'Kauai, HI'},
+  {c:'ITO',n:'Hilo International',city:'Hilo, HI'},
+  {c:'ANC',n:'Ted Stevens Anchorage International',city:'Anchorage, AK'},
+  {c:'FAI',n:'Fairbanks International',city:'Fairbanks, AK'},
+  {c:'JNU',n:'Juneau International',city:'Juneau, AK'},
+  // ── Southeast & Mid-Atlantic ──
+  {c:'JAX',n:'Jacksonville International',city:'Jacksonville, FL'},
+  {c:'RSW',n:'Southwest Florida International',city:'Fort Myers, FL'},
+  {c:'PBI',n:'Palm Beach International',city:'West Palm Beach, FL'},
+  {c:'SRQ',n:'Sarasota-Bradenton International',city:'Sarasota, FL'},
+  {c:'DAB',n:'Daytona Beach International',city:'Daytona Beach, FL'},
+  {c:'PIE',n:'St. Pete-Clearwater International',city:'St. Petersburg, FL'},
+  {c:'PNS',n:'Pensacola International',city:'Pensacola, FL'},
+  {c:'AGS',n:'Augusta Regional Airport',city:'Augusta, GA'},
+  {c:'SAV',n:'Savannah-Hilton Head International',city:'Savannah, GA'},
+  {c:'GSP',n:'Greenville-Spartanburg International',city:'Greenville, SC'},
+  {c:'CHS',n:'Charleston International',city:'Charleston, SC'},
+  {c:'CAE',n:'Columbia Metropolitan Airport',city:'Columbia, SC'},
+  {c:'MYR',n:'Myrtle Beach International',city:'Myrtle Beach, SC'},
+  {c:'OAJ',n:'Albert J. Ellis Airport',city:'Jacksonville, NC'},
+  {c:'ILM',n:'Wilmington International',city:'Wilmington, NC'},
+  {c:'GSO',n:'Piedmont Triad International',city:'Greensboro, NC'},
+  {c:'AVL',n:'Asheville Regional Airport',city:'Asheville, NC'},
+  {c:'ROA',n:'Roanoke-Blacksburg Regional',city:'Roanoke, VA'},
+  {c:'ORF',n:'Norfolk International',city:'Norfolk, VA'},
+  {c:'RIC',n:'Richmond International',city:'Richmond, VA'},
+  {c:'CHO',n:'Charlottesville-Albemarle Airport',city:'Charlottesville, VA'},
+  {c:'HHH',n:'Hilton Head Airport',city:'Hilton Head, SC'},
+  // ── Northeast & Mid-Atlantic ──
+  {c:'BDL',n:'Bradley International',city:'Hartford, CT'},
+  {c:'PVD',n:'T.F. Green International',city:'Providence, RI'},
+  {c:'MHT',n:'Manchester-Boston Regional',city:'Manchester, NH'},
+  {c:'BTV',n:'Burlington International',city:'Burlington, VT'},
+  {c:'BGR',n:'Bangor International',city:'Bangor, ME'},
+  {c:'PWM',n:'Portland International Jetport',city:'Portland, ME'},
+  {c:'ACK',n:'Nantucket Memorial Airport',city:'Nantucket, MA'},
+  {c:'HYA',n:'Barnstable Municipal Airport',city:'Hyannis, MA'},
+  {c:'MVY',n:"Martha's Vineyard Airport",city:"Martha's Vineyard, MA"},
+  {c:'ALB',n:'Albany International',city:'Albany, NY'},
+  {c:'BUF',n:'Buffalo Niagara International',city:'Buffalo, NY'},
+  {c:'ROC',n:'Frederick Douglass Greater Rochester Intl',city:'Rochester, NY'},
+  {c:'SYR',n:'Syracuse Hancock International',city:'Syracuse, NY'},
+  {c:'ITH',n:'Ithaca Tompkins International',city:'Ithaca, NY'},
+  {c:'ISP',n:'Long Island MacArthur Airport',city:'Islip, NY'},
+  {c:'HPN',n:'Westchester County Airport',city:'White Plains, NY'},
+  {c:'SWF',n:'New York Stewart International',city:'Newburgh, NY'},
+  {c:'TTN',n:'Trenton-Mercer Airport',city:'Trenton, NJ'},
+  {c:'ACY',n:'Atlantic City International',city:'Atlantic City, NJ'},
+  {c:'ABE',n:'Lehigh Valley International',city:'Allentown, PA'},
+  {c:'MDT',n:'Harrisburg International',city:'Harrisburg, PA'},
+  {c:'IPT',n:'Williamsport Regional',city:'Williamsport, PA'},
+  {c:'AVP',n:'Wilkes-Barre/Scranton International',city:'Scranton, PA'},
+  {c:'ERI',n:'Erie International',city:'Erie, PA'},
+  {c:'PIT',n:'Pittsburgh International',city:'Pittsburgh, PA'},
+  // ── Midwest ──
+  {c:'CMH',n:'John Glenn Columbus International',city:'Columbus, OH'},
+  {c:'CLE',n:'Cleveland Hopkins International',city:'Cleveland, OH'},
+  {c:'CVG',n:'Cincinnati/Northern Kentucky International',city:'Cincinnati, OH'},
+  {c:'DAY',n:'Dayton International',city:'Dayton, OH'},
+  {c:'TOL',n:'Eugene F. Kranz Toledo Express',city:'Toledo, OH'},
+  {c:'CAK',n:'Akron-Canton Airport',city:'Akron, OH'},
+  {c:'IND',n:'Indianapolis International',city:'Indianapolis, IN'},
+  {c:'FWA',n:'Fort Wayne International',city:'Fort Wayne, IN'},
+  {c:'SBN',n:'South Bend International',city:'South Bend, IN'},
+  {c:'EVV',n:'Evansville Regional',city:'Evansville, IN'},
+  {c:'DTW',n:'Detroit Metropolitan Airport',city:'Detroit, MI'},
+  {c:'GRR',n:'Gerald R. Ford International',city:'Grand Rapids, MI'},
+  {c:'FNT',n:'Bishop International',city:'Flint, MI'},
+  {c:'LAN',n:'Capital Region International',city:'Lansing, MI'},
+  {c:'MKE',n:'Milwaukee Mitchell International',city:'Milwaukee, WI'},
+  {c:'MSN',n:'Dane County Regional',city:'Madison, WI'},
+  {c:'GRB',n:'Austin Straubel International',city:'Green Bay, WI'},
+  {c:'MCI',n:'Kansas City International',city:'Kansas City, MO'},
+  {c:'STL',n:'St. Louis Lambert International',city:'St. Louis, MO'},
+  {c:'SGF',n:'Springfield-Branson National',city:'Springfield, MO'},
+  {c:'DSM',n:'Des Moines International',city:'Des Moines, IA'},
+  {c:'CID',n:'The Eastern Iowa Airport',city:'Cedar Rapids, IA'},
+  {c:'SUX',n:'Sioux Gateway Airport',city:'Sioux City, IA'},
+  {c:'DBQ',n:'Dubuque Regional Airport',city:'Dubuque, IA'},
+  {c:'OMA',n:'Eppley Airfield',city:'Omaha, NE'},
+  {c:'LNK',n:'Lincoln Airport',city:'Lincoln, NE'},
+  {c:'FSD',n:'Sioux Falls Regional Airport',city:'Sioux Falls, SD'},
+  {c:'RAP',n:'Rapid City Regional Airport',city:'Rapid City, SD'},
+  {c:'BIS',n:'Bismarck Airport',city:'Bismarck, ND'},
+  {c:'FAR',n:'Hector International Airport',city:'Fargo, ND'},
+  {c:'GFK',n:'Grand Forks International',city:'Grand Forks, ND'},
+  {c:'MSO',n:'Missoula Montana Airport',city:'Missoula, MT'},
+  {c:'BIL',n:'Billings Logan International',city:'Billings, MT'},
+  {c:'BTM',n:'Bert Mooney Airport',city:'Butte, MT'},
+  {c:'GTF',n:'Great Falls International',city:'Great Falls, MT'},
+  {c:'HLN',n:'Helena Regional Airport',city:'Helena, MT'},
+  // ── South & Central ──
+  {c:'HOU',n:'William P. Hobby Airport',city:'Houston, TX'},
+  {c:'DAL',n:'Dallas Love Field',city:'Dallas, TX'},
+  {c:'ELP',n:'El Paso International',city:'El Paso, TX'},
+  {c:'AMA',n:'Rick Husband Amarillo International',city:'Amarillo, TX'},
+  {c:'LBB',n:'Lubbock Preston Smith International',city:'Lubbock, TX'},
+  {c:'CRP',n:'Corpus Christi International',city:'Corpus Christi, TX'},
+  {c:'MAF',n:'Midland International Air & Space Port',city:'Midland, TX'},
+  {c:'HRL',n:'Valley International Airport',city:'Harlingen, TX'},
+  {c:'MFE',n:'McAllen Miller International',city:'McAllen, TX'},
+  {c:'TYL',n:'Tyler Pounds Regional',city:'Tyler, TX'},
+  {c:'BRO',n:'South Padre Island International',city:'Brownsville, TX'},
+  {c:'OKC',n:'Will Rogers World Airport',city:'Oklahoma City, OK'},
+  {c:'TUL',n:'Tulsa International',city:'Tulsa, OK'},
+  {c:'LIT',n:'Bill and Hillary Clinton National',city:'Little Rock, AR'},
+  {c:'XNA',n:'Northwest Arkansas National',city:'Fayetteville, AR'},
+  {c:'FSM',n:'Fort Smith Regional',city:'Fort Smith, AR'},
+  {c:'BTR',n:'Baton Rouge Metropolitan',city:'Baton Rouge, LA'},
+  {c:'SHV',n:'Shreveport Regional',city:'Shreveport, LA'},
+  {c:'LFT',n:'Lafayette Regional',city:'Lafayette, LA'},
+  {c:'JAN',n:'Jackson-Medgar Wiley Evers International',city:'Jackson, MS'},
+  {c:'GPT',n:'Gulfport-Biloxi International',city:'Gulfport, MS'},
+  {c:'MOB',n:'Mobile Regional Airport',city:'Mobile, AL'},
+  {c:'HSV',n:'Huntsville International',city:'Huntsville, AL'},
+  {c:'MGM',n:'Montgomery Regional Airport',city:'Montgomery, AL'},
+  {c:'BHM',n:'Birmingham-Shuttlesworth International',city:'Birmingham, AL'},
+  {c:'CHA',n:'Chattanooga Metropolitan Airport',city:'Chattanooga, TN'},
+  {c:'TYS',n:'McGhee Tyson Airport',city:'Knoxville, TN'},
+  {c:'MEM',n:'Memphis International',city:'Memphis, TN'},
+  {c:'TRI',n:'Tri-Cities Regional Airport',city:'Johnson City, TN'},
+  {c:'LEX',n:'Blue Grass Airport',city:'Lexington, KY'},
+  {c:'SDF',n:'Louisville Muhammad Ali International',city:'Louisville, KY'},
+  {c:'BKG',n:'Branson Airport',city:'Branson, MO'},
+  // ── Mountain West & Southwest ──
+  {c:'BOI',n:'Boise Airport',city:'Boise, ID'},
+  {c:'TWF',n:'Magic Valley Regional Airport',city:'Twin Falls, ID'},
+  {c:'IDA',n:'Idaho Falls Regional Airport',city:'Idaho Falls, ID'},
+  {c:'RDD',n:'Redding Municipal Airport',city:'Redding, CA'},
+  {c:'FAT',n:'Fresno Yosemite International',city:'Fresno, CA'},
+  {c:'BFL',n:'Meadows Field Airport',city:'Bakersfield, CA'},
+  {c:'SBA',n:'Santa Barbara Airport',city:'Santa Barbara, CA'},
+  {c:'SLO',n:'San Luis Obispo Regional',city:'San Luis Obispo, CA'},
+  {c:'MRY',n:'Monterey Regional Airport',city:'Monterey, CA'},
+  {c:'ACV',n:'California Redwood Coast Humboldt County',city:'Arcata, CA'},
+  {c:'MMH',n:'Mammoth Yosemite Airport',city:'Mammoth Lakes, CA'},
+  {c:'PSP',n:'Palm Springs International',city:'Palm Springs, CA'},
+  {c:'IPL',n:'Imperial County Airport',city:'Imperial, CA'},
+  {c:'RNO',n:'Reno-Tahoe International',city:'Reno, NV'},
+  {c:'EKO',n:'Elko Regional Airport',city:'Elko, NV'},
+  {c:'GEG',n:'Spokane International',city:'Spokane, WA'},
+  {c:'BLI',n:'Bellingham International',city:'Bellingham, WA'},
+  {c:'ALW',n:'Walla Walla Regional Airport',city:'Walla Walla, WA'},
+  {c:'YKM',n:'Yakima Air Terminal',city:'Yakima, WA'},
+  {c:'OLM',n:'Olympia Regional Airport',city:'Olympia, WA'},
+  {c:'EUG',n:'Eugene Airport',city:'Eugene, OR'},
+  {c:'MFR',n:'Rogue Valley International-Medford',city:'Medford, OR'},
+  {c:'RDM',n:'Roberts Field Redmond Airport',city:'Redmond, OR'},
+  {c:'OTH',n:'Southwest Oregon Regional',city:'Coos Bay, OR'},
+  {c:'ASE',n:'Aspen-Pitkin County Airport',city:'Aspen, CO'},
+  {c:'EGE',n:'Eagle County Regional Airport',city:'Vail, CO'},
+  {c:'MTJ',n:'Montrose Regional Airport',city:'Montrose, CO'},
+  {c:'GJT',n:'Grand Junction Regional Airport',city:'Grand Junction, CO'},
+  {c:'GUC',n:'Gunnison-Crested Butte Regional',city:'Gunnison, CO'},
+  {c:'HDN',n:'Yampa Valley Regional Airport',city:'Steamboat Springs, CO'},
+  {c:'PUB',n:'Pueblo Memorial Airport',city:'Pueblo, CO'},
+  {c:'COS',n:'Colorado Springs Airport',city:'Colorado Springs, CO'},
+  {c:'FNL',n:'Northern Colorado Regional Airport',city:'Fort Collins, CO'},
+  {c:'JAC',n:'Jackson Hole Airport',city:'Jackson, WY'},
+  {c:'CPR',n:'Casper/Natrona County International',city:'Casper, WY'},
+  {c:'COD',n:'Yellowstone Regional Airport',city:'Cody, WY'},
+  {c:'PIH',n:'Pocatello Regional Airport',city:'Pocatello, ID'},
+  {c:'SUN',n:'Friedman Memorial Airport',city:'Sun Valley, ID'},
+  {c:'SGU',n:'St. George Regional Airport',city:'St. George, UT'},
+  {c:'CDC',n:'Cedar City Regional Airport',city:'Cedar City, UT'},
+  {c:'PGD',n:'Punta Gorda Airport',city:'Punta Gorda, FL'},
+  {c:'GNV',n:'Gainesville Regional Airport',city:'Gainesville, FL'},
+  {c:'TLH',n:'Tallahassee International',city:'Tallahassee, FL'},
+  {c:'VPS',n:'Destin-Fort Walton Beach Airport',city:'Fort Walton Beach, FL'},
+  {c:'ECP',n:'Northwest Florida Beaches International',city:'Panama City, FL'},
+  {c:'MLB',n:'Melbourne Orlando International',city:'Melbourne, FL'},
+  // ── International: Europe ──
+  {c:'LHR',n:'London Heathrow',city:'London, UK'},
+  {c:'LGW',n:'London Gatwick',city:'London, UK'},
+  {c:'STN',n:'London Stansted',city:'London, UK'},
+  {c:'CDG',n:'Charles de Gaulle',city:'Paris, France'},
+  {c:'ORY',n:'Paris Orly',city:'Paris, France'},
+  {c:'FRA',n:'Frankfurt Airport',city:'Frankfurt, Germany'},
+  {c:'MUC',n:'Munich Airport',city:'Munich, Germany'},
+  {c:'BER',n:'Berlin Brandenburg Airport',city:'Berlin, Germany'},
+  {c:'AMS',n:'Amsterdam Schiphol',city:'Amsterdam, Netherlands'},
+  {c:'MAD',n:'Adolfo Suárez Madrid-Barajas',city:'Madrid, Spain'},
+  {c:'BCN',n:'Barcelona El Prat Airport',city:'Barcelona, Spain'},
+  {c:'FCO',n:'Rome Fiumicino Airport',city:'Rome, Italy'},
+  {c:'MXP',n:'Milan Malpensa Airport',city:'Milan, Italy'},
+  {c:'VCE',n:'Venice Marco Polo Airport',city:'Venice, Italy'},
+  {c:'ZRH',n:'Zurich Airport',city:'Zurich, Switzerland'},
+  {c:'GVA',n:'Geneva Airport',city:'Geneva, Switzerland'},
+  {c:'BRU',n:'Brussels Airport',city:'Brussels, Belgium'},
+  {c:'VIE',n:'Vienna International Airport',city:'Vienna, Austria'},
+  {c:'WAW',n:'Warsaw Chopin Airport',city:'Warsaw, Poland'},
+  {c:'PRG',n:'Václav Havel Airport Prague',city:'Prague, Czech Republic'},
+  {c:'BUD',n:'Budapest Ferenc Liszt International',city:'Budapest, Hungary'},
+  {c:'ARN',n:'Stockholm Arlanda Airport',city:'Stockholm, Sweden'},
+  {c:'CPH',n:'Copenhagen Airport',city:'Copenhagen, Denmark'},
+  {c:'OSL',n:'Oslo Gardermoen Airport',city:'Oslo, Norway'},
+  {c:'HEL',n:'Helsinki-Vantaa Airport',city:'Helsinki, Finland'},
+  {c:'DUB',n:'Dublin Airport',city:'Dublin, Ireland'},
+  {c:'LIS',n:'Humberto Delgado Airport',city:'Lisbon, Portugal'},
+  {c:'OPO',n:'Porto Airport',city:'Porto, Portugal'},
+  {c:'ATH',n:'Athens International Airport',city:'Athens, Greece'},
+  {c:'SKG',n:'Thessaloniki Airport',city:'Thessaloniki, Greece'},
+  {c:'IST',n:'Istanbul Airport',city:'Istanbul, Turkey'},
+  {c:'SAW',n:'Sabiha Gökçen International',city:'Istanbul, Turkey'},
+  // ── International: Asia-Pacific ──
+  {c:'NRT',n:'Tokyo Narita International',city:'Tokyo, Japan'},
+  {c:'HND',n:'Tokyo Haneda Airport',city:'Tokyo, Japan'},
+  {c:'KIX',n:'Kansai International Airport',city:'Osaka, Japan'},
+  {c:'NGO',n:'Chubu Centrair International',city:'Nagoya, Japan'},
+  {c:'ICN',n:'Incheon International',city:'Seoul, South Korea'},
+  {c:'GMP',n:'Gimpo International',city:'Seoul, South Korea'},
+  {c:'PEK',n:'Beijing Capital International',city:'Beijing, China'},
+  {c:'PKX',n:'Beijing Daxing International',city:'Beijing, China'},
+  {c:'PVG',n:'Shanghai Pudong International',city:'Shanghai, China'},
+  {c:'SHA',n:'Shanghai Hongqiao International',city:'Shanghai, China'},
+  {c:'CAN',n:'Guangzhou Baiyun International',city:'Guangzhou, China'},
+  {c:'HKG',n:'Hong Kong International Airport',city:'Hong Kong'},
+  {c:'TPE',n:'Taiwan Taoyuan International',city:'Taipei, Taiwan'},
+  {c:'MNL',n:'Ninoy Aquino International',city:'Manila, Philippines'},
+  {c:'CEB',n:'Mactan-Cebu International',city:'Cebu, Philippines'},
+  {c:'BKK',n:'Suvarnabhumi Airport',city:'Bangkok, Thailand'},
+  {c:'DMK',n:'Don Mueang International',city:'Bangkok, Thailand'},
+  {c:'CNX',n:'Chiang Mai International',city:'Chiang Mai, Thailand'},
+  {c:'HKT',n:'Phuket International Airport',city:'Phuket, Thailand'},
+  {c:'KUL',n:'Kuala Lumpur International',city:'Kuala Lumpur, Malaysia'},
+  {c:'SIN',n:'Changi Airport',city:'Singapore'},
+  {c:'CGK',n:'Soekarno-Hatta International',city:'Jakarta, Indonesia'},
+  {c:'DPS',n:'Ngurah Rai International',city:'Bali, Indonesia'},
+  {c:'SYD',n:'Kingsford Smith International',city:'Sydney, Australia'},
+  {c:'MEL',n:'Melbourne Airport',city:'Melbourne, Australia'},
+  {c:'BNE',n:'Brisbane Airport',city:'Brisbane, Australia'},
+  {c:'PER',n:'Perth Airport',city:'Perth, Australia'},
+  {c:'ADL',n:'Adelaide Airport',city:'Adelaide, Australia'},
+  {c:'AKL',n:'Auckland Airport',city:'Auckland, New Zealand'},
+  {c:'CHC',n:'Christchurch Airport',city:'Christchurch, New Zealand'},
+  {c:'BOM',n:'Chhatrapati Shivaji Maharaj International',city:'Mumbai, India'},
+  {c:'DEL',n:'Indira Gandhi International',city:'New Delhi, India'},
+  {c:'BLR',n:'Kempegowda International',city:'Bengaluru, India'},
+  {c:'HYD',n:'Rajiv Gandhi International',city:'Hyderabad, India'},
+  {c:'MAA',n:'Chennai International',city:'Chennai, India'},
+  {c:'CCU',n:'Netaji Subhas Chandra Bose International',city:'Kolkata, India'},
+  // ── International: Middle East & Africa ──
+  {c:'DXB',n:'Dubai International',city:'Dubai, UAE'},
+  {c:'AUH',n:'Abu Dhabi International',city:'Abu Dhabi, UAE'},
+  {c:'DOH',n:'Hamad International Airport',city:'Doha, Qatar'},
+  {c:'BAH',n:'Bahrain International Airport',city:'Manama, Bahrain'},
+  {c:'RUH',n:'King Khalid International',city:'Riyadh, Saudi Arabia'},
+  {c:'JED',n:'King Abdulaziz International',city:'Jeddah, Saudi Arabia'},
+  {c:'MCT',n:'Muscat International Airport',city:'Muscat, Oman'},
+  {c:'AMM',n:'Queen Alia International Airport',city:'Amman, Jordan'},
+  {c:'BEY',n:'Beirut-Rafic Hariri International',city:'Beirut, Lebanon'},
+  {c:'TLV',n:'Ben Gurion International',city:'Tel Aviv, Israel'},
+  {c:'CAI',n:'Cairo International Airport',city:'Cairo, Egypt'},
+  {c:'ADD',n:'Addis Ababa Bole International',city:'Addis Ababa, Ethiopia'},
+  {c:'NBO',n:'Jomo Kenyatta International',city:'Nairobi, Kenya'},
+  {c:'JNB',n:'O.R. Tambo International',city:'Johannesburg, South Africa'},
+  {c:'CPT',n:'Cape Town International',city:'Cape Town, South Africa'},
+  {c:'LOS',n:'Murtala Muhammed International',city:'Lagos, Nigeria'},
+  {c:'CMN',n:'Mohammed V International',city:'Casablanca, Morocco'},
+  // ── International: Americas ──
+  {c:'MEX',n:'Benito Juarez International',city:'Mexico City, Mexico'},
+  {c:'CUN',n:'Cancun International',city:'Cancun, Mexico'},
+  {c:'GDL',n:'Miguel Hidalgo y Costilla International',city:'Guadalajara, Mexico'},
+  {c:'MTY',n:'General Mariano Escobedo International',city:'Monterrey, Mexico'},
+  {c:'SJD',n:'Los Cabos International',city:'Los Cabos, Mexico'},
+  {c:'PVR',n:'Licenciado Gustavo Díaz Ordaz International',city:'Puerto Vallarta, Mexico'},
+  {c:'MZT',n:'General Rafael Buelna International',city:'Mazatlan, Mexico'},
+  {c:'HMO',n:'General Ignacio Pesqueira Garcia International',city:'Hermosillo, Mexico'},
+  {c:'ZIH',n:'Ixtapa-Zihuatanejo International',city:'Zihuatanejo, Mexico'},
+  {c:'YYZ',n:'Toronto Pearson International',city:'Toronto, ON'},
+  {c:'YVR',n:'Vancouver International',city:'Vancouver, BC'},
+  {c:'YYC',n:'Calgary International',city:'Calgary, AB'},
+  {c:'YEG',n:'Edmonton International',city:'Edmonton, AB'},
+  {c:'YUL',n:'Montreal-Pierre Elliott Trudeau International',city:'Montreal, QC'},
+  {c:'YQB',n:'Quebec City Jean Lesage International',city:'Quebec City, QC'},
+  {c:'YOW',n:'Ottawa Macdonald-Cartier International',city:'Ottawa, ON'},
+  {c:'YHZ',n:'Halifax Stanfield International',city:'Halifax, NS'},
+  {c:'YWG',n:'Winnipeg James Armstrong Richardson International',city:'Winnipeg, MB'},
+  {c:'GRU',n:'Guarulhos International',city:'São Paulo, Brazil'},
+  {c:'GIG',n:'Rio de Janeiro-Galeão International',city:'Rio de Janeiro, Brazil'},
+  {c:'BSB',n:'Brasília International Airport',city:'Brasília, Brazil'},
+  {c:'EZE',n:'Ministro Pistarini International',city:'Buenos Aires, Argentina'},
+  {c:'SCL',n:'Arturo Merino Benítez International',city:'Santiago, Chile'},
+  {c:'LIM',n:'Jorge Chávez International',city:'Lima, Peru'},
+  {c:'BOG',n:'El Dorado International',city:'Bogotá, Colombia'},
+  {c:'MDE',n:'José María Córdova International',city:'Medellín, Colombia'},
+  {c:'UIO',n:'Mariscal Sucre International',city:'Quito, Ecuador'},
+  {c:'GYE',n:'José Joaquín de Olmedo International',city:'Guayaquil, Ecuador'},
+  {c:'NAS',n:'Lynden Pindling International',city:'Nassau, Bahamas'},
+  {c:'MBJ',n:'Sangster International',city:'Montego Bay, Jamaica'},
+  {c:'KIN',n:'Norman Manley International',city:'Kingston, Jamaica'},
+  {c:'PUJ',n:'Punta Cana International',city:'Punta Cana, Dominican Republic'},
+  {c:'SDQ',n:'Las Américas International',city:'Santo Domingo, Dominican Republic'},
+  {c:'SJU',n:'Luis Muñoz Marín International',city:'San Juan, Puerto Rico'},
+  {c:'SXM',n:'Princess Juliana International',city:'Sint Maarten'},
+  {c:'BGI',n:'Grantley Adams International',city:'Bridgetown, Barbados'},
+  {c:'ANU',n:'V.C. Bird International',city:"St. John's, Antigua"},
+  {c:'GUA',n:'La Aurora International',city:'Guatemala City, Guatemala'},
+  {c:'SAL',n:'El Salvador International',city:'San Salvador, El Salvador'},
+  {c:'MGA',n:'Augusto C. Sandino International',city:'Managua, Nicaragua'},
+  {c:'SJO',n:'Juan Santamaría International',city:'San José, Costa Rica'},
+  {c:'PTY',n:'Tocumen International Airport',city:'Panama City, Panama'},
+  {c:'HAV',n:'José Martí International',city:'Havana, Cuba'}
+];
 const AIRLINES=[{code:'AA',name:'American Airlines',multi:1.00,dom:true,intl:true,ns:true,rst:false},{code:'DL',name:'Delta Air Lines',multi:1.05,dom:true,intl:true,ns:true,rst:false},{code:'UA',name:'United Airlines',multi:1.02,dom:true,intl:true,ns:true,rst:false},{code:'WN',name:'Southwest Airlines',multi:0.85,dom:true,intl:false,ns:true,rst:false},{code:'B6',name:'JetBlue Airways',multi:0.82,dom:true,intl:true,ns:true,rst:false},{code:'AS',name:'Alaska Airlines',multi:0.88,dom:true,intl:true,ns:true,rst:false},{code:'F9',name:'Frontier Airlines',multi:0.65,dom:true,intl:false,ns:false,rst:false},{code:'NK',name:'Spirit Airlines',multi:0.55,dom:true,intl:false,ns:false,rst:true},{code:'G4',name:'Allegiant Air',multi:0.62,dom:true,intl:false,ns:false,rst:false},{code:'XP',name:'Avelo Airlines',multi:0.60,dom:true,intl:false,ns:false,rst:false},{code:'MX',name:'Breeze Airways',multi:0.63,dom:true,intl:false,ns:false,rst:false},{code:'AC',name:'Air Canada',multi:1.05,dom:false,intl:true,ns:true,rst:false},{code:'AF',name:'Air France',multi:1.40,dom:false,intl:true,ns:true,rst:false},{code:'BA',name:'British Airways',multi:1.45,dom:false,intl:true,ns:true,rst:false},{code:'LH',name:'Lufthansa',multi:1.42,dom:false,intl:true,ns:true,rst:false},{code:'EK',name:'Emirates',multi:1.80,dom:false,intl:true,ns:true,rst:false},{code:'QR',name:'Qatar Airways',multi:1.75,dom:false,intl:true,ns:true,rst:false},{code:'SQ',name:'Singapore Airlines',multi:1.85,dom:false,intl:true,ns:true,rst:false},{code:'AM',name:'Aeroméxico',multi:0.95,dom:false,intl:true,ns:false,rst:false},{code:'EI',name:'Aer Lingus',multi:1.20,dom:false,intl:true,ns:true,rst:false},{code:'FI',name:'Icelandair',multi:1.20,dom:false,intl:true,ns:false,rst:false},{code:'N0',name:'Norse Atlantic',multi:0.85,dom:false,intl:true,ns:false,rst:false}];
 
 let AF={
