@@ -1463,6 +1463,37 @@ input:focus, select:focus, button:focus-visible {
 ═══════════════════════════════════════════ */
 *:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; border-radius: 4px; }
 
+/* ═══ SPARKLINE ═══ */
+.item-sparkline { margin-top:10px; padding-top:10px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.spark-label { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
+/* ═══ MARKET OVERVIEW BAR ═══ */
+.market-bar { display:flex; align-items:center; background:white; border:1.5px solid var(--border); border-radius:12px; padding:12px 20px; margin-bottom:20px; flex-wrap:wrap; gap:4px; }
+.mkt-stat { display:flex; flex-direction:column; align-items:center; padding:0 16px; gap:2px; }
+.mkt-num { font-family:'Fraunces',serif; font-size:22px; font-weight:400; line-height:1; }
+.mkt-num.up { color:var(--accent); } .mkt-num.down { color:var(--green); }
+.mkt-lbl { font-size:10px; color:var(--muted); font-family:'DM Mono',monospace; letter-spacing:0.05em; white-space:nowrap; }
+.mkt-div { width:1px; background:var(--border); height:32px; flex-shrink:0; }
+/* ═══ UTILITIES RANKING ═══ */
+.util-ranking { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
+.rank-col { background:white; border:1.5px solid var(--border); border-radius:12px; padding:16px 18px; }
+.rank-title { font-size:12px; font-weight:600; margin-bottom:12px; }
+.rank-title.green-txt { color:var(--green); } .rank-title.red-txt { color:var(--accent); }
+.rank-row { display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.rank-pos { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); width:22px; }
+.rank-name { flex:1; font-weight:500; } .rank-val { font-family:'DM Mono',monospace; font-size:12px; font-weight:600; }
+/* ═══ TAX COMPARE WIDGET ═══ */
+.tc-widget { background:white; border:1.5px solid var(--border); border-radius:14px; padding:20px 22px; margin-bottom:24px; }
+.tc-table { width:100%; border-collapse:collapse; font-size:13px; }
+.tc-table th { font-family:'DM Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); padding:6px 12px; border-bottom:2px solid var(--border); }
+.tc-table td { padding:9px 12px; text-align:center; font-family:'DM Mono',monospace; border-bottom:1px solid var(--border); }
+.tc-lbl { font-family:'Outfit',sans-serif; color:var(--muted); font-size:12px; }
+.tc-win { font-weight:700; color:var(--green); background:rgba(21,128,61,0.06); border-radius:4px; }
+/* ═══ AI ANALYSIS ═══ */
+.ai-analysis { display:flex; flex-direction:column; gap:12px; }
+.ai-sec { display:flex; flex-direction:column; gap:4px; }
+.ai-lbl { font-family:'DM Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.5); }
+.ai-txt { font-size:14px; color:rgba(255,255,255,0.88); line-height:1.65; margin:0; }
+
 /* Price history "Was $X" on grocery cards */
 .item-prev { font-size: 11px; color: var(--muted); text-decoration: line-through; margin-left: auto; font-family: 'DM Mono', monospace; }
 
@@ -1555,6 +1586,7 @@ input:focus, select:focus, button:focus-visible {
     <div class="section-header"><h2 class="section-title">Grocery Prices</h2><span class="section-count" id="groceryCount"></span></div>
     <p class="section-desc">Retail prices from BLS Average Price Survey. Commodity signals from USDA NASS + FRED. Forecasts based on 4–8 week commodity-to-retail lag.</p>
     <div class="signals-row" id="signalsRow"></div>
+    <div id="marketBar"></div>
     <div class="toolbar">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -1648,6 +1680,7 @@ input:focus, select:focus, button:focus-visible {
   <div class="section-panel" id="section-utilities">
     <div class="section-header"><h2 class="section-title">Utilities</h2><span class="section-count">50 states</span></div>
     <p class="section-desc">Electricity rates from EIA. Average monthly bills for electricity, water, gas, and internet by state.</p>
+    <div id="utilitiesRanking"></div>
     <div class="utilities-grid" id="utilitiesGrid"></div>
   </div>
 
@@ -1674,6 +1707,7 @@ input:focus, select:focus, button:focus-visible {
         <input type="text" placeholder="Search state…" id="taxSearch" oninput="filterTaxes()">
       </div>
     </div>
+    <div id="taxCompare"></div>
     <div class="tax-table-wrap"><table class="tax-table"><thead><tr><th>State</th><th>Sales Tax</th><th>Top Income Tax</th><th>Avg Property Tax Rate</th><th>Gas Tax (¢/gal)</th><th>Tax Burden Rank</th></tr></thead><tbody id="taxTableBody"></tbody></table></div>
   </div>
 
@@ -2130,7 +2164,7 @@ let selectedState="",selectedCity="",groceryFilter="all",grocerySearch="",gasFil
 document.addEventListener("DOMContentLoaded",()=>{
   buildTicker(); populateStateDropdown(); buildSignals(); buildGroceries(); buildForecast();
   buildGasGrid(); buildHousingGrid(); buildUtilitiesGrid(); buildElecGrid();
-  buildTaxTable(); buildSuggestions(); updateBudget(600); updateHeroStats();
+  buildTaxTable(); buildTaxCompare(); buildSuggestions(); updateBudget(600); updateHeroStats();
   rxRenderTable(DRUGS);
   setTimeout(()=>{ animateHeroStats(); staggerCards("section-groceries"); },100);
   document.getElementById("rxStatShortage").textContent=DRUGS.filter(d=>d.shortage).length;
@@ -2420,6 +2454,59 @@ function updateHeroStats(){
   if(rentEl)rentEl.textContent='$'+Math.round(medRent*factor).toLocaleString();
 }
 
+function buildSparkline(item,factor){
+  const pts=[];const w=80,h=28,pad=3;
+  for(let t=0;t<8;t++){
+    const seed=(item.id*0.8)%(2*Math.PI);
+    const trend=(t/7)*(item.change/100)*0.5;
+    const noise=Math.sin(t*Math.PI*1.8+seed)*0.04+Math.sin(t*0.9+seed*2)*0.02;
+    pts.push(1+trend+noise);
+  }
+  const mn=Math.min(...pts),mx=Math.max(...pts);
+  const scaleY=v=>pad+(h-2*pad)*(1-(v-mn)/(Math.max(mx-mn,0.001)));
+  const scaleX=i=>pad+(i/7)*(w-2*pad);
+  const color=item.trend==='up'?'#d94f2a':item.trend==='down'?'#15803d':'#78716c';
+  return`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" fill="none"><polyline points="${pts.map((v,i)=>`${scaleX(i).toFixed(1)},${scaleY(v).toFixed(1)}`).join(' ')}" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" fill="none"/><circle cx="${scaleX(7).toFixed(1)}" cy="${scaleY(pts[7]).toFixed(1)}" r="2" fill="${color}"/></svg>`;
+}
+function buildMarketBar(){
+  const up=GROCERY_DATA.filter(g=>g.trend==='up').length;
+  const dn=GROCERY_DATA.filter(g=>g.trend==='down').length;
+  const stable=GROCERY_DATA.length-up-dn;
+  const avgChange=(GROCERY_DATA.reduce((s,g)=>s+g.change,0)/GROCERY_DATA.length);
+  const topBuys=[...GROCERY_DATA].filter(g=>g.action==='buy').sort((a,b)=>b.change-a.change).slice(0,3);
+  const el=document.getElementById('marketBar');if(!el)return;
+  el.innerHTML=`<div class="market-bar"><div class="mkt-stat"><span class="mkt-num up">${up}</span><span class="mkt-lbl">Rising</span></div><div class="mkt-div"></div><div class="mkt-stat"><span class="mkt-num down">${dn}</span><span class="mkt-lbl">Falling</span></div><div class="mkt-div"></div><div class="mkt-stat"><span class="mkt-num">${stable}</span><span class="mkt-lbl">Stable</span></div><div class="mkt-div"></div><div class="mkt-stat"><span class="mkt-num ${avgChange>0?'up':'down'}">${avgChange>0?'+':''}${avgChange.toFixed(1)}%</span><span class="mkt-lbl">Avg Change</span></div><div class="mkt-div"></div><div class="mkt-stat" style="align-items:flex-start;flex:1;min-width:180px"><span class="mkt-lbl" style="margin-bottom:4px">Stock Up Now</span><span style="font-size:12px;font-weight:600;color:var(--accent)">${topBuys.map(g=>g.emoji+' '+g.name.split(' (')[0]).join(' · ')}</span></div></div>`;
+}
+function buildUtilitiesRanking(){
+  const sorted=UTILITIES_DATA.map(u=>({name:u.name,total:u.monthly_elec+u.water+(u.gas==='N/A'?0:u.gas)+u.internet})).sort((a,b)=>a.total-b.total);
+  const cheapest=sorted.slice(0,5);const priciest=sorted.slice(-5).reverse();
+  const el=document.getElementById('utilitiesRanking');if(!el)return;
+  const rowsOf=arr=>arr.map((s,i)=>`<div class="rank-row"><span class="rank-pos">#${i+1}</span><span class="rank-name">${s.name}</span><span class="rank-val">$${s.total}/mo</span></div>`).join('');
+  el.innerHTML=`<div class="util-ranking"><div class="rank-col"><div class="rank-title green-txt">✅ Cheapest States</div>${rowsOf(cheapest)}</div><div class="rank-col"><div class="rank-title red-txt">💸 Most Expensive States</div>${rowsOf(priciest)}</div></div>`;
+}
+function buildTaxCompare(){
+  const el=document.getElementById('taxCompare');if(!el)return;
+  el.innerHTML=`<div class="tc-widget"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap"><span style="font-weight:600;font-size:14px">Compare Two States</span><select id="tc-stateA" onchange="renderTaxCompare()" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px"></select><span style="color:var(--muted);font-size:13px">vs</span><select id="tc-stateB" onchange="renderTaxCompare()" style="padding:5px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px"></select></div><div id="tc-result"></div></div>`;
+  const selA=document.getElementById('tc-stateA');const selB=document.getElementById('tc-stateB');
+  TAX_DATA.forEach((t,i)=>{
+    const oA=document.createElement('option');oA.value=t.code;oA.textContent=t.state;if(i===0)oA.selected=true;selA.appendChild(oA);
+    const oB=document.createElement('option');oB.value=t.code;oB.textContent=t.state;if(i===4)oB.selected=true;selB.appendChild(oB);
+  });
+  renderTaxCompare();
+}
+function renderTaxCompare(){
+  const aCode=document.getElementById('tc-stateA')?.value;const bCode=document.getElementById('tc-stateB')?.value;
+  const a=TAX_DATA.find(t=>t.code===aCode);const b=TAX_DATA.find(t=>t.code===bCode);
+  const el=document.getElementById('tc-result');if(!a||!b||!el)return;
+  const rows=[
+    {label:'Sales Tax',va:a.sales===0?'None':a.sales+'%',vb:b.sales===0?'None':b.sales+'%',numA:a.sales,numB:b.sales},
+    {label:'Top Income Tax',va:a.income===0?'None':a.income+'%',vb:b.income===0?'None':b.income+'%',numA:a.income,numB:b.income},
+    {label:'Avg Property Tax',va:a.property+'%',vb:b.property+'%',numA:a.property,numB:b.property},
+    {label:'Gas Tax (¢/gal)',va:a.gas+'¢',vb:b.gas+'¢',numA:a.gas,numB:b.gas},
+    {label:'Tax Burden Rank',va:'#'+a.rank,vb:'#'+b.rank,numA:a.rank,numB:b.rank}
+  ];
+  el.innerHTML=`<table class="tc-table"><thead><tr><th class="tc-lbl">Category</th><th>${a.state}</th><th>${b.state}</th></tr></thead><tbody>`+rows.map(r=>`<tr><td class="tc-lbl">${r.label}</td><td class="${r.numA<r.numB?'tc-win':''}">${r.va}</td><td class="${r.numB<r.numA?'tc-win':''}">${r.vb}</td></tr>`).join('')+'</tbody></table>';
+}
 function buildGroceries(){
   const factor=getPriceFactor();const grid=document.getElementById("groceryGrid");
   const items=GROCERY_DATA.filter(item=>{const ms=groceryFilter==="all"||item.action===groceryFilter;const mq=!grocerySearch||item.name.toLowerCase().includes(grocerySearch.toLowerCase())||item.cat.toLowerCase().includes(grocerySearch.toLowerCase());return ms&&mq;});
@@ -2433,8 +2520,9 @@ function buildGroceries(){
     const changeClass=item.change>0?'up':'down';const changeStr=(item.change>0?'+':'')+item.change.toFixed(1)+'% YoY';
     const actionClass=item.action==='buy'?'action-buy':item.action==='wait'?'action-wait':'action-watch';
     const prevStr=item.prev?`<span class="item-prev">was $${(item.prev*factor).toFixed(2)}</span>`:'';
-    return`<div class="item-card ${trendClass}" onclick="openModal(${item.id})"><div class="item-top"><span class="item-emoji">${item.emoji}</span><span class="item-badge ${badgeClass}">${badgeText}</span></div><div class="item-name">${item.name}</div><div class="item-category">${item.cat}</div><div class="item-price-row"><span class="item-price">$${adjPrice}</span><span class="item-unit">${item.unit}</span>${prevStr}</div><div class="item-change ${changeClass}">${changeStr}</div><div class="item-signal">${item.signal}</div><span class="item-action ${actionClass}">${item.action==='buy'?'⬆ Stock Up':item.action==='wait'?'⬇ Wait':'👁 Watch'}</span></div>`;
+    return`<div class="item-card ${trendClass}" onclick="openModal(${item.id})"><div class="item-top"><span class="item-emoji">${item.emoji}</span><span class="item-badge ${badgeClass}">${badgeText}</span></div><div class="item-name">${item.name}</div><div class="item-category">${item.cat}</div><div class="item-price-row"><span class="item-price">$${adjPrice}</span><span class="item-unit">${item.unit}</span>${prevStr}</div><div class="item-change ${changeClass}">${changeStr}</div><div class="item-signal">${item.signal}</div><div class="item-sparkline">${buildSparkline(item,factor)}<span class="spark-label">8-wk trend</span></div><span class="item-action ${actionClass}">${item.action==='buy'?'⬆ Stock Up':item.action==='wait'?'⬇ Wait':'👁 Watch'}</span></div>`;
   }).join("");
+  buildMarketBar();
 }
 function filterGroceries(){grocerySearch=document.getElementById("grocerySearch").value;buildGroceries();}
 function filterByStatus(status,btn){groceryFilter=status;document.querySelectorAll("#filterPills .pill").forEach(p=>p.classList.remove("active","danger","safe"));btn.classList.add("active");if(status==='buy')btn.classList.add("danger");if(status==='wait')btn.classList.add("safe");buildGroceries();}
@@ -2442,7 +2530,7 @@ function buildGasGrid(){const grid=document.getElementById("gasGrid");let data=G
 function filterGas(){gasFilter=document.getElementById("gasSearch").value;buildGasGrid();}
 function buildHousingGrid(){filterHousing();}
 function filterHousing(){const search=document.getElementById("housingSearch").value.toLowerCase();const grid=document.getElementById("housingGrid");const factor=getPriceFactor();const data=HOUSING_DATA.filter(h=>!search||h.city.toLowerCase().includes(search)||h.metro.toLowerCase().includes(search));grid.innerHTML=data.map(h=>{const adj=(v)=>Math.round(v*factor);const chgColor=h.change>0?'var(--accent)':'var(--green)';return`<div class="housing-card"><div class="housing-city">${h.city}</div><div class="housing-metro">${h.metro}</div><div class="rent-rows"><div class="rent-row"><span class="rent-type">Studio</span><span class="rent-amount">$${adj(h.studio).toLocaleString()}/mo</span></div><div class="rent-row"><span class="rent-type">1 Bedroom</span><span class="rent-amount">$${adj(h.one).toLocaleString()}/mo</span></div><div class="rent-row"><span class="rent-type">2 Bedroom</span><span class="rent-amount">$${adj(h.two).toLocaleString()}/mo</span></div><div class="rent-row"><span class="rent-type">3 Bedroom</span><span class="rent-amount">$${adj(h.three).toLocaleString()}/mo</span></div></div><div style="margin-top:12px;font-family:'DM Mono',monospace;font-size:11px;color:${chgColor}">YoY: ${h.change>0?'+':''}${h.change}% rent change</div></div>`;}).join("");}
-function buildUtilitiesGrid(){const grid=document.getElementById("utilitiesGrid");const data=selectedState?UTILITIES_DATA.filter(u=>u.state===selectedState):UTILITIES_DATA;const display=data.length>0?data:UTILITIES_DATA;grid.innerHTML=display.map(u=>`<div class="util-card"><div class="util-icon">⚡</div><div class="util-state">${u.name}</div><div class="util-name">Monthly Utility Costs</div><div class="util-rows"><div class="util-row"><span class="util-label">Electricity (avg mo.)</span><span class="util-val">$${u.monthly_elec}</span></div><div class="util-row"><span class="util-label">Elec. rate per kWh</span><span class="util-val">$${u.elec_kwh.toFixed(3)}</span></div><div class="util-row"><span class="util-label">Water (avg mo.)</span><span class="util-val">$${u.water}</span></div><div class="util-row"><span class="util-label">Nat. Gas (avg mo.)</span><span class="util-val">${u.gas==="N/A"?"N/A":"$"+u.gas}</span></div><div class="util-row"><span class="util-label">Internet (avg mo.)</span><span class="util-val">$${u.internet}</span></div><div class="util-row" style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px"><span class="util-label" style="font-weight:600">Total est. monthly</span><span class="util-val" style="font-weight:700">$${u.monthly_elec+u.water+(u.gas==="N/A"?0:u.gas)+u.internet}</span></div></div></div>`).join("");}
+function buildUtilitiesGrid(){const grid=document.getElementById("utilitiesGrid");const data=selectedState?UTILITIES_DATA.filter(u=>u.state===selectedState):UTILITIES_DATA;const display=data.length>0?data:UTILITIES_DATA;grid.innerHTML=display.map(u=>`<div class="util-card"><div class="util-icon">⚡</div><div class="util-state">${u.name}</div><div class="util-name">Monthly Utility Costs</div><div class="util-rows"><div class="util-row"><span class="util-label">Electricity (avg mo.)</span><span class="util-val">$${u.monthly_elec}</span></div><div class="util-row"><span class="util-label">Elec. rate per kWh</span><span class="util-val">$${u.elec_kwh.toFixed(3)}</span></div><div class="util-row"><span class="util-label">Water (avg mo.)</span><span class="util-val">$${u.water}</span></div><div class="util-row"><span class="util-label">Nat. Gas (avg mo.)</span><span class="util-val">${u.gas==="N/A"?"N/A":"$"+u.gas}</span></div><div class="util-row"><span class="util-label">Internet (avg mo.)</span><span class="util-val">$${u.internet}</span></div><div class="util-row" style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px"><span class="util-label" style="font-weight:600">Total est. monthly</span><span class="util-val" style="font-weight:700">$${u.monthly_elec+u.water+(u.gas==="N/A"?0:u.gas)+u.internet}</span></div></div></div>`).join("");buildUtilitiesRanking();}
 function buildElecGrid(){filterElec();}
 function filterElec(){const search=document.getElementById("elecSearch").value.toLowerCase();const grid=document.getElementById("elecGrid");const data=ELECTRONICS_DATA.filter(e=>!search||e.name.toLowerCase().includes(search)||e.spec.toLowerCase().includes(search));grid.innerHTML=data.map(e=>{const trendClass=e.trendClass==='buy'?'action-buy':e.trendClass==='wait'?'action-wait':'action-watch';const trendLabel=e.trendClass==='buy'?'⬆ Buy Now':e.trendClass==='wait'?'⬇ Wait':'👁 Watch';return`<div class="elec-card"><div class="elec-icon">${e.icon}</div><div class="elec-name">${e.name}</div><div class="elec-spec">${e.spec}</div><div class="elec-price">$${e.price.toLocaleString()}</div><div class="elec-range">${e.range}</div><span class="elec-trend item-action ${trendClass}" style="margin-top:8px">${trendLabel}</span><div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.4">${e.note}</div></div>`;}).join("");}
 function buildTaxTable(){filterTaxes();}
@@ -3024,10 +3112,47 @@ function afSortBy(col){AF.sortDir=AF.sortCol===col?(AF.sortDir==='asc'?'desc':'a
 function afDoFilter(f,btn){AF.filter=f;document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('on'));btn.classList.add('on');if(f==='cheapest'){AF.sortCol='price';AF.sortDir='asc';}afRenderTable();}
 function afResetFilters(){AF.filter='all';document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('on'));document.querySelector('[data-f="all"]').classList.add('on');}
 async function afTriggerAI(){
-  const el=document.getElementById('af-ai-ban-body');el.innerHTML='<div class="ai-load"><div class="ai-spin"></div>Analyzing fares and route conditions…</div>';
-  const cheap=AF.fares[0];const avg=Math.round(AF.fares.reduce((a,f)=>a+f.price,0)/AF.fares.length);const buys=AF.fares.filter(f=>f.sig==='buy').map(f=>f.al.name).slice(0,3).join(', ');const tUp=AF.fares.filter(f=>f.trend==='up').length;const tDn=AF.fares.filter(f=>f.trend==='down').length;
-  const prompt=`You are a concise airfare analyst for CartCast. Write EXACTLY 3 sentences (no bullets, no headers, no markdown).\n\nRoute: ${AF.orig.city} (${AF.orig.code}) to ${AF.dest.city} (${AF.dest.code})\nDate: ${AF.dep}${AF.trip==='roundtrip'?`, Return: ${AF.ret}`:''}\nCabin: ${AF.cabin} · Passengers: ${AF.pax}\nFares: ${AF.fares.length} airlines · Cheapest $${cheap.price} on ${cheap.al.name} · Average $${avg}\nTrend: ${tUp} airlines rising, ${tDn} falling\nBuy signals: ${buys||'none'}\n\nWrite: 1) Book now or wait? 2) Best value airline 3) What the ${AF.prefTime} departure costs vs off-peak`;
-  try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});const d=await r.json();const t=d.content?.map(c=>c.text||'').join('')||'';el.innerHTML=t?`<p class="ai-txt">${t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</p>`:`<p class="ai-txt">Cheapest fare on ${AF.orig.code}–${AF.dest.code}: <strong>$${cheap.price}</strong> on ${cheap.al.name}. Route average: $${avg}. ${buys?'Buy signals: '+buys+'.':''}</p>`;}catch(e){el.innerHTML=`<p class="ai-txt">Cheapest fare on ${AF.orig.code}–${AF.dest.code} is <strong>$${cheap.price}</strong> on ${cheap.al.name}. Route average: <strong>$${avg}</strong>.</p>`;}
+  const el=document.getElementById('af-ai-ban-body');
+  el.innerHTML='<div class="ai-load"><div class="ai-spin"></div>Analyzing fares and route conditions…</div>';
+  await new Promise(r=>setTimeout(r,900));
+  const cheap=AF.fares[0];
+  const prices=AF.fares.map(f=>f.price).sort((a,b)=>a-b);
+  const avg=Math.round(prices.reduce((s,p)=>s+p,0)/prices.length);
+  const med=prices[Math.floor(prices.length/2)];
+  const buys=AF.fares.filter(f=>f.sig==='buy');
+  const waits=AF.fares.filter(f=>f.sig==='wait');
+  const tUp=AF.fares.filter(f=>f.trend==='up').length;
+  const tDn=AF.fares.filter(f=>f.trend==='down').length;
+  const spread=avg-cheap.price;
+  const spreadPct=Math.round((spread/avg)*100);
+  const nonstops=AF.fares.filter(f=>f.sc===0);
+  const depDate=new Date(AF.dep);
+  const mo=depDate.getMonth();
+  const daysOut=Math.round((depDate-Date.now())/(1000*60*60*24));
+  const seasonMsg=mo>=5&&mo<=7?'peak summer travel season — book ASAP'
+    :mo===11||mo===0?'holiday peak — fares rise fast near the date'
+    :mo>=8&&mo<=9?'shoulder season — solid deals available now'
+    :'off-peak window — pricing is flexible';
+  const urgency=daysOut<7?'<strong>Immediate</strong> — fares spike sharply within 7 days'
+    :daysOut<14?'<strong>High</strong> — prices typically rise in the final 2 weeks'
+    :daysOut<30?'<strong>Moderate</strong> — 2–4 weeks out is the sweet spot for this route'
+    :'<strong>Low</strong> — you have flexibility; monitor for flash drops';
+  const buyPct=Math.round((buys.length/AF.fares.length)*100);
+  const signalLine=buys.length>0
+    ?`${buyPct}% of tracked airlines show buy signals — top pick is <strong>${buys[0].al.name}</strong> at $${buys[0].price}.`
+    :`${waits.length} airlines showing wait signals; pricing pressure appears to be easing.`;
+  const valueLine=spread>30
+    ?`The cheapest option is <strong>$${spread} below the route average</strong> (${spreadPct}% discount) — a strong value gap on ${cheap.al.name}.`
+    :`Fares are tightly clustered within <strong>$${spread} of the average</strong> — limited price arbitrage on this route.`;
+  const trendLine=tUp>tDn
+    ?`${tUp} of ${AF.fares.length} airlines are trending up — momentum favors booking now.`
+    :tDn>tUp
+    ?`${tDn} airlines trending down — waiting a few days could yield a lower fare.`
+    :'Fare trends are mixed with no clear directional signal.';
+  const nonstopLine=nonstops.length>0
+    ?`${nonstops.length} nonstop option${nonstops.length>1?'s are':' is'} available from <strong>$${Math.min(...nonstops.map(f=>f.price))}</strong>.`
+    :'No nonstop options found — expect a connection on this route.';
+  el.innerHTML=`<div class="ai-analysis"><div class="ai-sec"><span class="ai-lbl">Market Signal</span><p class="ai-txt">${signalLine} ${valueLine}</p></div><div class="ai-sec"><span class="ai-lbl">Booking Urgency</span><p class="ai-txt">Urgency is ${urgency}. You're traveling during <strong>${seasonMsg}</strong>${daysOut>0?' with '+daysOut+' days until departure':''}.  Route avg <strong>$${avg}</strong> · Median <strong>$${med}</strong>.</p></div><div class="ai-sec"><span class="ai-lbl">Route Intelligence</span><p class="ai-txt">${trendLine} ${nonstopLine}</p></div></div>`;
 }
 async function afOpenModal(idx){
   const f=AF.fares[idx];if(!f)return;
