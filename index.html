@@ -1909,6 +1909,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   buildGasGrid(); buildHousingGrid(); buildUtilitiesGrid(); buildElecGrid();
   buildTaxTable(); buildSuggestions(); updateBudget(600); updateHeroStats();
   rxRenderTable(DRUGS);
+  setTimeout(()=>{ animateHeroStats(); staggerCards("section-groceries"); },100);
   document.getElementById("rxStatShortage").textContent=DRUGS.filter(d=>d.shortage).length;
   document.getElementById("rxStatRising").textContent=DRUGS.filter(d=>d.trend==="up").length;
   document.getElementById("rxStatTotal").textContent=DRUGS.length;
