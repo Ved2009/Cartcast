@@ -1273,6 +1273,204 @@ input:focus, select:focus, button:focus-visible {
   .fc-pres-grid { grid-template-columns: repeat(2,1fr); }
 }
 
+/* ═══════════════════════════════════════════
+   DARK MODE
+═══════════════════════════════════════════ */
+[data-theme="dark"] {
+  --ink: #eeebe5;
+  --paper: #0f0f14;
+  --warm: #1c1c26;
+  --accent: #f06040;
+  --accent2: #5a9cff;
+  --gold: #d4a030;
+  --green: #22c55e;
+  --muted: #7a7570;
+  --border: #272736;
+  --card-bg: #17171f;
+  --shadow: 0 1px 12px rgba(0,0,0,0.35);
+  --shadow-lg: 0 6px 32px rgba(0,0,0,0.45);
+  --cream: #1e1e2c;
+  --amber: #d4a030;
+  --blue: #3a6cbf;
+}
+[data-theme="dark"] body { background: var(--paper); }
+[data-theme="dark"] header { background: rgba(15,15,20,0.96); border-color: var(--border); }
+[data-theme="dark"] .location-bar { background: #15151e; border-color: var(--border); }
+[data-theme="dark"] .item-card,
+[data-theme="dark"] .gas-card,
+[data-theme="dark"] .housing-card,
+[data-theme="dark"] .util-card,
+[data-theme="dark"] .elec-card,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .fc-card,
+[data-theme="dark"] .signal-card,
+[data-theme="dark"] .rx-stat,
+[data-theme="dark"] .pharmacy-legend,
+[data-theme="dark"] .ph-price-card { background: var(--card-bg); border-color: var(--border); }
+[data-theme="dark"] .budget-card { background: #1e1e2e; }
+[data-theme="dark"] .search-box { background: var(--card-bg); border-color: var(--border); }
+[data-theme="dark"] .search-box input { color: var(--ink); }
+[data-theme="dark"] .pill,
+[data-theme="dark"] .fc-pill { background: var(--card-bg); border-color: var(--border); color: var(--muted); }
+[data-theme="dark"] .pill.active { background: var(--ink); color: var(--paper); }
+[data-theme="dark"] .loc-select { background-color: var(--card-bg); border-color: var(--border); color: var(--ink); }
+[data-theme="dark"] .tax-table-wrap,
+[data-theme="dark"] .rx-table-wrap { background: var(--card-bg); border-color: var(--border); }
+[data-theme="dark"] .tax-table th { background: #1f1f2e; border-color: var(--border); }
+[data-theme="dark"] .tax-table td { border-color: var(--border); }
+[data-theme="dark"] .tax-table tr:hover td { background: var(--warm); }
+[data-theme="dark"] .fc-model-info { background: var(--warm); border-color: var(--border); }
+[data-theme="dark"] .fc-pred-block { background: var(--warm); }
+[data-theme="dark"] .modal { background: var(--card-bg); }
+[data-theme="dark"] .modal-header { background: #1a1a28; border-color: var(--border); }
+[data-theme="dark"] .modal-body { background: var(--card-bg); }
+[data-theme="dark"] footer { background: #080810; }
+[data-theme="dark"] .badge-up { background: rgba(240,96,64,0.18); color: var(--accent); }
+[data-theme="dark"] .badge-down { background: rgba(34,197,94,0.15); color: var(--green); }
+[data-theme="dark"] .badge-flat { background: rgba(212,160,48,0.15); color: var(--gold); }
+[data-theme="dark"] .badge-hot { background: var(--accent); color: #fff; }
+[data-theme="dark"] .action-buy { background: rgba(240,96,64,0.15); color: var(--accent); }
+[data-theme="dark"] .action-wait { background: rgba(34,197,94,0.15); color: var(--green); }
+[data-theme="dark"] .action-watch { background: rgba(212,160,48,0.15); color: var(--gold); }
+[data-theme="dark"] .item-signal { border-top-color: var(--border); }
+[data-theme="dark"] .rx-search { background: var(--card-bg); border-color: var(--border); color: var(--ink); }
+[data-theme="dark"] .rx-table tbody tr:hover { background: var(--warm); }
+[data-theme="dark"] .shortage-banner { background: rgba(255,179,71,0.08); border-color: rgba(255,179,71,0.3); }
+[data-theme="dark"] .fc-acc-badge { background: var(--warm); border-color: var(--border); }
+[data-theme="dark"] .drug-dosage { background: #252535; }
+[data-theme="dark"] .alt-item { background: var(--warm); }
+[data-theme="dark"] .pred-bar-bg { background: var(--warm); }
+[data-theme="dark"] .suggest-section { background: linear-gradient(135deg,#0e0e18 0%,#18182a 50%,#0e0e18 100%); }
+
+/* Dark mode toggle */
+.dark-toggle {
+  width: 36px; height: 36px; border-radius: 9px;
+  border: 1.5px solid var(--border); background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; transition: all 0.22s; flex-shrink: 0; color: var(--ink);
+}
+.dark-toggle:hover { background: var(--warm); border-color: var(--ink); transform: rotate(15deg); }
+
+/* ═══════════════════════════════════════════
+   ENHANCED HOVER EFFECTS
+═══════════════════════════════════════════ */
+.item-card { will-change: transform; }
+.item-card:hover { transform: translateY(-5px) !important; box-shadow: 0 18px 50px rgba(17,17,24,0.14) !important; border-color: transparent !important; }
+.gas-card { will-change: transform; }
+.gas-card:hover { transform: translateY(-3px) !important; box-shadow: 0 10px 30px rgba(17,17,24,0.12) !important; }
+.housing-card { will-change: transform; }
+.housing-card:hover { transform: translateY(-3px) !important; box-shadow: 0 10px 30px rgba(17,17,24,0.12) !important; }
+.util-card { transition: all 0.2s; will-change: transform; }
+.util-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(17,17,24,0.12); }
+.elec-card { will-change: transform; }
+.elec-card:hover { transform: translateY(-3px) !important; box-shadow: 0 10px 30px rgba(17,17,24,0.12) !important; }
+.fc-card { will-change: transform; }
+.fc-card:hover { transform: translateY(-4px) !important; box-shadow: 0 14px 40px rgba(17,17,24,0.13) !important; border-color: transparent !important; }
+.stat-card { will-change: transform; }
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(17,17,24,0.10); }
+
+/* ═══════════════════════════════════════════
+   CARD ENTRY ANIMATION
+═══════════════════════════════════════════ */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: cardIn 0.38s ease both; }
+
+/* ═══════════════════════════════════════════
+   HERO BACKGROUND
+═══════════════════════════════════════════ */
+.hero {
+  background: linear-gradient(150deg, rgba(217,79,42,0.05) 0%, rgba(37,99,235,0.025) 55%, transparent 100%);
+  border-bottom: 1px solid var(--border);
+}
+[data-theme="dark"] .hero {
+  background: linear-gradient(150deg, rgba(240,96,64,0.06) 0%, rgba(90,156,255,0.03) 55%, transparent 100%);
+}
+
+/* ═══════════════════════════════════════════
+   NAV TAB ACTIVE DOT
+═══════════════════════════════════════════ */
+.nav-tab { position: relative; }
+.nav-tab.active::after {
+  content: ''; position: absolute; bottom: -5px; left: 50%;
+  transform: translateX(-50%); width: 4px; height: 4px;
+  border-radius: 50%; background: var(--accent);
+}
+
+/* ═══════════════════════════════════════════
+   TICKER PAUSE ON HOVER
+═══════════════════════════════════════════ */
+.ticker-wrap:hover .ticker-inner { animation-play-state: paused; }
+
+/* ═══════════════════════════════════════════
+   SEARCH FOCUS RING
+═══════════════════════════════════════════ */
+.search-box:focus-within { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+[data-theme="dark"] .search-box:focus-within { box-shadow: 0 0 0 3px rgba(90,156,255,0.15); }
+
+/* ═══════════════════════════════════════════
+   PILL ACTIVE GLOW
+═══════════════════════════════════════════ */
+.pill.active { box-shadow: 0 2px 10px rgba(17,17,24,0.2); }
+.pill.danger.active { box-shadow: 0 2px 12px rgba(217,79,42,0.35); }
+.pill.safe.active { box-shadow: 0 2px 12px rgba(21,128,61,0.35); }
+
+/* ═══════════════════════════════════════════
+   HOT BADGE PULSE
+═══════════════════════════════════════════ */
+.badge-hot { animation: badge-pulse 2.5s ease-in-out infinite; }
+@keyframes badge-pulse { 0%,100% { opacity:1; } 50% { opacity:.72; } }
+
+/* ═══════════════════════════════════════════
+   SECTION HEADER DIVIDER
+═══════════════════════════════════════════ */
+.section-header { border-bottom: 2px solid var(--border); padding-bottom: 14px; margin-bottom: 20px; }
+
+/* ═══════════════════════════════════════════
+   MOBILE BOTTOM NAV
+═══════════════════════════════════════════ */
+.mobile-nav {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(255,255,255,0.96); border-top: 1px solid var(--border);
+  padding: 6px 8px 8px; z-index: 200; overflow-x: auto;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  backdrop-filter: blur(20px); box-shadow: 0 -4px 24px rgba(17,17,24,0.09);
+  align-items: center; gap: 2px;
+}
+.mobile-nav::-webkit-scrollbar { display: none; }
+[data-theme="dark"] .mobile-nav { background: rgba(15,15,20,0.97); border-color: var(--border); }
+.mn-btn {
+  flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
+  gap: 2px; padding: 6px 10px; border-radius: 10px; border: none;
+  background: transparent; cursor: pointer; transition: all 0.18s; color: var(--muted);
+}
+.mn-icon { font-size: 19px; line-height: 1; }
+.mn-label { font-size: 9px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'Outfit',sans-serif; white-space: nowrap; }
+.mn-btn.active { background: var(--warm); color: var(--ink); }
+.mn-btn.active .mn-label { color: var(--accent); }
+[data-theme="dark"] .mn-btn.active { background: var(--warm); }
+
+@media(max-width:768px) {
+  .mobile-nav { display: flex; }
+  .main-wrap { padding-bottom: 90px !important; }
+  .nav-tabs { display: none !important; }
+}
+
+/* ═══════════════════════════════════════════
+   FOCUS VISIBLE (ACCESSIBILITY)
+═══════════════════════════════════════════ */
+*:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; border-radius: 4px; }
+
+/* ═══════════════════════════════════════════
+   PRINT
+═══════════════════════════════════════════ */
+@media print {
+  .ticker-wrap, header, .location-bar, footer, .mobile-nav { display: none !important; }
+  .section-panel { display: block !important; }
+}
+
 </style>
 </head>
 <body>
@@ -1297,6 +1495,7 @@ input:focus, select:focus, button:focus-visible {
     <button class="nav-tab" onclick="switchSection('forecast',this)">📈 Forecast</button>
   </div>
   <div class="header-right">
+    <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
     <div class="share-wrap">
       <a class="share-btn" href="https://reddit.com/submit?url=https://cartcast.vercel.app&title=Free+tool+tracks+commodity+futures+to+predict+grocery+prices+4-6+weeks+early" target="_blank">📤 Reddit</a>
       <a class="share-btn" href="https://twitter.com/intent/tweet?text=Know+what+everything+costs+before+you+pay+%40CartCast&url=https://cartcast.vercel.app" target="_blank">𝕏 Share</a>
@@ -1777,6 +1976,19 @@ input:focus, select:focus, button:focus-visible {
 <!-- GLOBAL TOAST -->
 <div class="toast" id="toast"><div class="t-dot"></div><span id="t-msg">Updated</span></div>
 
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+  <button class="mn-btn active" onclick="mnSwitch('groceries',this)"><span class="mn-icon">🛒</span><span class="mn-label">Groceries</span></button>
+  <button class="mn-btn" onclick="mnSwitch('gas',this)"><span class="mn-icon">⛽</span><span class="mn-label">Gas</span></button>
+  <button class="mn-btn" onclick="mnSwitch('medicine',this)"><span class="mn-icon">💊</span><span class="mn-label">Medicine</span></button>
+  <button class="mn-btn" onclick="mnSwitch('housing',this)"><span class="mn-icon">🏠</span><span class="mn-label">Housing</span></button>
+  <button class="mn-btn" onclick="mnSwitch('utilities',this)"><span class="mn-icon">⚡</span><span class="mn-label">Utilities</span></button>
+  <button class="mn-btn" onclick="mnSwitch('electronics',this)"><span class="mn-icon">📱</span><span class="mn-label">Electronics</span></button>
+  <button class="mn-btn" onclick="mnSwitch('taxes',this)"><span class="mn-icon">🏛️</span><span class="mn-label">Taxes</span></button>
+  <button class="mn-btn" onclick="mnSwitch('airfare',this)"><span class="mn-icon">✈️</span><span class="mn-label">Airfare</span></button>
+  <button class="mn-btn" onclick="mnSwitch('forecast',this)"><span class="mn-icon">📈</span><span class="mn-label">Forecast</span></button>
+</nav>
+
 <footer>
   <span class="footer-brand">CartCast</span>
   <div class="footer-links">
@@ -1954,6 +2166,68 @@ function switchSection(id,btn){
   document.querySelectorAll(".nav-tab").forEach(b=>b.classList.remove("active"));
   document.getElementById("section-"+id).classList.add("active");
   btn.classList.add("active");
+  document.querySelectorAll(".mn-btn").forEach(b=>b.classList.remove("active"));
+  const mnBtn=document.querySelector(`.mn-btn[onclick*="'${id}'"]`);
+  if(mnBtn)mnBtn.classList.add("active");
+  staggerCards("section-"+id);
+}
+function mnSwitch(id,btn){
+  document.querySelectorAll(".section-panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".mn-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("section-"+id).classList.add("active");
+  btn.classList.add("active");
+  document.querySelectorAll(".nav-tab").forEach(b=>b.classList.remove("active"));
+  const hBtn=document.querySelector(`.nav-tab[onclick*="'${id}'"]`);
+  if(hBtn)hBtn.classList.add("active");
+  staggerCards("section-"+id);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function staggerCards(sectionId){
+  const section=document.getElementById(sectionId);
+  if(!section)return;
+  const cards=section.querySelectorAll(".item-card,.gas-card,.housing-card,.util-card,.elec-card,.fc-card,.stat-card,.signal-card");
+  cards.forEach((c,i)=>{
+    c.classList.remove("animate-in");
+    c.style.animationDelay=`${i*0.04}s`;
+    requestAnimationFrame(()=>c.classList.add("animate-in"));
+  });
+}
+function toggleDark(){
+  const isDark=document.documentElement.getAttribute("data-theme")==="dark";
+  document.documentElement.setAttribute("data-theme",isDark?"light":"dark");
+  document.getElementById("darkToggle").textContent=isDark?"🌙":"☀️";
+  try{localStorage.setItem("cc-theme",isDark?"light":"dark");}catch(e){}
+}
+(function initTheme(){
+  try{
+    const saved=localStorage.getItem("cc-theme");
+    if(saved==="dark"){
+      document.documentElement.setAttribute("data-theme","dark");
+      const btn=document.getElementById("darkToggle");
+      if(btn)btn.textContent="☀️";
+    }
+  }catch(e){}
+})();
+function animateCounter(el,target,suffix,prefix,duration){
+  if(!el||isNaN(target))return;
+  const start=Date.now();const isFloat=!Number.isInteger(target);
+  const dec=isFloat?String(target).split(".")[1].length:0;
+  function tick(){
+    const p=Math.min((Date.now()-start)/duration,1);
+    const ease=1-Math.pow(1-p,3);
+    const val=target*ease;
+    el.textContent=(prefix||"")+(dec?val.toFixed(dec):Math.round(val).toLocaleString())+(suffix||"");
+    if(p<1)requestAnimationFrame(tick);
+  }
+  tick();
+}
+function animateHeroStats(){
+  const avgEl=document.getElementById("heroAvgChange");
+  if(avgEl){const v=parseFloat(avgEl.textContent.replace(/[^0-9.-]/g,""))||0;animateCounter(avgEl,Math.abs(v),"%",v>=0?"+":"-",900);}
+  const buyEl=document.getElementById("heroBuyCount");
+  if(buyEl)animateCounter(buyEl,parseInt(buyEl.textContent)||0,"","",700);
+  const waitEl=document.getElementById("heroWaitCount");
+  if(waitEl)animateCounter(waitEl,parseInt(waitEl.textContent)||0,"","",700);
 }
 function buildSignals(){document.getElementById("signalsRow").innerHTML=SIGNALS_DATA.map(s=>`<div class="signal-card"><div class="signal-dot ${s.status}"></div><div><div class="signal-name">${s.name}</div><div style="font-size:11px;color:var(--muted)">${s.val}</div></div><div class="signal-val ${s.status}">${s.change}</div></div>`).join("");}
 
