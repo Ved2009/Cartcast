@@ -2320,7 +2320,7 @@ function updateLocation(){
   const citySel=document.getElementById("citySelect");
   citySel.innerHTML='<option value="">— Select City —</option>';
   if(selectedState&&STATES_CITIES[selectedState]){STATES_CITIES[selectedState].cities.forEach(c=>{const opt=document.createElement("option");opt.value=c;opt.textContent=c;citySel.appendChild(opt);});}
-  updateLocationInfo();buildGroceries();buildGasGrid();updateHeroStats();
+  updateLocationInfo();buildGroceries();buildGasGrid();filterTaxes();updateHeroStats();
 }
 function updateCity(){selectedCity=document.getElementById("citySelect").value;updateLocationInfo();buildGroceries();buildGasGrid();}
 function getPriceFactor(){return STATE_PRICE_FACTORS[selectedState]||1.0;}
