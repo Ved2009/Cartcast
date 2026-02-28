@@ -1555,6 +1555,11 @@ input:focus, select:focus, button:focus-visible {
 /* ═══════════════════════════════════════════
    PRINT
 ═══════════════════════════════════════════ */
+/* ═══ LANGUAGE SWITCHER ═══ */
+.lang-select { padding:4px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:12px; font-family:'DM Mono',monospace; background:var(--paper); color:var(--ink); cursor:pointer; transition:border-color .15s; }
+.lang-select:hover { border-color:var(--accent2); }
+.lang-select:focus { outline:none; border-color:var(--accent2); }
+[data-theme="dark"] .lang-select { background:rgba(255,255,255,.08); color:var(--paper); border-color:var(--border); }
 @media print {
   .ticker-wrap, header, .location-bar, footer, .mobile-nav { display: none !important; }
   .section-panel { display: block !important; }
@@ -1573,17 +1578,27 @@ input:focus, select:focus, button:focus-visible {
 <header>
   <a href="#" class="logo">Cart<span>Cast</span> <sup class="logo-badge">BETA</sup></a>
   <div class="nav-tabs" id="mainNav">
-    <button class="nav-tab active" onclick="switchSection('groceries',this)">🛒 Groceries</button>
-    <button class="nav-tab" onclick="switchSection('gas',this)">⛽ Gas</button>
-    <button class="nav-tab" onclick="switchSection('medicine',this)">💊 Medicine</button>
-    <button class="nav-tab" onclick="switchSection('housing',this)">🏠 Housing</button>
-    <button class="nav-tab" onclick="switchSection('utilities',this)">⚡ Utilities</button>
-    <button class="nav-tab" onclick="switchSection('electronics',this)">📱 Electronics</button>
-    <button class="nav-tab" onclick="switchSection('taxes',this)">🏛️ State Taxes</button>
-    <button class="nav-tab" onclick="switchSection('airfare',this)">✈️ Airfare</button>
-    <button class="nav-tab" onclick="switchSection('forecast',this)">📈 Forecast</button>
+    <button class="nav-tab active" onclick="switchSection('groceries',this)" data-i18n="nav_groceries">🛒 Groceries</button>
+    <button class="nav-tab" onclick="switchSection('gas',this)" data-i18n="nav_gas">⛽ Gas</button>
+    <button class="nav-tab" onclick="switchSection('medicine',this)" data-i18n="nav_medicine">💊 Medicine</button>
+    <button class="nav-tab" onclick="switchSection('housing',this)" data-i18n="nav_housing">🏠 Housing</button>
+    <button class="nav-tab" onclick="switchSection('utilities',this)" data-i18n="nav_utilities">⚡ Utilities</button>
+    <button class="nav-tab" onclick="switchSection('electronics',this)" data-i18n="nav_electronics">📱 Electronics</button>
+    <button class="nav-tab" onclick="switchSection('taxes',this)" data-i18n="nav_taxes">🏛️ State Taxes</button>
+    <button class="nav-tab" onclick="switchSection('airfare',this)" data-i18n="nav_airfare">✈️ Airfare</button>
+    <button class="nav-tab" onclick="switchSection('forecast',this)" data-i18n="nav_forecast">📈 Forecast</button>
   </div>
   <div class="header-right">
+    <select id="langSelect" class="lang-select" onchange="setLanguage(this.value)" title="Language">
+      <option value="en">🇺🇸 EN</option>
+      <option value="es">🇪🇸 ES</option>
+      <option value="fr">🇫🇷 FR</option>
+      <option value="zh">🇨🇳 中文</option>
+      <option value="pt">🇧🇷 PT</option>
+      <option value="hi">🇮🇳 HI</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="vi">🇻🇳 VI</option>
+    </select>
     <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
     <div class="share-wrap">
       <a class="share-btn" href="https://reddit.com/submit?url=https://cartcast.vercel.app&title=Free+tool+tracks+commodity+futures+to+predict+grocery+prices+4-6+weeks+early" target="_blank">📤 Reddit</a>
@@ -1608,24 +1623,24 @@ input:focus, select:focus, button:focus-visible {
 <div class="hero">
   <div class="hero-top">
     <div>
-      <h1 class="hero-headline">Know what <em>everything</em> costs — before you pay it.</h1>
-      <p class="hero-sub">Real government data — USDA, BLS, EIA, HUD, Census — tracking groceries, gas, medicine, rent, utilities, airfare, and more. By your state and city. Updated weekly.</p>
+      <h1 class="hero-headline" data-i18n="hero_headline">Know what <em>everything</em> costs — before you pay it.</h1>
+      <p class="hero-sub" data-i18n="hero_sub">Real government data — USDA, BLS, EIA, HUD, Census — tracking groceries, gas, medicine, rent, utilities, airfare, and more. By your state and city. Updated weekly.</p>
     </div>
     <div class="budget-card">
       <h3>📊 Monthly Budget Impact</h3>
       <div style="margin-bottom:20px">
-        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;color:rgba(255,255,255,.7)"><span>Monthly grocery budget</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;color:rgba(255,255,255,.7)"><span data-i18n="budget_monthly">Monthly grocery budget</span></div>
         <div class="budget-amount" id="budgetDisplay">$600</div>
         <input type="range" min="100" max="2000" step="50" value="600" id="budgetSlider" oninput="updateBudget(this.value)">
       </div>
-      <div class="budget-row highlight"><span class="label">Projected next month</span><span class="val" id="budgetNext">$643</span></div>
-      <div class="budget-row"><span class="label">Estimated increase</span><span class="val" id="budgetDiff">+$43</span></div>
-      <div class="budget-row"><span class="label">90-day impact</span><span class="val" id="budget90">+$129</span></div>
-      <div class="budget-row green"><span class="label">Savings if you stock up</span><span class="val" id="budgetSave">-$38</span></div>
+      <div class="budget-row highlight"><span class="label" data-i18n="budget_next">Projected next month</span><span class="val" id="budgetNext">$643</span></div>
+      <div class="budget-row"><span class="label" data-i18n="budget_diff">Estimated increase</span><span class="val" id="budgetDiff">+$43</span></div>
+      <div class="budget-row"><span class="label" data-i18n="budget_90">90-day impact</span><span class="val" id="budget90">+$129</span></div>
+      <div class="budget-row green"><span class="label" data-i18n="budget_save">Savings if you stock up</span><span class="val" id="budgetSave">-$38</span></div>
       <div style="border-top:1px solid rgba(255,255,255,.15);margin:10px 0 6px"></div>
-      <div class="budget-row" style="opacity:.75"><span class="label">+ Gas (est. monthly)</span><span class="val" id="budgetGas">—</span></div>
-      <div class="budget-row" style="opacity:.75"><span class="label">+ Utilities (est. monthly)</span><span class="val" id="budgetUtils">—</span></div>
-      <div class="budget-row highlight"><span class="label">Total household est.</span><span class="val" id="budgetTotal">—</span></div>
+      <div class="budget-row" style="opacity:.75"><span class="label" data-i18n="budget_gas">+ Gas (est. monthly)</span><span class="val" id="budgetGas">—</span></div>
+      <div class="budget-row" style="opacity:.75"><span class="label" data-i18n="budget_utils">+ Utilities (est. monthly)</span><span class="val" id="budgetUtils">—</span></div>
+      <div class="budget-row highlight"><span class="label" data-i18n="budget_total">Total household est.</span><span class="val" id="budgetTotal">—</span></div>
     </div>
   </div>
   <div class="stats-row">
@@ -1642,20 +1657,20 @@ input:focus, select:focus, button:focus-visible {
 
   <!-- GROCERIES -->
   <div class="section-panel active" id="section-groceries">
-    <div class="section-header"><h2 class="section-title">Grocery Prices</h2><span class="section-count" id="groceryCount"></span></div>
-    <p class="section-desc">Retail prices from BLS Average Price Survey. Commodity signals from USDA NASS + FRED. Forecasts based on 4–8 week commodity-to-retail lag.</p>
+    <div class="section-header"><h2 class="section-title" data-i18n="sec_groceries">Grocery Prices</h2><span class="section-count" id="groceryCount"></span></div>
+    <p class="section-desc" data-i18n="desc_groceries">Retail prices from BLS Average Price Survey. Commodity signals from USDA NASS + FRED. Forecasts based on 4–8 week commodity-to-retail lag.</p>
     <div class="signals-row" id="signalsRow"></div>
     <div id="marketBar"></div>
     <div class="toolbar">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" placeholder="Search any item…" id="grocerySearch" oninput="filterGroceries()">
+        <input type="text" placeholder="Search any item…" data-i18n-ph="ph_grocery" id="grocerySearch" oninput="filterGroceries()">
       </div>
       <div class="filter-pills" id="filterPills">
-        <button class="pill active" onclick="filterByStatus('all',this)">All Items</button>
-        <button class="pill danger" onclick="filterByStatus('buy',this)">🔴 Stock Up Now</button>
-        <button class="pill safe" onclick="filterByStatus('wait',this)">🟢 Wait to Buy</button>
-        <button class="pill" onclick="filterByStatus('watch',this)">🟡 Watch</button>
+        <button class="pill active" onclick="filterByStatus('all',this)" data-i18n="pill_all">All Items</button>
+        <button class="pill danger" onclick="filterByStatus('buy',this)" data-i18n="badge_hot">🔴 Stock Up Now</button>
+        <button class="pill safe" onclick="filterByStatus('wait',this)" data-i18n="badge_down">🟢 Wait to Buy</button>
+        <button class="pill" onclick="filterByStatus('watch',this)" data-i18n="badge_flat">🟡 Watch</button>
       </div>
       <div class="data-freshness" style="margin-bottom:0;margin-left:auto;"><div class="fresh-dot"></div><span>BLS + USDA + FRED data</span></div>
     </div>
@@ -1664,23 +1679,23 @@ input:focus, select:focus, button:focus-visible {
 
   <!-- GAS -->
   <div class="section-panel" id="section-gas">
-    <div class="section-header"><h2 class="section-title">Gas Prices</h2><span class="section-count">50 states + major cities</span></div>
-    <p class="section-desc">Weekly gas price averages from EIA. Regular, midgrade, premium, and diesel by state and city.</p>
+    <div class="section-header"><h2 class="section-title" data-i18n="sec_gas">Gas Prices</h2><span class="section-count">50 states + major cities</span></div>
+    <p class="section-desc" data-i18n="desc_gas">Weekly gas price averages from EIA. Regular, midgrade, premium, and diesel by state and city.</p>
     <div class="toolbar">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" placeholder="Search state or city…" id="gasSearch" oninput="filterGas()">
+        <input type="text" placeholder="Search state or city…" data-i18n-ph="ph_tax" id="gasSearch" oninput="filterGas()">
       </div>
     </div>
     <div id="gasRanking"></div>
-    <div class="gas-tip">💡 <strong>Best day to fill up:</strong> Monday or Tuesday — EIA data shows weekly lows hit early in the week as stations reset pricing before weekend demand spikes. Avoid Thursday–Saturday for the highest prices.</div>
+    <div class="gas-tip" data-i18n="gas_tip">💡 <strong>Best day to fill up:</strong> Monday or Tuesday — EIA data shows weekly lows hit early in the week as stations reset pricing before weekend demand spikes. Avoid Thursday–Saturday for the highest prices.</div>
     <div class="gas-grid" id="gasGrid"></div>
   </div>
 
   <!-- MEDICINE -->
   <div class="section-panel" id="section-medicine">
-    <div class="section-header"><h2 class="section-title">Medicine & Pharmacy</h2><span class="section-count" id="medicineCount">20 drugs · 5 pharmacies compared</span></div>
-    <p class="section-desc">Compare real prices across CVS, Walgreens, Walmart, Costco & Amazon Pharmacy. Source: Medicare Part D NDC data, FDA drug pricing, verified pharmacy surveys.</p>
+    <div class="section-header"><h2 class="section-title" data-i18n="sec_medicine">Medicine & Pharmacy</h2><span class="section-count" id="medicineCount">20 drugs · 5 pharmacies compared</span></div>
+    <p class="section-desc" data-i18n="desc_medicine">Compare real prices across CVS, Walgreens, Walmart, Costco & Amazon Pharmacy. Source: Medicare Part D NDC data, FDA drug pricing, verified pharmacy surveys.</p>
     <div class="rx-summary">
       <div class="rx-stat"><span class="rx-stat-num" id="rxStatTotal">48</span><span class="rx-stat-label">Drugs tracked</span></div>
       <div class="rx-stat alert-stat"><span class="rx-stat-num" id="rxStatShortage">7</span><span class="rx-stat-label">Active shortages</span></div>
@@ -1690,14 +1705,14 @@ input:focus, select:focus, button:focus-visible {
     <div class="rx-controls">
       <div class="search-wrap">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input class="rx-search" type="text" id="rxSearch" placeholder="Search drug name or condition...">
+        <input class="rx-search" type="text" id="rxSearch" placeholder="Search drug name or condition..." data-i18n-ph="ph_medicine">
       </div>
       <div class="filter-pills" id="rxFilterPills">
-        <button class="pill active" data-rxfilter="all">All</button>
+        <button class="pill active" data-rxfilter="all" data-i18n="pill_all_rx">All</button>
         <button class="pill" data-rxfilter="otc">OTC</button>
         <button class="pill" data-rxfilter="rx">Prescription</button>
         <button class="pill" data-rxfilter="shortage">⚠ Shortage</button>
-        <button class="pill" data-rxfilter="generic">Generic Available</button>
+        <button class="pill" data-rxfilter="generic" data-i18n="pill_generic">Generic Available</button>
         <button class="pill" data-rxfilter="rising">Price Rising</button>
       </div>
     </div>
@@ -1726,12 +1741,12 @@ input:focus, select:focus, button:focus-visible {
 
   <!-- HOUSING -->
   <div class="section-panel" id="section-housing">
-    <div class="section-header"><h2 class="section-title">Housing & Rent</h2><span class="section-count">Major US metros</span></div>
-    <p class="section-desc">Fair Market Rents from HUD + market-rate data from Rentcast. Median rent by bedroom count. Actual prices vary by neighborhood.</p>
+    <div class="section-header"><h2 class="section-title" data-i18n="sec_housing">Housing & Rent</h2><span class="section-count">Major US metros</span></div>
+    <p class="section-desc" data-i18n="desc_housing">Fair Market Rents from HUD + market-rate data from Rentcast. Median rent by bedroom count. Actual prices vary by neighborhood.</p>
     <div class="toolbar">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" placeholder="Search city or metro…" id="housingSearch" oninput="filterHousing()">
+        <input type="text" placeholder="Search city or metro…" data-i18n-ph="ph_tax" id="housingSearch" oninput="filterHousing()">
       </div>
     </div>
     <div id="affordCalc"></div>
@@ -1740,20 +1755,20 @@ input:focus, select:focus, button:focus-visible {
 
   <!-- UTILITIES -->
   <div class="section-panel" id="section-utilities">
-    <div class="section-header"><h2 class="section-title">Utilities</h2><span class="section-count">50 states</span></div>
-    <p class="section-desc">Electricity rates from EIA. Average monthly bills for electricity, water, gas, and internet by state.</p>
+    <div class="section-header"><h2 class="section-title" data-i18n="sec_utilities">Utilities</h2><span class="section-count">50 states</span></div>
+    <p class="section-desc" data-i18n="desc_utilities">Electricity rates from EIA. Average monthly bills for electricity, water, gas, and internet by state.</p>
     <div id="utilitiesRanking"></div>
     <div class="utilities-grid" id="utilitiesGrid"></div>
   </div>
 
   <!-- ELECTRONICS -->
   <div class="section-panel" id="section-electronics">
-    <div class="section-header"><h2 class="section-title">Electronics & Appliances</h2><span class="section-count">60+ products</span></div>
-    <p class="section-desc">Typical retail prices for consumer electronics and appliances. Updated monthly. Tariff and supply chain impacts noted.</p>
+    <div class="section-header"><h2 class="section-title" data-i18n="sec_electronics">Electronics & Appliances</h2><span class="section-count">60+ products</span></div>
+    <p class="section-desc" data-i18n="desc_electronics">Typical retail prices for consumer electronics and appliances. Updated monthly. Tariff and supply chain impacts noted.</p>
     <div class="toolbar">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" placeholder="Search device…" id="elecSearch" oninput="filterElec()">
+        <input type="text" placeholder="Search device…" data-i18n-ph="ph_elec" id="elecSearch" oninput="filterElec()">
       </div>
     </div>
     <div id="tariffCalc"></div>
@@ -1762,26 +1777,26 @@ input:focus, select:focus, button:focus-visible {
 
   <!-- TAXES -->
   <div class="section-panel" id="section-taxes">
-    <div class="section-header"><h2 class="section-title">State Tax Rates</h2><span class="section-count">All 50 states</span></div>
-    <p class="section-desc">State sales tax, income tax brackets, and property tax rates. Source: Tax Foundation 2025. Does not include local/county taxes.</p>
+    <div class="section-header"><h2 class="section-title" data-i18n="sec_taxes">State Tax Rates</h2><span class="section-count">All 50 states</span></div>
+    <p class="section-desc" data-i18n="desc_taxes">State sales tax, income tax brackets, and property tax rates. Source: Tax Foundation 2025. Does not include local/county taxes.</p>
     <div class="toolbar">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" placeholder="Search state…" id="taxSearch" oninput="filterTaxes()">
+        <input type="text" placeholder="Search state…" data-i18n-ph="ph_tax" id="taxSearch" oninput="filterTaxes()">
       </div>
     </div>
     <div id="insuranceWidget"></div>
     <div id="taxCompare"></div>
-    <div class="tax-table-wrap"><table class="tax-table"><thead><tr><th>State</th><th>Sales Tax</th><th>Top Income Tax</th><th>Avg Property Tax Rate</th><th>Gas Tax (¢/gal)</th><th>Tax Burden Rank</th></tr></thead><tbody id="taxTableBody"></tbody></table></div>
+    <div class="tax-table-wrap"><table class="tax-table"><thead><tr><th data-i18n="th_state">State</th><th data-i18n="th_sales">Sales Tax</th><th data-i18n="th_income">Top Income Tax</th><th data-i18n="th_property">Avg Property Tax Rate</th><th>Gas Tax (¢/gal)</th><th data-i18n="th_total">Tax Burden Rank</th></tr></thead><tbody id="taxTableBody"></tbody></table></div>
   </div>
 
   <!-- ═══ AIRFARE SECTION ═══ -->
   <div class="section-panel" id="section-airfare">
     <div class="section-header">
-      <h2 class="section-title">Airfare Intelligence</h2>
+      <h2 class="section-title" data-i18n="sec_airfare">Airfare Intelligence</h2>
       <span class="section-count">200+ airports · 22 airlines · AI predictions · 30-min refresh</span>
     </div>
-    <p class="section-desc">Multiple departure options across 50+ airlines. AI-powered buy/wait signals. Fare alert emails via Resend. Amadeus API ready — simulation fallback active.</p>
+    <p class="section-desc" data-i18n="desc_airfare">Multiple departure options across 50+ airlines. AI-powered buy/wait signals. Fare alert emails via Resend. Amadeus API ready — simulation fallback active.</p>
 
     <!-- Search Screen -->
     <div id="af-screen-search">
@@ -1798,7 +1813,7 @@ input:focus, select:focus, button:focus-visible {
         <div class="route-row">
           <div class="fld from">
             <label class="fld-lbl">Flying From</label>
-            <input id="af-inp-orig" class="fld-in" type="text" placeholder="City or airport code" autocomplete="off" oninput="afDoAC('orig',this.value)" onblur="afHideAC('orig')">
+            <input id="af-inp-orig" class="fld-in" type="text" placeholder="City or airport code" data-i18n-ph="ph_airfare_from" autocomplete="off" oninput="afDoAC('orig',this.value)" onblur="afHideAC('orig')">
             <div id="af-ac-orig" class="ac-list"></div>
           </div>
           <button class="swap-btn" onclick="afDoSwap()">
@@ -1806,7 +1821,7 @@ input:focus, select:focus, button:focus-visible {
           </button>
           <div class="fld to">
             <label class="fld-lbl">Flying To</label>
-            <input id="af-inp-dest" class="fld-in" type="text" placeholder="City or airport code" autocomplete="off" oninput="afDoAC('dest',this.value)" onblur="afHideAC('dest')">
+            <input id="af-inp-dest" class="fld-in" type="text" placeholder="City or airport code" data-i18n-ph="ph_airfare_to" autocomplete="off" oninput="afDoAC('dest',this.value)" onblur="afHideAC('dest')">
             <div id="af-ac-dest" class="ac-list"></div>
           </div>
         </div>
@@ -1925,14 +1940,14 @@ input:focus, select:focus, button:focus-visible {
   <!-- ═══ FORECAST SECTION ═══ -->
   <div class="section-panel" id="section-forecast">
     <div class="section-header">
-      <h2 class="section-title">Price Forecast</h2>
+      <h2 class="section-title" data-i18n="sec_forecast">Price Forecast</h2>
       <span class="section-count" id="fcCount"></span>
     </div>
-    <p class="section-desc">4–8 week grocery price forecasts powered by commodity futures transmission lag model (USDA ERS methodology). Commodity prices lead retail by 2–12 weeks — giving you time to act.</p>
+    <p class="section-desc" data-i18n="desc_forecast">4–8 week grocery price forecasts powered by commodity futures transmission lag model (USDA ERS methodology). Commodity prices lead retail by 2–12 weeks — giving you time to act.</p>
 
     <!-- Price Pressure Index -->
     <div class="fc-pressure-card">
-      <div class="fc-pres-title">Food Price Pressure Index — Next 8 Weeks</div>
+      <div class="fc-pres-title" data-i18n="fc_pressure">Food Price Pressure Index — Next 8 Weeks</div>
       <div class="fc-pres-bar-wrap">
         <div class="fc-pres-bar" id="fcPressureBar" style="width:0%">
           <div class="fc-pres-marker"></div>
@@ -2079,15 +2094,15 @@ input:focus, select:focus, button:focus-visible {
 
 <!-- MOBILE BOTTOM NAV -->
 <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
-  <button class="mn-btn active" onclick="mnSwitch('groceries',this)"><span class="mn-icon">🛒</span><span class="mn-label">Groceries</span></button>
-  <button class="mn-btn" onclick="mnSwitch('gas',this)"><span class="mn-icon">⛽</span><span class="mn-label">Gas</span></button>
-  <button class="mn-btn" onclick="mnSwitch('medicine',this)"><span class="mn-icon">💊</span><span class="mn-label">Medicine</span></button>
-  <button class="mn-btn" onclick="mnSwitch('housing',this)"><span class="mn-icon">🏠</span><span class="mn-label">Housing</span></button>
-  <button class="mn-btn" onclick="mnSwitch('utilities',this)"><span class="mn-icon">⚡</span><span class="mn-label">Utilities</span></button>
-  <button class="mn-btn" onclick="mnSwitch('electronics',this)"><span class="mn-icon">📱</span><span class="mn-label">Electronics</span></button>
-  <button class="mn-btn" onclick="mnSwitch('taxes',this)"><span class="mn-icon">🏛️</span><span class="mn-label">Taxes</span></button>
-  <button class="mn-btn" onclick="mnSwitch('airfare',this)"><span class="mn-icon">✈️</span><span class="mn-label">Airfare</span></button>
-  <button class="mn-btn" onclick="mnSwitch('forecast',this)"><span class="mn-icon">📈</span><span class="mn-label">Forecast</span></button>
+  <button class="mn-btn active" onclick="mnSwitch('groceries',this)"><span class="mn-icon">🛒</span><span class="mn-label" data-i18n="nav_groceries">Groceries</span></button>
+  <button class="mn-btn" onclick="mnSwitch('gas',this)"><span class="mn-icon">⛽</span><span class="mn-label" data-i18n="nav_gas">Gas</span></button>
+  <button class="mn-btn" onclick="mnSwitch('medicine',this)"><span class="mn-icon">💊</span><span class="mn-label" data-i18n="nav_medicine">Medicine</span></button>
+  <button class="mn-btn" onclick="mnSwitch('housing',this)"><span class="mn-icon">🏠</span><span class="mn-label" data-i18n="nav_housing">Housing</span></button>
+  <button class="mn-btn" onclick="mnSwitch('utilities',this)"><span class="mn-icon">⚡</span><span class="mn-label" data-i18n="nav_utilities">Utilities</span></button>
+  <button class="mn-btn" onclick="mnSwitch('electronics',this)"><span class="mn-icon">📱</span><span class="mn-label" data-i18n="nav_electronics">Electronics</span></button>
+  <button class="mn-btn" onclick="mnSwitch('taxes',this)"><span class="mn-icon">🏛️</span><span class="mn-label" data-i18n="nav_taxes">Taxes</span></button>
+  <button class="mn-btn" onclick="mnSwitch('airfare',this)"><span class="mn-icon">✈️</span><span class="mn-label" data-i18n="nav_airfare">Airfare</span></button>
+  <button class="mn-btn" onclick="mnSwitch('forecast',this)"><span class="mn-icon">📈</span><span class="mn-label" data-i18n="nav_forecast">Forecast</span></button>
 </nav>
 
 <footer>
@@ -2095,10 +2110,283 @@ input:focus, select:focus, button:focus-visible {
   <div class="footer-links">
     <a href="#">About</a><a href="#">Methodology</a><a href="#">GitHub</a><a href="#">API</a>
   </div>
-  <span>Data: BLS · USDA · FRED · EIA · HUD · Census · OpenFDA · Rentcast · 200+ airports · Updated weekly</span>
+  <span data-i18n="footer_data">Data: BLS · USDA · FRED · EIA · HUD · Census · OpenFDA · Rentcast · 200+ airports · Updated weekly</span>
 </footer>
 
 <script>
+// ═══════════════════════════════════════════════════════════════
+// TRANSLATIONS
+// ═══════════════════════════════════════════════════════════════
+const TRANSLATIONS={
+en:{
+  nav_groceries:"🛒 Groceries",nav_gas:"⛽ Gas",nav_medicine:"💊 Medicine",nav_housing:"🏠 Housing",nav_utilities:"⚡ Utilities",nav_electronics:"📱 Electronics",nav_taxes:"🏛️ State Taxes",nav_airfare:"✈️ Airfare",nav_forecast:"📈 Forecast",
+  hero_headline:"Know what <em>everything</em> costs — before you pay it.",
+  hero_sub:"Real government data — USDA, BLS, EIA, HUD, Census — analyzed daily so you can shop smarter.",
+  stat_items:"items tracked",stat_sources:"gov't data sources",stat_updated:"updated",
+  budget_monthly:"Monthly Grocery Budget",budget_next:"next 4 wks",budget_diff:"vs today",budget_90:"90-day outlook",budget_save:"Save by buying smart",budget_gas:"+ Gas (est. monthly)",budget_utils:"+ Utilities (est. monthly)",budget_total:"Total household est.",
+  sec_groceries:"Grocery Price Intelligence",desc_groceries:"Real-time pricing data from USDA, BLS, and commodity futures markets.",
+  sec_gas:"Gas Prices by State",desc_gas:"EIA weekly retail price data. National average and state-by-state breakdown.",
+  sec_medicine:"Rx Price Tracker",desc_medicine:"FDA and CMS drug pricing data. Compare costs across pharmacies.",
+  sec_housing:"Housing Costs by State",desc_housing:"HUD Fair Market Rents and Rentcast market data.",
+  sec_utilities:"Utilities by State",desc_utilities:"EIA electricity rates, water, gas, and internet cost estimates.",
+  sec_electronics:"Electronics Price Watch",desc_electronics:"Track price trends on consumer electronics and estimate tariff impact.",
+  sec_taxes:"State Tax Rates",desc_taxes:"2024 state income, sales, and property tax rates from Tax Foundation.",
+  sec_airfare:"Airfare Search",desc_airfare:"Live flight pricing powered by Amadeus.",
+  sec_forecast:"Price Forecast",desc_forecast:"Commodity-driven 4–8 week price predictions using futures data.",
+  ph_grocery:"Search groceries…",ph_medicine:"Search drug name…",ph_elec:"Search electronics…",ph_tax:"Search state…",ph_airfare_from:"From (city or code)",ph_airfare_to:"To (city or code)",
+  pill_all:"All",pill_dairy:"Dairy & Eggs",pill_proteins:"Proteins",pill_produce:"Produce",pill_grains:"Grains",pill_oils:"Oils & Pantry",pill_snacks:"Snacks",pill_beverages:"Beverages",
+  pill_all_rx:"All",pill_common:"Common",pill_brand:"Brand-Name",pill_generic:"Generic",
+  act_buy:"⬆ Stock Up",act_wait:"⬇ Wait",act_watch:"👁 Watch",
+  badge_hot:"🔴 STOCK UP",badge_down:"🟢 WAIT",badge_flat:"🟡 WATCH",
+  th_state:"State",th_income:"Income Tax",th_sales:"Sales Tax",th_property:"Property Tax",th_total:"Total Burden",
+  rx_name:"Drug Name",rx_type:"Type",rx_price_30:"30-day price",rx_price_90:"90-day price",rx_tip:"Tip",
+  gas_tip:"💡 <strong>Tip:</strong> Prices typically drop 2–4¢ Tuesday–Wednesday. Fill up mid-week to save.",
+  af_from:"From",af_to:"To",af_date:"Depart",af_search:"Search Flights",af_searching:"Searching…",af_results:"results",af_nonstop:"Nonstop",af_stop:"stop",af_stops:"stops",
+  fc_pressure:"Price Pressure Index",fc_sort_default:"Default",fc_sort_urgent:"Most Urgent",fc_sort_rise:"Biggest Rise",fc_sort_drop:"Biggest Drop",fc_model_title:"About this model",fc_model_body:"Forecasts use commodity futures (FRED, USDA) with item-specific transmission elasticities and supply-chain lag times.",
+  footer_data:"Data: USDA · BLS · EIA · HUD · Census · OpenFDA · Amadeus",
+  loc_your:"📍 Your Location",loc_state:"— Select State —",loc_city:"— Select City —",
+  rx_stat_tracked:"drugs tracked",rx_stat_generic:"% with generic available",rx_stat_save:"avg savings generic vs brand",
+  ins_title:"🚗 Auto Insurance by State (avg annual premium)",ins_cheapest:"5 Cheapest States",ins_priciest:"5 Priciest States",ins_national:"National Average",
+  tariff_title:"🛃 Tariff Impact Calculator",tariff_note:"Estimates based on 2025–26 US tariff schedules. Pass-through assumes 65% retail transmission.",
+  tariff_pre:"Pre-tariff avg",tariff_impact:"Tariff impact",tariff_new:"Est. new price"
+},
+es:{
+  nav_groceries:"🛒 Víveres",nav_gas:"⛽ Gasolina",nav_medicine:"💊 Medicina",nav_housing:"🏠 Vivienda",nav_utilities:"⚡ Servicios",nav_electronics:"📱 Electrónica",nav_taxes:"🏛️ Impuestos",nav_airfare:"✈️ Vuelos",nav_forecast:"📈 Pronóstico",
+  hero_headline:"Conoce lo que cuesta <em>todo</em> — antes de pagarlo.",
+  hero_sub:"Datos reales del gobierno — USDA, BLS, EIA, HUD, Census — analizados diariamente para que compres mejor.",
+  stat_items:"artículos rastreados",stat_sources:"fuentes de datos",stat_updated:"actualizado",
+  budget_monthly:"Presupuesto mensual de víveres",budget_next:"próx. 4 sem.",budget_diff:"vs. hoy",budget_90:"perspectiva 90 días",budget_save:"Ahorra comprando inteligente",budget_gas:"+ Gasolina (est. mensual)",budget_utils:"+ Servicios (est. mensual)",budget_total:"Total hogar estimado",
+  sec_groceries:"Inteligencia de precios de víveres",desc_groceries:"Datos de precios en tiempo real de USDA, BLS y mercados de futuros.",
+  sec_gas:"Precios de gasolina por estado",desc_gas:"Datos semanales de precios de la EIA.",
+  sec_medicine:"Rastreador de precios de medicamentos",desc_medicine:"Datos de precios de medicamentos de FDA y CMS.",
+  sec_housing:"Costos de vivienda por estado",desc_housing:"Rentas de mercado justo de HUD y datos de Rentcast.",
+  sec_utilities:"Servicios por estado",desc_utilities:"Tarifas de electricidad EIA, agua, gas e internet.",
+  sec_electronics:"Vigilancia de precios de electrónica",desc_electronics:"Sigue tendencias de precios y estima el impacto arancelario.",
+  sec_taxes:"Tasas impositivas estatales",desc_taxes:"Tasas de impuestos estatales 2024 de Tax Foundation.",
+  sec_airfare:"Búsqueda de vuelos",desc_airfare:"Precios de vuelos en vivo con Amadeus.",
+  sec_forecast:"Pronóstico de precios",desc_forecast:"Predicciones de precios a 4–8 semanas basadas en futuros de commodities.",
+  ph_grocery:"Buscar víveres…",ph_medicine:"Buscar medicamento…",ph_elec:"Buscar electrónica…",ph_tax:"Buscar estado…",ph_airfare_from:"Origen (ciudad o código)",ph_airfare_to:"Destino (ciudad o código)",
+  pill_all:"Todo",pill_dairy:"Lácteos",pill_proteins:"Proteínas",pill_produce:"Verduras",pill_grains:"Granos",pill_oils:"Aceites",pill_snacks:"Bocadillos",pill_beverages:"Bebidas",
+  pill_all_rx:"Todo",pill_common:"Comunes",pill_brand:"Marca",pill_generic:"Genérico",
+  act_buy:"⬆ Comprar",act_wait:"⬇ Esperar",act_watch:"👁 Vigilar",
+  badge_hot:"🔴 COMPRAR",badge_down:"🟢 ESPERAR",badge_flat:"🟡 VIGILAR",
+  th_state:"Estado",th_income:"Imp. Ingreso",th_sales:"Imp. Ventas",th_property:"Imp. Propiedad",th_total:"Carga Total",
+  rx_name:"Medicamento",rx_type:"Tipo",rx_price_30:"Precio 30 días",rx_price_90:"Precio 90 días",rx_tip:"Consejo",
+  gas_tip:"💡 <strong>Consejo:</strong> Los precios suelen bajar 2–4¢ los martes y miércoles. Llena el tanque a mitad de semana.",
+  af_from:"Origen",af_to:"Destino",af_date:"Salida",af_search:"Buscar vuelos",af_searching:"Buscando…",af_results:"resultados",af_nonstop:"Directo",af_stop:"escala",af_stops:"escalas",
+  fc_pressure:"Índice de presión de precios",fc_sort_default:"Por defecto",fc_sort_urgent:"Más urgente",fc_sort_rise:"Mayor subida",fc_sort_drop:"Mayor bajada",fc_model_title:"Sobre este modelo",fc_model_body:"Los pronósticos usan futuros de commodities con elasticidades de transmisión y tiempos de retraso.",
+  footer_data:"Datos: USDA · BLS · EIA · HUD · Census · OpenFDA · Amadeus",
+  loc_your:"📍 Tu ubicación",loc_state:"— Seleccionar estado —",loc_city:"— Seleccionar ciudad —",
+  rx_stat_tracked:"medicamentos rastreados",rx_stat_generic:"% con genérico disponible",rx_stat_save:"ahorro promedio genérico vs marca",
+  ins_title:"🚗 Seguro de auto por estado (prima anual promedio)",ins_cheapest:"5 estados más baratos",ins_priciest:"5 estados más caros",ins_national:"Promedio nacional",
+  tariff_title:"🛃 Calculadora de aranceles",tariff_note:"Estimaciones basadas en aranceles de EE. UU. 2025–26. Transmisión minorista asumida al 65%.",
+  tariff_pre:"Precio sin arancel",tariff_impact:"Impacto arancelario",tariff_new:"Nuevo precio estimado"
+},
+fr:{
+  nav_groceries:"🛒 Épicerie",nav_gas:"⛽ Carburant",nav_medicine:"💊 Médicaments",nav_housing:"🏠 Logement",nav_utilities:"⚡ Services",nav_electronics:"📱 Électronique",nav_taxes:"🏛️ Impôts",nav_airfare:"✈️ Vols",nav_forecast:"📈 Prévisions",
+  hero_headline:"Sachez ce que coûte <em>tout</em> — avant de payer.",
+  hero_sub:"Données gouvernementales réelles — USDA, BLS, EIA, HUD, Census — analysées quotidiennement.",
+  stat_items:"articles suivis",stat_sources:"sources de données",stat_updated:"mis à jour",
+  budget_monthly:"Budget épicerie mensuel",budget_next:"4 proch. sem.",budget_diff:"vs aujourd'hui",budget_90:"perspective 90j",budget_save:"Économisez en achetant malin",budget_gas:"+ Carburant (est. mensuel)",budget_utils:"+ Services (est. mensuel)",budget_total:"Total ménage estimé",
+  sec_groceries:"Intelligence des prix alimentaires",desc_groceries:"Données de prix en temps réel du USDA, BLS et marchés à terme.",
+  sec_gas:"Prix du carburant par État",desc_gas:"Données hebdomadaires de prix au détail de l'EIA.",
+  sec_medicine:"Suivi des prix des médicaments",desc_medicine:"Données de prix FDA et CMS.",
+  sec_housing:"Coûts du logement par État",desc_housing:"Loyers équitables HUD et données Rentcast.",
+  sec_utilities:"Services publics par État",desc_utilities:"Tarifs EIA, eau, gaz et internet.",
+  sec_electronics:"Surveillance prix électronique",desc_electronics:"Suivez les tendances de prix et estimez l'impact tarifaire.",
+  sec_taxes:"Taux d'imposition par État",desc_taxes:"Taux d'imposition 2024 de Tax Foundation.",
+  sec_airfare:"Recherche de vols",desc_airfare:"Tarifs en direct via Amadeus.",
+  sec_forecast:"Prévisions de prix",desc_forecast:"Prédictions de prix à 4–8 semaines basées sur les matières premières.",
+  ph_grocery:"Rechercher…",ph_medicine:"Rechercher un médicament…",ph_elec:"Rechercher…",ph_tax:"Rechercher un état…",ph_airfare_from:"Départ (ville ou code)",ph_airfare_to:"Arrivée (ville ou code)",
+  pill_all:"Tout",pill_dairy:"Laitiers",pill_proteins:"Protéines",pill_produce:"Légumes",pill_grains:"Céréales",pill_oils:"Huiles",pill_snacks:"Snacks",pill_beverages:"Boissons",
+  pill_all_rx:"Tout",pill_common:"Courants",pill_brand:"Marque",pill_generic:"Générique",
+  act_buy:"⬆ Stocker",act_wait:"⬇ Attendre",act_watch:"👁 Surveiller",
+  badge_hot:"🔴 STOCKER",badge_down:"🟢 ATTENDRE",badge_flat:"🟡 SURVEILLER",
+  th_state:"État",th_income:"Imp. Revenu",th_sales:"Imp. Ventes",th_property:"Imp. Foncier",th_total:"Charge Totale",
+  rx_name:"Médicament",rx_type:"Type",rx_price_30:"Prix 30j",rx_price_90:"Prix 90j",rx_tip:"Conseil",
+  gas_tip:"💡 <strong>Conseil :</strong> Les prix baissent souvent de 2–4¢ mardi–mercredi. Faites le plein en milieu de semaine.",
+  af_from:"Départ",af_to:"Arrivée",af_date:"Date",af_search:"Rechercher",af_searching:"Recherche…",af_results:"résultats",af_nonstop:"Direct",af_stop:"escale",af_stops:"escales",
+  fc_pressure:"Indice de pression des prix",fc_sort_default:"Par défaut",fc_sort_urgent:"Plus urgent",fc_sort_rise:"Plus forte hausse",fc_sort_drop:"Plus forte baisse",fc_model_title:"À propos du modèle",fc_model_body:"Les prévisions utilisent les futures de matières premières avec des élasticités de transmission spécifiques.",
+  footer_data:"Données : USDA · BLS · EIA · HUD · Census · OpenFDA · Amadeus",
+  loc_your:"📍 Votre localisation",loc_state:"— Sélectionner l'État —",loc_city:"— Sélectionner la ville —",
+  rx_stat_tracked:"médicaments suivis",rx_stat_generic:"% avec générique disponible",rx_stat_save:"économies moy. générique vs marque",
+  ins_title:"🚗 Assurance auto par État (prime annuelle moy.)",ins_cheapest:"5 États les moins chers",ins_priciest:"5 États les plus chers",ins_national:"Moyenne nationale",
+  tariff_title:"🛃 Calculateur de droits de douane",tariff_note:"Estimations basées sur les tarifs américains 2025–26. Transmission au détail estimée à 65%.",
+  tariff_pre:"Prix hors taxe",tariff_impact:"Impact tarifaire",tariff_new:"Nouveau prix estimé"
+},
+zh:{
+  nav_groceries:"🛒 食品杂货",nav_gas:"⛽ 汽油",nav_medicine:"💊 药品",nav_housing:"🏠 住房",nav_utilities:"⚡ 公用事业",nav_electronics:"📱 电子产品",nav_taxes:"🏛️ 州税",nav_airfare:"✈️ 机票",nav_forecast:"📈 预测",
+  hero_headline:"在付款前了解<em>一切</em>的价格。",
+  hero_sub:"来自USDA、BLS、EIA、HUD、Census的真实政府数据——每日分析，助您精明购物。",
+  stat_items:"追踪商品",stat_sources:"政府数据来源",stat_updated:"已更新",
+  budget_monthly:"每月食品预算",budget_next:"未来4周",budget_diff:"对比今日",budget_90:"90天展望",budget_save:"精明购物省钱",budget_gas:"+ 汽油（月估算）",budget_utils:"+ 公用事业（月估算）",budget_total:"家庭总估算",
+  sec_groceries:"食品价格情报",desc_groceries:"来自USDA、BLS和商品期货市场的实时定价数据。",
+  sec_gas:"各州汽油价格",desc_gas:"EIA每周零售价格数据。",
+  sec_medicine:"处方药价格追踪器",desc_medicine:"FDA和CMS药品定价数据。",
+  sec_housing:"各州住房成本",desc_housing:"HUD公平市场租金和Rentcast市场数据。",
+  sec_utilities:"各州公用事业",desc_utilities:"EIA电费、水费、燃气费和网费估算。",
+  sec_electronics:"电子产品价格监控",desc_electronics:"追踪价格趋势并估算关税影响。",
+  sec_taxes:"州税率",desc_taxes:"来自税务基金会的2024年州税率。",
+  sec_airfare:"机票搜索",desc_airfare:"由Amadeus提供的实时航班定价。",
+  sec_forecast:"价格预测",desc_forecast:"基于期货数据的4–8周价格预测。",
+  ph_grocery:"搜索食品…",ph_medicine:"搜索药品…",ph_elec:"搜索电子产品…",ph_tax:"搜索州…",ph_airfare_from:"出发地（城市或代码）",ph_airfare_to:"目的地（城市或代码）",
+  pill_all:"全部",pill_dairy:"乳制品",pill_proteins:"蛋白质",pill_produce:"蔬果",pill_grains:"谷物",pill_oils:"油脂",pill_snacks:"零食",pill_beverages:"饮料",
+  pill_all_rx:"全部",pill_common:"常见药",pill_brand:"品牌药",pill_generic:"仿制药",
+  act_buy:"⬆ 囤货",act_wait:"⬇ 等待",act_watch:"👁 观望",
+  badge_hot:"🔴 囤货",badge_down:"🟢 等待",badge_flat:"🟡 观望",
+  th_state:"州",th_income:"所得税",th_sales:"销售税",th_property:"房产税",th_total:"总负担",
+  rx_name:"药品名称",rx_type:"类型",rx_price_30:"30天价格",rx_price_90:"90天价格",rx_tip:"建议",
+  gas_tip:"💡 <strong>提示：</strong>周二至周三价格通常下降2–4¢。建议周中加油以节省开支。",
+  af_from:"出发地",af_to:"目的地",af_date:"出发日期",af_search:"搜索航班",af_searching:"搜索中…",af_results:"结果",af_nonstop:"直飞",af_stop:"经停",af_stops:"经停",
+  fc_pressure:"价格压力指数",fc_sort_default:"默认",fc_sort_urgent:"最紧急",fc_sort_rise:"涨幅最大",fc_sort_drop:"降幅最大",fc_model_title:"关于此模型",fc_model_body:"预测使用商品期货数据，结合特定传导弹性和供应链滞后时间。",
+  footer_data:"数据来源：USDA · BLS · EIA · HUD · Census · OpenFDA · Amadeus",
+  loc_your:"📍 您的位置",loc_state:"— 选择州 —",loc_city:"— 选择城市 —",
+  rx_stat_tracked:"追踪药品",rx_stat_generic:"% 有仿制药可用",rx_stat_save:"仿制药 vs 品牌药平均节省",
+  ins_title:"🚗 各州汽车保险（年均保费）",ins_cheapest:"5个最便宜的州",ins_priciest:"5个最贵的州",ins_national:"全国平均",
+  tariff_title:"🛃 关税影响计算器",tariff_note:"基于2025–26年美国关税表的估算。零售传导率假设为65%。",
+  tariff_pre:"关税前均价",tariff_impact:"关税影响",tariff_new:"预计新价格"
+},
+pt:{
+  nav_groceries:"🛒 Mercearia",nav_gas:"⛽ Combustível",nav_medicine:"💊 Medicamentos",nav_housing:"🏠 Moradia",nav_utilities:"⚡ Serviços",nav_electronics:"📱 Eletrônicos",nav_taxes:"🏛️ Impostos",nav_airfare:"✈️ Passagens",nav_forecast:"📈 Previsão",
+  hero_headline:"Saiba o que custa <em>tudo</em> — antes de pagar.",
+  hero_sub:"Dados reais do governo — USDA, BLS, EIA, HUD, Census — analisados diariamente.",
+  stat_items:"itens rastreados",stat_sources:"fontes de dados",stat_updated:"atualizado",
+  budget_monthly:"Orçamento mensal de mercearia",budget_next:"próx. 4 sem.",budget_diff:"vs hoje",budget_90:"perspectiva 90 dias",budget_save:"Economize comprando com inteligência",budget_gas:"+ Combustível (est. mensal)",budget_utils:"+ Serviços (est. mensal)",budget_total:"Total doméstico estimado",
+  sec_groceries:"Inteligência de preços de alimentos",desc_groceries:"Dados de preços em tempo real do USDA, BLS e mercados futuros.",
+  sec_gas:"Preços de combustível por estado",desc_gas:"Dados semanais de preços ao varejo da EIA.",
+  sec_medicine:"Rastreador de preços de medicamentos",desc_medicine:"Dados de preços da FDA e CMS.",
+  sec_housing:"Custos de moradia por estado",desc_housing:"Aluguéis do mercado justo HUD e dados Rentcast.",
+  sec_utilities:"Serviços públicos por estado",desc_utilities:"Tarifas EIA, água, gás e internet.",
+  sec_electronics:"Monitor de preços de eletrônicos",desc_electronics:"Acompanhe tendências de preços e estime o impacto tarifário.",
+  sec_taxes:"Alíquotas estaduais",desc_taxes:"Alíquotas estaduais 2024 da Tax Foundation.",
+  sec_airfare:"Busca de passagens",desc_airfare:"Preços de voos ao vivo via Amadeus.",
+  sec_forecast:"Previsão de preços",desc_forecast:"Previsões de preços de 4–8 semanas com base em futuros de commodities.",
+  ph_grocery:"Buscar alimentos…",ph_medicine:"Buscar medicamento…",ph_elec:"Buscar eletrônicos…",ph_tax:"Buscar estado…",ph_airfare_from:"Origem (cidade ou código)",ph_airfare_to:"Destino (cidade ou código)",
+  pill_all:"Tudo",pill_dairy:"Laticínios",pill_proteins:"Proteínas",pill_produce:"Hortifruti",pill_grains:"Grãos",pill_oils:"Óleos",pill_snacks:"Lanches",pill_beverages:"Bebidas",
+  pill_all_rx:"Tudo",pill_common:"Comuns",pill_brand:"Marca",pill_generic:"Genérico",
+  act_buy:"⬆ Estocar",act_wait:"⬇ Aguardar",act_watch:"👁 Observar",
+  badge_hot:"🔴 ESTOCAR",badge_down:"🟢 AGUARDAR",badge_flat:"🟡 OBSERVAR",
+  th_state:"Estado",th_income:"Imp. Renda",th_sales:"Imp. Vendas",th_property:"Imp. Propriedade",th_total:"Carga Total",
+  rx_name:"Medicamento",rx_type:"Tipo",rx_price_30:"Preço 30 dias",rx_price_90:"Preço 90 dias",rx_tip:"Dica",
+  gas_tip:"💡 <strong>Dica:</strong> Os preços geralmente caem 2–4¢ terça–quarta. Abasteça no meio da semana.",
+  af_from:"Origem",af_to:"Destino",af_date:"Partida",af_search:"Buscar voos",af_searching:"Buscando…",af_results:"resultados",af_nonstop:"Direto",af_stop:"escala",af_stops:"escalas",
+  fc_pressure:"Índice de pressão de preços",fc_sort_default:"Padrão",fc_sort_urgent:"Mais urgente",fc_sort_rise:"Maior alta",fc_sort_drop:"Maior queda",fc_model_title:"Sobre este modelo",fc_model_body:"As previsões usam futuros de commodities com elasticidades de transmissão específicas.",
+  footer_data:"Dados: USDA · BLS · EIA · HUD · Census · OpenFDA · Amadeus",
+  loc_your:"📍 Sua localização",loc_state:"— Selecionar estado —",loc_city:"— Selecionar cidade —",
+  rx_stat_tracked:"medicamentos rastreados",rx_stat_generic:"% com genérico disponível",rx_stat_save:"economia média genérico vs marca",
+  ins_title:"🚗 Seguro auto por estado (prêmio anual médio)",ins_cheapest:"5 estados mais baratos",ins_priciest:"5 estados mais caros",ins_national:"Média nacional",
+  tariff_title:"🛃 Calculadora de tarifas",tariff_note:"Estimativas baseadas nas tarifas dos EUA 2025–26. Transmissão de varejo de 65%.",
+  tariff_pre:"Preço sem tarifa",tariff_impact:"Impacto tarifário",tariff_new:"Novo preço estimado"
+},
+hi:{
+  nav_groceries:"🛒 किराना",nav_gas:"⛽ गैस",nav_medicine:"💊 दवाइयाँ",nav_housing:"🏠 आवास",nav_utilities:"⚡ उपयोगिताएँ",nav_electronics:"📱 इलेक्ट्रॉनिक्स",nav_taxes:"🏛️ राज्य कर",nav_airfare:"✈️ हवाई किराया",nav_forecast:"📈 पूर्वानुमान",
+  hero_headline:"भुगतान करने से पहले <em>सब कुछ</em> की कीमत जानें।",
+  hero_sub:"वास्तविक सरकारी डेटा — USDA, BLS, EIA, HUD, Census — रोज़ाना विश्लेषित।",
+  stat_items:"ट्रैक किए गए आइटम",stat_sources:"सरकारी डेटा स्रोत",stat_updated:"अपडेट किया गया",
+  budget_monthly:"मासिक किराना बजट",budget_next:"अगले 4 सप्ताह",budget_diff:"आज की तुलना में",budget_90:"90 दिन का दृष्टिकोण",budget_save:"स्मार्ट खरीदारी से बचाएं",budget_gas:"+ गैस (अनुमानित मासिक)",budget_utils:"+ उपयोगिताएँ (अनुमानित मासिक)",budget_total:"कुल घरेलू अनुमान",
+  sec_groceries:"किराना मूल्य खुफिया",desc_groceries:"USDA, BLS और कमोडिटी फ्यूचर्स मार्केट से रीयल-टाइम मूल्य डेटा।",
+  sec_gas:"राज्य के अनुसार गैस की कीमतें",desc_gas:"EIA साप्ताहिक खुदरा मूल्य डेटा।",
+  sec_medicine:"Rx मूल्य ट्रैकर",desc_medicine:"FDA और CMS दवा मूल्य निर्धारण डेटा।",
+  sec_housing:"राज्य के अनुसार आवास लागत",desc_housing:"HUD उचित बाज़ार किराए और Rentcast डेटा।",
+  sec_utilities:"राज्य के अनुसार उपयोगिताएँ",desc_utilities:"EIA बिजली दरें, पानी, गैस और इंटरनेट अनुमान।",
+  sec_electronics:"इलेक्ट्रॉनिक्स मूल्य निगरानी",desc_electronics:"मूल्य रुझान और टैरिफ प्रभाव का अनुमान।",
+  sec_taxes:"राज्य कर दरें",desc_taxes:"Tax Foundation से 2024 राज्य कर दरें।",
+  sec_airfare:"हवाई किराया खोज",desc_airfare:"Amadeus द्वारा लाइव उड़ान मूल्य निर्धारण।",
+  sec_forecast:"मूल्य पूर्वानुमान",desc_forecast:"फ्यूचर्स डेटा का उपयोग करके 4–8 सप्ताह के मूल्य पूर्वानुमान।",
+  ph_grocery:"किराना खोजें…",ph_medicine:"दवा खोजें…",ph_elec:"इलेक्ट्रॉनिक्स खोजें…",ph_tax:"राज्य खोजें…",ph_airfare_from:"प्रस्थान (शहर या कोड)",ph_airfare_to:"गंतव्य (शहर या कोड)",
+  pill_all:"सभी",pill_dairy:"डेयरी",pill_proteins:"प्रोटीन",pill_produce:"सब्ज़ियाँ",pill_grains:"अनाज",pill_oils:"तेल",pill_snacks:"नाश्ता",pill_beverages:"पेय",
+  pill_all_rx:"सभी",pill_common:"सामान्य",pill_brand:"ब्रांड",pill_generic:"जेनेरिक",
+  act_buy:"⬆ स्टॉक करें",act_wait:"⬇ प्रतीक्षा करें",act_watch:"👁 देखें",
+  badge_hot:"🔴 स्टॉक करें",badge_down:"🟢 प्रतीक्षा",badge_flat:"🟡 निगरानी",
+  th_state:"राज्य",th_income:"आयकर",th_sales:"बिक्री कर",th_property:"संपत्ति कर",th_total:"कुल बोझ",
+  rx_name:"दवा का नाम",rx_type:"प्रकार",rx_price_30:"30 दिन की कीमत",rx_price_90:"90 दिन की कीमत",rx_tip:"सुझाव",
+  gas_tip:"💡 <strong>सुझाव:</strong> मंगलवार–बुधवार को कीमतें 2–4¢ गिरती हैं। सप्ताह के मध्य में ईंधन भरें।",
+  af_from:"प्रस्थान",af_to:"गंतव्य",af_date:"तारीख",af_search:"उड़ानें खोजें",af_searching:"खोज रहे हैं…",af_results:"परिणाम",af_nonstop:"सीधी",af_stop:"स्टॉप",af_stops:"स्टॉप",
+  fc_pressure:"मूल्य दबाव सूचकांक",fc_sort_default:"डिफ़ॉल्ट",fc_sort_urgent:"सबसे ज़रूरी",fc_sort_rise:"सबसे बड़ी वृद्धि",fc_sort_drop:"सबसे बड़ी गिरावट",fc_model_title:"इस मॉडल के बारे में",fc_model_body:"पूर्वानुमान कमोडिटी फ्यूचर्स डेटा का उपयोग करते हैं।",
+  footer_data:"डेटा: USDA · BLS · EIA · HUD · Census · OpenFDA · Amadeus",
+  loc_your:"📍 आपका स्थान",loc_state:"— राज्य चुनें —",loc_city:"— शहर चुनें —",
+  rx_stat_tracked:"ट्रैक की गई दवाइयाँ",rx_stat_generic:"% जेनेरिक उपलब्ध",rx_stat_save:"जेनेरिक बनाम ब्रांड औसत बचत",
+  ins_title:"🚗 राज्य के अनुसार ऑटो बीमा (औसत वार्षिक प्रीमियम)",ins_cheapest:"5 सस्ते राज्य",ins_priciest:"5 महंगे राज्य",ins_national:"राष्ट्रीय औसत",
+  tariff_title:"🛃 टैरिफ प्रभाव कैलकुलेटर",tariff_note:"2025–26 अमेरिकी टैरिफ अनुसूची पर आधारित अनुमान।",
+  tariff_pre:"टैरिफ-पूर्व औसत",tariff_impact:"टैरिफ प्रभाव",tariff_new:"अनुमानित नई कीमत"
+},
+ko:{
+  nav_groceries:"🛒 식료품",nav_gas:"⛽ 주유",nav_medicine:"💊 의약품",nav_housing:"🏠 주거",nav_utilities:"⚡ 공과금",nav_electronics:"📱 전자제품",nav_taxes:"🏛️ 주 세금",nav_airfare:"✈️ 항공권",nav_forecast:"📈 예측",
+  hero_headline:"지불하기 전에 <em>모든 것</em>의 가격을 파악하세요.",
+  hero_sub:"USDA, BLS, EIA, HUD, Census의 실제 정부 데이터를 매일 분석하여 더 스마트하게 쇼핑하세요.",
+  stat_items:"추적 항목",stat_sources:"정부 데이터 출처",stat_updated:"업데이트됨",
+  budget_monthly:"월간 식료품 예산",budget_next:"향후 4주",budget_diff:"오늘 대비",budget_90:"90일 전망",budget_save:"스마트 쇼핑으로 절약",budget_gas:"+ 주유 (월 추정)",budget_utils:"+ 공과금 (월 추정)",budget_total:"총 가구 추정",
+  sec_groceries:"식료품 가격 인텔리전스",desc_groceries:"USDA, BLS 및 원자재 선물 시장의 실시간 가격 데이터.",
+  sec_gas:"주별 주유 가격",desc_gas:"EIA 주간 소매 가격 데이터.",
+  sec_medicine:"처방약 가격 추적기",desc_medicine:"FDA 및 CMS 의약품 가격 데이터.",
+  sec_housing:"주별 주거 비용",desc_housing:"HUD 공정 시장 임대료 및 Rentcast 데이터.",
+  sec_utilities:"주별 공과금",desc_utilities:"EIA 전기 요금, 수도, 가스, 인터넷 추정.",
+  sec_electronics:"전자제품 가격 모니터",desc_electronics:"가격 트렌드를 추적하고 관세 영향을 추정하세요.",
+  sec_taxes:"주 세율",desc_taxes:"Tax Foundation의 2024년 주 세율.",
+  sec_airfare:"항공권 검색",desc_airfare:"Amadeus를 통한 실시간 항공편 가격.",
+  sec_forecast:"가격 예측",desc_forecast:"선물 데이터를 사용한 4–8주 가격 예측.",
+  ph_grocery:"식료품 검색…",ph_medicine:"의약품 검색…",ph_elec:"전자제품 검색…",ph_tax:"주 검색…",ph_airfare_from:"출발지 (도시 또는 코드)",ph_airfare_to:"도착지 (도시 또는 코드)",
+  pill_all:"전체",pill_dairy:"유제품",pill_proteins:"단백질",pill_produce:"농산물",pill_grains:"곡물",pill_oils:"오일",pill_snacks:"스낵",pill_beverages:"음료",
+  pill_all_rx:"전체",pill_common:"일반",pill_brand:"브랜드",pill_generic:"제네릭",
+  act_buy:"⬆ 재고 확보",act_wait:"⬇ 대기",act_watch:"👁 관망",
+  badge_hot:"🔴 재고 확보",badge_down:"🟢 대기",badge_flat:"🟡 관망",
+  th_state:"주",th_income:"소득세",th_sales:"판매세",th_property:"재산세",th_total:"총 부담",
+  rx_name:"약품명",rx_type:"유형",rx_price_30:"30일 가격",rx_price_90:"90일 가격",rx_tip:"팁",
+  gas_tip:"💡 <strong>팁:</strong> 화요일~수요일에 가격이 2–4¢ 하락합니다. 주중에 주유하세요.",
+  af_from:"출발지",af_to:"도착지",af_date:"출발일",af_search:"항공편 검색",af_searching:"검색 중…",af_results:"결과",af_nonstop:"직항",af_stop:"경유",af_stops:"경유",
+  fc_pressure:"가격 압력 지수",fc_sort_default:"기본",fc_sort_urgent:"가장 긴급",fc_sort_rise:"최대 상승",fc_sort_drop:"최대 하락",fc_model_title:"이 모델에 대해",fc_model_body:"예측은 품목별 전달 탄력성 및 지연 시간이 포함된 원자재 선물을 사용합니다.",
+  footer_data:"데이터: USDA · BLS · EIA · HUD · Census · OpenFDA · Amadeus",
+  loc_your:"📍 내 위치",loc_state:"— 주 선택 —",loc_city:"— 도시 선택 —",
+  rx_stat_tracked:"추적 의약품",rx_stat_generic:"% 제네릭 이용 가능",rx_stat_save:"제네릭 vs 브랜드 평균 절약",
+  ins_title:"🚗 주별 자동차 보험 (연간 평균 보험료)",ins_cheapest:"가장 저렴한 5개 주",ins_priciest:"가장 비싼 5개 주",ins_national:"전국 평균",
+  tariff_title:"🛃 관세 영향 계산기",tariff_note:"2025–26년 미국 관세 일정 기반 추정치. 소매 전달률 65% 가정.",
+  tariff_pre:"관세 전 평균",tariff_impact:"관세 영향",tariff_new:"예상 신규 가격"
+},
+vi:{
+  nav_groceries:"🛒 Thực phẩm",nav_gas:"⛽ Xăng",nav_medicine:"💊 Thuốc",nav_housing:"🏠 Nhà ở",nav_utilities:"⚡ Tiện ích",nav_electronics:"📱 Điện tử",nav_taxes:"🏛️ Thuế tiểu bang",nav_airfare:"✈️ Vé máy bay",nav_forecast:"📈 Dự báo",
+  hero_headline:"Biết giá <em>mọi thứ</em> — trước khi trả tiền.",
+  hero_sub:"Dữ liệu chính phủ thực — USDA, BLS, EIA, HUD, Census — được phân tích hàng ngày.",
+  stat_items:"mặt hàng theo dõi",stat_sources:"nguồn dữ liệu chính phủ",stat_updated:"đã cập nhật",
+  budget_monthly:"Ngân sách thực phẩm hàng tháng",budget_next:"4 tuần tới",budget_diff:"so với hôm nay",budget_90:"triển vọng 90 ngày",budget_save:"Tiết kiệm bằng mua thông minh",budget_gas:"+ Xăng (ước tính hàng tháng)",budget_utils:"+ Tiện ích (ước tính hàng tháng)",budget_total:"Tổng chi phí gia đình ước tính",
+  sec_groceries:"Thông tin giá thực phẩm",desc_groceries:"Dữ liệu giá thời gian thực từ USDA, BLS và thị trường hàng hóa kỳ hạn.",
+  sec_gas:"Giá xăng theo tiểu bang",desc_gas:"Dữ liệu giá bán lẻ hàng tuần của EIA.",
+  sec_medicine:"Theo dõi giá thuốc",desc_medicine:"Dữ liệu giá thuốc từ FDA và CMS.",
+  sec_housing:"Chi phí nhà ở theo tiểu bang",desc_housing:"Giá thuê thị trường công bằng HUD và dữ liệu Rentcast.",
+  sec_utilities:"Tiện ích theo tiểu bang",desc_utilities:"Giá điện EIA, nước, gas và internet.",
+  sec_electronics:"Theo dõi giá điện tử",desc_electronics:"Theo dõi xu hướng giá và ước tính tác động thuế quan.",
+  sec_taxes:"Thuế suất tiểu bang",desc_taxes:"Thuế suất tiểu bang 2024 từ Tax Foundation.",
+  sec_airfare:"Tìm kiếm vé máy bay",desc_airfare:"Giá vé trực tiếp qua Amadeus.",
+  sec_forecast:"Dự báo giá",desc_forecast:"Dự báo giá 4–8 tuần dựa trên dữ liệu hợp đồng kỳ hạn hàng hóa.",
+  ph_grocery:"Tìm thực phẩm…",ph_medicine:"Tìm thuốc…",ph_elec:"Tìm điện tử…",ph_tax:"Tìm tiểu bang…",ph_airfare_from:"Điểm đi (thành phố hoặc mã)",ph_airfare_to:"Điểm đến (thành phố hoặc mã)",
+  pill_all:"Tất cả",pill_dairy:"Sữa",pill_proteins:"Đạm",pill_produce:"Rau củ",pill_grains:"Ngũ cốc",pill_oils:"Dầu",pill_snacks:"Đồ ăn nhẹ",pill_beverages:"Đồ uống",
+  pill_all_rx:"Tất cả",pill_common:"Phổ biến",pill_brand:"Thương hiệu",pill_generic:"Thuốc gốc",
+  act_buy:"⬆ Mua dự trữ",act_wait:"⬇ Chờ đợi",act_watch:"👁 Theo dõi",
+  badge_hot:"🔴 MUA DỰ TRỮ",badge_down:"🟢 CHỜ ĐỢI",badge_flat:"🟡 THEO DÕI",
+  th_state:"Tiểu bang",th_income:"Thuế thu nhập",th_sales:"Thuế bán hàng",th_property:"Thuế bất động sản",th_total:"Tổng gánh nặng",
+  rx_name:"Tên thuốc",rx_type:"Loại",rx_price_30:"Giá 30 ngày",rx_price_90:"Giá 90 ngày",rx_tip:"Mẹo",
+  gas_tip:"💡 <strong>Mẹo:</strong> Giá thường giảm 2–4¢ vào thứ Ba–thứ Tư. Đổ xăng giữa tuần để tiết kiệm.",
+  af_from:"Điểm đi",af_to:"Điểm đến",af_date:"Ngày khởi hành",af_search:"Tìm chuyến bay",af_searching:"Đang tìm…",af_results:"kết quả",af_nonstop:"Bay thẳng",af_stop:"điểm dừng",af_stops:"điểm dừng",
+  fc_pressure:"Chỉ số áp lực giá",fc_sort_default:"Mặc định",fc_sort_urgent:"Khẩn cấp nhất",fc_sort_rise:"Tăng nhiều nhất",fc_sort_drop:"Giảm nhiều nhất",fc_model_title:"Về mô hình này",fc_model_body:"Dự báo sử dụng hợp đồng kỳ hạn hàng hóa với độ đàn hồi truyền dẫn đặc thù.",
+  footer_data:"Dữ liệu: USDA · BLS · EIA · HUD · Census · OpenFDA · Amadeus",
+  loc_your:"📍 Vị trí của bạn",loc_state:"— Chọn tiểu bang —",loc_city:"— Chọn thành phố —",
+  rx_stat_tracked:"thuốc được theo dõi",rx_stat_generic:"% có thuốc gốc",rx_stat_save:"tiết kiệm trung bình thuốc gốc vs thương hiệu",
+  ins_title:"🚗 Bảo hiểm ô tô theo tiểu bang (phí bảo hiểm hàng năm trung bình)",ins_cheapest:"5 tiểu bang rẻ nhất",ins_priciest:"5 tiểu bang đắt nhất",ins_national:"Trung bình quốc gia",
+  tariff_title:"🛃 Máy tính tác động thuế quan",tariff_note:"Ước tính dựa trên biểu thuế Hoa Kỳ 2025–26. Giả định truyền dẫn bán lẻ 65%.",
+  tariff_pre:"Giá trước thuế quan",tariff_impact:"Tác động thuế quan",tariff_new:"Giá mới ước tính"
+}
+};
+let currentLang='en';
+let T=TRANSLATIONS.en;
+function setLanguage(lang){
+  if(!TRANSLATIONS[lang])lang='en';
+  currentLang=lang; T=TRANSLATIONS[lang];
+  localStorage.setItem('cc_lang',lang);
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(T[k]!==undefined)el.innerHTML=T[k];});
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const k=el.dataset.i18nPh;if(T[k]!==undefined)el.placeholder=T[k];});
+  buildGroceries();buildForecast();filterElec();filterTaxes();rxApplyFilters();
+  const s=document.getElementById('langSelect');if(s)s.value=lang;
+}
+
 // ═══════════════════════════════════════════════════════════════
 // CARTCAST CORE DATA
 // ═══════════════════════════════════════════════════════════════
@@ -2263,10 +2551,16 @@ let selectedState="",selectedCity="",groceryFilter="all",grocerySearch="",gasFil
 // INIT
 // ═══════════════════════════════════════════════════════════════
 document.addEventListener("DOMContentLoaded",()=>{
+  const savedLang=localStorage.getItem('cc_lang')||'en';
+  if(savedLang!=='en'){currentLang=savedLang;T=TRANSLATIONS[savedLang]||TRANSLATIONS.en;}
   buildTicker(); populateStateDropdown(); buildSignals(); buildGroceries(); buildForecast();
   buildGasGrid(); buildAffordCalc(); buildHousingGrid(); buildUtilitiesGrid(); buildElecGrid();
   buildTaxTable(); buildInsuranceWidget(); buildTaxCompare(); buildTariffCalc(); buildSuggestions(); updateBudget(600); updateHeroStats();
   rxRenderTable(DRUGS);
+  // Apply translations to all static data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(T[k]!==undefined)el.innerHTML=T[k];});
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const k=el.dataset.i18nPh;if(T[k]!==undefined)el.placeholder=T[k];});
+  const ls=document.getElementById('langSelect');if(ls)ls.value=currentLang;
   setTimeout(()=>{ animateHeroStats(); staggerCards("section-groceries"); },100);
   document.getElementById("rxStatShortage").textContent=DRUGS.filter(d=>d.shortage).length;
   document.getElementById("rxStatRising").textContent=DRUGS.filter(d=>d.trend==="up").length;
@@ -2485,7 +2779,7 @@ function buildForecast(){
   else if(fcSortMode==='confidence') data.sort((a,b)=>b.conf-a.conf);
   else data.sort((a,b)=>a.name.localeCompare(b.name));
 
-  document.getElementById('fcCount').textContent=data.length+' items tracked';
+  document.getElementById('fcCount').textContent=data.length+' '+(T.stat_items||'items tracked');
 
   // Price Pressure Index
   const rising =data.filter(d=>d.dir==='up');
@@ -2514,7 +2808,7 @@ function buildForecast(){
     const adj8=(item.f8*factor).toFixed(2);
     const dCls=item.dir==='up'?'fc-up':item.dir==='down'?'fc-down':'fc-flat';
     const bCls=item.action==='buy'?'fc-badge-buy':item.action==='wait'?'fc-badge-wait':'fc-badge-watch';
-    const bTxt=item.action==='buy'?'⬆ BUY NOW':item.action==='wait'?'⬇ WAIT':'👁 WATCH';
+    const bTxt=item.action==='buy'?T.act_buy:item.action==='wait'?T.act_wait:T.act_watch;
     const c4c=item.c4>0?'up':'down'; const c8c=item.c8>0?'up':'down';
     const c4s=(item.c4>0?'+':'')+item.c4.toFixed(1)+'%';
     const c8s=(item.c8>0?'+':'')+item.c8.toFixed(1)+'%';
@@ -2619,12 +2913,12 @@ function buildGroceries(){
   grid.innerHTML=items.map(item=>{
     const adjPrice=(item.price*factor).toFixed(2);
     const badgeClass=item.action==='buy'?'badge-hot':item.action==='wait'?'badge-down':'badge-flat';
-    const badgeText=item.action==='buy'?'🔴 STOCK UP':item.action==='wait'?'🟢 WAIT':'🟡 WATCH';
+    const badgeText=item.action==='buy'?T.badge_hot:item.action==='wait'?T.badge_down:T.badge_flat;
     const trendClass=item.trend==='up'?'trend-up':item.trend==='down'?'trend-down':'trend-flat';
     const changeClass=item.change>0?'up':'down';const changeStr=(item.change>0?'+':'')+item.change.toFixed(1)+'% YoY';
     const actionClass=item.action==='buy'?'action-buy':item.action==='wait'?'action-wait':'action-watch';
     const prevStr=item.prev?`<span class="item-prev">was $${(item.prev*factor).toFixed(2)}</span>`:'';
-    return`<div class="item-card ${trendClass}" onclick="openModal(${item.id})"><div class="item-top"><span class="item-emoji">${item.emoji}</span><span class="item-badge ${badgeClass}">${badgeText}</span></div><div class="item-name">${item.name}</div><div class="item-category">${item.cat}</div><div class="item-price-row"><span class="item-price">$${adjPrice}</span><span class="item-unit">${item.unit}</span>${prevStr}</div><div class="item-change ${changeClass}">${changeStr}</div><div class="item-signal">${item.signal}</div><div class="item-sparkline">${buildSparkline(item,factor)}<span class="spark-label">8-wk trend</span></div><span class="item-action ${actionClass}">${item.action==='buy'?'⬆ Stock Up':item.action==='wait'?'⬇ Wait':'👁 Watch'}</span></div>`;
+    return`<div class="item-card ${trendClass}" onclick="openModal(${item.id})"><div class="item-top"><span class="item-emoji">${item.emoji}</span><span class="item-badge ${badgeClass}">${badgeText}</span></div><div class="item-name">${item.name}</div><div class="item-category">${item.cat}</div><div class="item-price-row"><span class="item-price">$${adjPrice}</span><span class="item-unit">${item.unit}</span>${prevStr}</div><div class="item-change ${changeClass}">${changeStr}</div><div class="item-signal">${item.signal}</div><div class="item-sparkline">${buildSparkline(item,factor)}<span class="spark-label">8-wk trend</span></div><span class="item-action ${actionClass}">${item.action==='buy'?T.act_buy:item.action==='wait'?T.act_wait:T.act_watch}</span></div>`;
   }).join("");
   buildMarketBar();
 }
@@ -2730,7 +3024,7 @@ function buildInsuranceWidget(){
     </div>
   </div>`;}
 function buildElecGrid(){filterElec();}
-function filterElec(){const search=document.getElementById("elecSearch").value.toLowerCase();const grid=document.getElementById("elecGrid");const data=ELECTRONICS_DATA.filter(e=>!search||e.name.toLowerCase().includes(search)||e.spec.toLowerCase().includes(search));grid.innerHTML=data.map(e=>{const trendClass=e.trendClass==='buy'?'action-buy':e.trendClass==='wait'?'action-wait':'action-watch';const trendLabel=e.trendClass==='buy'?'⬆ Buy Now':e.trendClass==='wait'?'⬇ Wait':'👁 Watch';return`<div class="elec-card"><div class="elec-icon">${e.icon}</div><div class="elec-name">${e.name}</div><div class="elec-spec">${e.spec}</div><div class="elec-price">$${e.price.toLocaleString()}</div><div class="elec-range">${e.range}</div><span class="elec-trend item-action ${trendClass}" style="margin-top:8px">${trendLabel}</span><div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.4">${e.note}</div></div>`;}).join("");}
+function filterElec(){const search=document.getElementById("elecSearch").value.toLowerCase();const grid=document.getElementById("elecGrid");const data=ELECTRONICS_DATA.filter(e=>!search||e.name.toLowerCase().includes(search)||e.spec.toLowerCase().includes(search));grid.innerHTML=data.map(e=>{const trendClass=e.trendClass==='buy'?'action-buy':e.trendClass==='wait'?'action-wait':'action-watch';const trendLabel=e.trendClass==='buy'?T.act_buy:e.trendClass==='wait'?T.act_wait:T.act_watch;return`<div class="elec-card"><div class="elec-icon">${e.icon}</div><div class="elec-name">${e.name}</div><div class="elec-spec">${e.spec}</div><div class="elec-price">$${e.price.toLocaleString()}</div><div class="elec-range">${e.range}</div><span class="elec-trend item-action ${trendClass}" style="margin-top:8px">${trendLabel}</span><div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.4">${e.note}</div></div>`;}).join("");}
 function buildTaxTable(){filterTaxes();}
 function filterTaxes(){const search=document.getElementById("taxSearch").value.toLowerCase();const tbody=document.getElementById("taxTableBody");const preFilter=(!search&&selectedState)?TAX_DATA.filter(t=>t.code===selectedState):TAX_DATA;const data=preFilter.filter(t=>!search||t.state.toLowerCase().includes(search)||t.code.toLowerCase().includes(search));tbody.innerHTML=data.map(t=>{const salesClass=t.sales===0?'no-tax':t.sales>=7?'high-tax':'';const incomeClass=t.income===0?'no-tax':t.income>=9?'high-tax':'';return`<tr><td><strong>${t.state}</strong> <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${t.code}</span></td><td><span class="tax-val ${salesClass}">${t.sales===0?'None':t.sales+'%'}</span></td><td><span class="tax-val ${incomeClass}">${t.income===0?'None':t.income+'%'}</span></td><td><span class="tax-val">${t.property}%</span></td><td><span class="tax-val">${t.gas}¢</span></td><td><span class="tax-val" style="${t.rank>=45?'color:var(--accent)':t.rank<=10?'color:var(--green)':''}">#${t.rank}</span></td></tr>`;}).join("");}
 function updateBudget(val){
@@ -2760,7 +3054,7 @@ function buildSuggestions(){document.getElementById("suggestTags").innerHTML=SUG
 function fillSuggest(text){document.getElementById("suggestInput").value=text;}
 function submitSuggestion(){const val=document.getElementById("suggestInput").value.trim();if(!val)return;document.getElementById("suggestInput").value="";showToast('✓ Thanks! We got your suggestion: "'+val+'"');}
 function showToast(msg){const t=document.getElementById("toast");document.getElementById("t-msg").textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3500);}
-function openModal(id){const item=GROCERY_DATA.find(i=>i.id===id);if(!item)return;const factor=getPriceFactor();const adjPrice=(item.price*factor).toFixed(2);const changeClass=item.change>0?'up':'down';const badgeClass=item.action==='buy'?'badge-hot':item.action==='wait'?'badge-down':'badge-flat';const badgeText=item.action==='buy'?'🔴 STOCK UP NOW':item.action==='wait'?'🟢 WAIT TO BUY':'🟡 WATCH';document.getElementById("modalEmoji").textContent=item.emoji;document.getElementById("modalName").textContent=item.name;document.getElementById("modalCategory").textContent=item.cat+(selectedState&&selectedCity?` · ${selectedCity}, ${selectedState}`:selectedState?` · ${STATES_CITIES[selectedState]?.name||''}`:'');document.getElementById("modalPrice").textContent="$"+adjPrice+item.unit;document.getElementById("modalChange").textContent=(item.change>0?"+":"")+item.change.toFixed(1)+"% YoY";document.getElementById("modalChange").className="item-change "+changeClass;document.getElementById("modalBadge").innerHTML=`<span class="item-badge ${badgeClass}">${badgeText}</span>`;document.getElementById("modalWhy").textContent=item.why;document.getElementById("modalSignal").textContent=item.signal;document.getElementById("modalActions").innerHTML=`<div class="modal-action buy"><div class="modal-action-label">Stock Up</div>${item.buy}</div><div class="modal-action wait"><div class="modal-action-label">Wait</div>${item.wait}</div><div class="modal-action swap"><div class="modal-action-label">Substitute</div>${item.swap}</div>`;document.getElementById("modalSources").innerHTML=item.sources.map(s=>`<span class="source-tag">${s}</span>`).join("");document.getElementById("modalBackdrop").classList.add("open");document.body.style.overflow="hidden";}
+function openModal(id){const item=GROCERY_DATA.find(i=>i.id===id);if(!item)return;const factor=getPriceFactor();const adjPrice=(item.price*factor).toFixed(2);const changeClass=item.change>0?'up':'down';const badgeClass=item.action==='buy'?'badge-hot':item.action==='wait'?'badge-down':'badge-flat';const badgeText=item.action==='buy'?T.badge_hot:item.action==='wait'?T.badge_down:T.badge_flat;document.getElementById("modalEmoji").textContent=item.emoji;document.getElementById("modalName").textContent=item.name;document.getElementById("modalCategory").textContent=item.cat+(selectedState&&selectedCity?` · ${selectedCity}, ${selectedState}`:selectedState?` · ${STATES_CITIES[selectedState]?.name||''}`:'');document.getElementById("modalPrice").textContent="$"+adjPrice+item.unit;document.getElementById("modalChange").textContent=(item.change>0?"+":"")+item.change.toFixed(1)+"% YoY";document.getElementById("modalChange").className="item-change "+changeClass;document.getElementById("modalBadge").innerHTML=`<span class="item-badge ${badgeClass}">${badgeText}</span>`;document.getElementById("modalWhy").textContent=item.why;document.getElementById("modalSignal").textContent=item.signal;document.getElementById("modalActions").innerHTML=`<div class="modal-action buy"><div class="modal-action-label">Stock Up</div>${item.buy}</div><div class="modal-action wait"><div class="modal-action-label">Wait</div>${item.wait}</div><div class="modal-action swap"><div class="modal-action-label">Substitute</div>${item.swap}</div>`;document.getElementById("modalSources").innerHTML=item.sources.map(s=>`<span class="source-tag">${s}</span>`).join("");document.getElementById("modalBackdrop").classList.add("open");document.body.style.overflow="hidden";}
 function closeModal(){document.getElementById("modalBackdrop").classList.remove("open");document.body.style.overflow="";}
 function closeModalBackdrop(e){if(e.target===document.getElementById("modalBackdrop"))closeModal();}
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeModal();closeRxModal();}});
