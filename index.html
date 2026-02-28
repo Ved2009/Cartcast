@@ -1526,6 +1526,29 @@ input:focus, select:focus, button:focus-visible {
 .ai-lbl { font-family:'DM Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.5); }
 .ai-txt { font-size:14px; color:rgba(255,255,255,0.88); line-height:1.65; margin:0; }
 
+/* ═══ TARIFF CALCULATOR ═══ */
+.tariff-widget { background:white; border:1.5px solid var(--border); border-radius:14px; padding:20px 22px; margin-bottom:24px; }
+.tariff-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px; }
+.tariff-title { font-size:16px; font-weight:700; }
+.tariff-select { padding:7px 14px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; font-family:'Outfit',sans-serif; background:var(--paper); cursor:pointer; min-width:220px; }
+.tariff-result { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; }
+.tariff-stat { background:var(--paper); border-radius:10px; padding:14px 16px; text-align:center; }
+.tariff-stat-num { font-family:'Fraunces',serif; font-size:26px; font-weight:400; line-height:1; margin-bottom:4px; }
+.tariff-stat-lbl { font-family:'DM Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+.tariff-detail { font-size:12px; color:var(--muted); margin-top:12px; line-height:1.5; }
+.tariff-note { font-size:11px; color:var(--muted); margin-top:10px; font-style:italic; border-top:1px solid var(--border); padding-top:10px; }
+/* ═══ INSURANCE WIDGET ═══ */
+.ins-widget { background:white; border:1.5px solid var(--border); border-radius:14px; padding:20px 22px; margin-bottom:24px; }
+.ins-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:8px; }
+.ins-title { font-size:16px; font-weight:700; }
+.ins-avg { font-family:'DM Mono',monospace; font-size:12px; color:var(--muted); }
+.ins-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.ins-col-title { font-size:12px; font-weight:600; margin-bottom:10px; }
+.ins-col-title.green-txt { color:var(--green); } .ins-col-title.red-txt { color:var(--accent); }
+.ins-row { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.ins-pos { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); width:22px; }
+.ins-state { flex:1; font-weight:500; }
+.ins-val { font-family:'DM Mono',monospace; font-size:12px; font-weight:600; }
 /* Price history "Was $X" on grocery cards */
 .item-prev { font-size: 11px; color: var(--muted); text-decoration: line-through; margin-left: auto; font-family: 'DM Mono', monospace; }
 
@@ -1599,6 +1622,10 @@ input:focus, select:focus, button:focus-visible {
       <div class="budget-row"><span class="label">Estimated increase</span><span class="val" id="budgetDiff">+$43</span></div>
       <div class="budget-row"><span class="label">90-day impact</span><span class="val" id="budget90">+$129</span></div>
       <div class="budget-row green"><span class="label">Savings if you stock up</span><span class="val" id="budgetSave">-$38</span></div>
+      <div style="border-top:1px solid rgba(255,255,255,.15);margin:10px 0 6px"></div>
+      <div class="budget-row" style="opacity:.75"><span class="label">+ Gas (est. monthly)</span><span class="val" id="budgetGas">—</span></div>
+      <div class="budget-row" style="opacity:.75"><span class="label">+ Utilities (est. monthly)</span><span class="val" id="budgetUtils">—</span></div>
+      <div class="budget-row highlight"><span class="label">Total household est.</span><span class="val" id="budgetTotal">—</span></div>
     </div>
   </div>
   <div class="stats-row">
@@ -1729,6 +1756,7 @@ input:focus, select:focus, button:focus-visible {
         <input type="text" placeholder="Search device…" id="elecSearch" oninput="filterElec()">
       </div>
     </div>
+    <div id="tariffCalc"></div>
     <div class="elec-grid" id="elecGrid"></div>
   </div>
 
@@ -1742,6 +1770,7 @@ input:focus, select:focus, button:focus-visible {
         <input type="text" placeholder="Search state…" id="taxSearch" oninput="filterTaxes()">
       </div>
     </div>
+    <div id="insuranceWidget"></div>
     <div id="taxCompare"></div>
     <div class="tax-table-wrap"><table class="tax-table"><thead><tr><th>State</th><th>Sales Tax</th><th>Top Income Tax</th><th>Avg Property Tax Rate</th><th>Gas Tax (¢/gal)</th><th>Tax Burden Rank</th></tr></thead><tbody id="taxTableBody"></tbody></table></div>
   </div>
@@ -2185,6 +2214,43 @@ const ELECTRONICS_DATA=[{name:"iPhone 15 Pro",icon:"📱",spec:"256GB, Titanium"
 {name:"Toaster Oven / Air Fryer",icon:"🥐",spec:"Breville/Cuisinart, 0.8 cu ft",price:199,range:"$99–299",trend:"up",trendClass:"buy",note:"⚠️ Chinese-assembled models face tariff pressure. Multi-function countertop ovens up 12–18% from tariffs. Buy before next price round."},
 {name:"Instant Pot (6qt)",icon:"🍲",spec:"Duo 7-in-1 Pressure Cooker",price:99,range:"$79–129",trend:"up",trendClass:"buy",note:"⚠️ Tariff exposure varies by model. China-made SKUs up 15–20%. Canadian-made models stable. Check origin label before buying. Strong deal under $89."}];
 const TAX_DATA=[{state:"Alabama",code:"AL",sales:4.0,income:5.0,property:0.37,gas:29.0,rank:40},{state:"Alaska",code:"AK",sales:0,income:0,property:0.96,gas:14.7,rank:5},{state:"Arizona",code:"AZ",sales:5.6,income:2.5,property:0.59,gas:18.0,rank:14},{state:"Arkansas",code:"AR",sales:6.5,income:4.7,property:0.61,gas:24.8,rank:45},{state:"California",code:"CA",sales:7.25,income:13.3,property:0.73,gas:68.1,rank:49},{state:"Colorado",code:"CO",sales:2.9,income:4.4,property:0.51,gas:22.0,rank:19},{state:"Connecticut",code:"CT",sales:6.35,income:6.99,property:1.79,gas:36.3,rank:47},{state:"Delaware",code:"DE",sales:0,income:6.6,property:0.55,gas:23.0,rank:17},{state:"Florida",code:"FL",sales:6.0,income:0,property:0.83,gas:36.2,rank:8},{state:"Georgia",code:"GA",sales:4.0,income:5.75,property:0.83,gas:32.3,rank:32},{state:"Hawaii",code:"HI",sales:4.0,income:11.0,property:0.29,gas:52.0,rank:46},{state:"Idaho",code:"ID",sales:6.0,income:5.8,property:0.62,gas:32.0,rank:25},{state:"Illinois",code:"IL",sales:6.25,income:4.95,property:2.07,gas:39.2,rank:48},{state:"Indiana",code:"IN",sales:7.0,income:3.23,property:0.81,gas:33.0,rank:30},{state:"Iowa",code:"IA",sales:6.0,income:6.0,property:1.52,gas:30.0,rank:42},{state:"Kansas",code:"KS",sales:6.5,income:5.7,property:1.37,gas:24.0,rank:41},{state:"Kentucky",code:"KY",sales:6.0,income:4.5,property:0.83,gas:26.0,rank:35},{state:"Louisiana",code:"LA",sales:4.45,income:4.25,property:0.53,gas:20.0,rank:27},{state:"Maine",code:"ME",sales:5.5,income:7.15,property:1.13,gas:30.0,rank:38},{state:"Maryland",code:"MD",sales:6.0,income:5.75,property:1.07,gas:47.0,rank:40},{state:"Massachusetts",code:"MA",sales:6.25,income:5.0,property:1.17,gas:24.0,rank:36},{state:"Michigan",code:"MI",sales:6.0,income:4.25,property:1.44,gas:28.6,rank:39},{state:"Minnesota",code:"MN",sales:6.875,income:9.85,property:1.12,gas:28.6,rank:44},{state:"Mississippi",code:"MS",sales:7.0,income:5.0,property:0.51,gas:18.8,rank:33},{state:"Missouri",code:"MO",sales:4.225,income:4.95,property:0.97,gas:19.4,rank:26},{state:"Montana",code:"MT",sales:0,income:6.75,property:0.74,gas:33.0,rank:18},{state:"Nebraska",code:"NE",sales:5.5,income:6.64,property:1.63,gas:24.8,rank:41},{state:"Nevada",code:"NV",sales:6.85,income:0,property:0.55,gas:23.0,rank:12},{state:"New Hampshire",code:"NH",sales:0,income:0,property:1.77,gas:22.2,rank:7},{state:"New Jersey",code:"NJ",sales:6.625,income:10.75,property:2.47,gas:42.4,rank:50},{state:"New Mexico",code:"NM",sales:5.125,income:5.9,property:0.67,gas:17.0,rank:23},{state:"New York",code:"NY",sales:4.0,income:10.9,property:1.40,gas:48.2,rank:46},{state:"North Carolina",code:"NC",sales:4.75,income:4.75,property:0.77,gas:40.5,rank:24},{state:"North Dakota",code:"ND",sales:5.0,income:2.9,property:0.94,gas:23.0,rank:10},{state:"Ohio",code:"OH",sales:5.75,income:3.99,property:1.53,gas:38.5,rank:37},{state:"Oklahoma",code:"OK",sales:4.5,income:4.75,property:0.85,gas:19.0,rank:27},{state:"Oregon",code:"OR",sales:0,income:9.9,property:0.91,gas:36.0,rank:29},{state:"Pennsylvania",code:"PA",sales:6.0,income:3.07,property:1.53,gas:57.6,rank:43},{state:"Rhode Island",code:"RI",sales:7.0,income:5.99,property:1.53,gas:33.0,rank:44},{state:"South Carolina",code:"SC",sales:6.0,income:7.0,property:0.55,gas:26.8,rank:31},{state:"South Dakota",code:"SD",sales:4.2,income:0,property:1.08,gas:30.0,rank:9},{state:"Tennessee",code:"TN",sales:7.0,income:0,property:0.67,gas:26.4,rank:11},{state:"Texas",code:"TX",sales:6.25,income:0,property:1.67,gas:20.0,rank:13},{state:"Utah",code:"UT",sales:4.85,income:4.65,property:0.52,gas:31.4,rank:16},{state:"Vermont",code:"VT",sales:6.0,income:8.75,property:1.83,gas:30.5,rank:43},{state:"Virginia",code:"VA",sales:5.3,income:5.75,property:0.80,gas:26.2,rank:28},{state:"Washington",code:"WA",sales:6.5,income:0,property:0.84,gas:49.4,rank:22},{state:"West Virginia",code:"WV",sales:6.0,income:5.12,property:0.57,gas:35.7,rank:31},{state:"Wisconsin",code:"WI",sales:5.0,income:7.65,property:1.73,gas:30.9,rank:43},{state:"Wyoming",code:"WY",sales:4.0,income:0,property:0.57,gas:23.0,rank:6}];
+const INSURANCE_DATA=[
+{state:"LA",name:"Louisiana",annual:2839},{state:"NV",name:"Nevada",annual:2779},
+{state:"FL",name:"Florida",annual:2694},{state:"MI",name:"Michigan",annual:2691},
+{state:"NY",name:"New York",annual:2321},{state:"DE",name:"Delaware",annual:2313},
+{state:"CA",name:"California",annual:2291},{state:"CO",name:"Colorado",annual:2228},
+{state:"MN",name:"Minnesota",annual:2208},{state:"KY",name:"Kentucky",annual:2185},
+{state:"OK",name:"Oklahoma",annual:2178},{state:"MT",name:"Montana",annual:2156},
+{state:"MD",name:"Maryland",annual:2089},{state:"GA",name:"Georgia",annual:2044},
+{state:"SC",name:"South Carolina",annual:1998},{state:"CT",name:"Connecticut",annual:1987},
+{state:"NJ",name:"New Jersey",annual:1964},{state:"TX",name:"Texas",annual:1940},
+{state:"AL",name:"Alabama",annual:1921},{state:"WA",name:"Washington",annual:1889},
+{state:"MS",name:"Mississippi",annual:1876},{state:"AK",name:"Alaska",annual:1843},
+{state:"TN",name:"Tennessee",annual:1821},{state:"AZ",name:"Arizona",annual:1798},
+{state:"NM",name:"New Mexico",annual:1765},{state:"AR",name:"Arkansas",annual:1742},
+{state:"VA",name:"Virginia",annual:1698},{state:"WV",name:"West Virginia",annual:1689},
+{state:"IL",name:"Illinois",annual:1672},{state:"IN",name:"Indiana",annual:1634},
+{state:"PA",name:"Pennsylvania",annual:1621},{state:"OR",name:"Oregon",annual:1598},
+{state:"HI",name:"Hawaii",annual:1567},{state:"NC",name:"North Carolina",annual:1543},
+{state:"MA",name:"Massachusetts",annual:1521},{state:"KS",name:"Kansas",annual:1498},
+{state:"MO",name:"Missouri",annual:1476},{state:"UT",name:"Utah",annual:1445},
+{state:"RI",name:"Rhode Island",annual:1423},{state:"NE",name:"Nebraska",annual:1389},
+{state:"WY",name:"Wyoming",annual:1367},{state:"ND",name:"North Dakota",annual:1312},
+{state:"SD",name:"South Dakota",annual:1289},{state:"IA",name:"Iowa",annual:1256},
+{state:"ID",name:"Idaho",annual:1234},{state:"WI",name:"Wisconsin",annual:1198},
+{state:"OH",name:"Ohio",annual:1167},{state:"ME",name:"Maine",annual:1112},
+{state:"NH",name:"New Hampshire",annual:1089},{state:"VT",name:"Vermont",annual:1043}];
+const TARIFF_CATEGORIES=[
+{cat:"Consumer Electronics",origin:"China",rate:145,example:"Smartphones, tablets, TVs",avgPrice:500},
+{cat:"Major Appliances",origin:"China / South Korea",rate:25,example:"Washers, dryers, refrigerators",avgPrice:1200},
+{cat:"Small Kitchen Appliances",origin:"China",rate:145,example:"Coffee makers, air fryers, Instant Pots",avgPrice:120},
+{cat:"Furniture & Home Goods",origin:"China / Vietnam",rate:46,example:"Sofas, beds, desks, shelving",avgPrice:800},
+{cat:"Clothing & Footwear",origin:"China",rate:145,example:"Shirts, shoes, jackets, sneakers",avgPrice:60},
+{cat:"Toys & Games",origin:"China",rate:145,example:"Action figures, board games, LEGO",avgPrice:35},
+{cat:"Automotive Parts",origin:"Canada / Mexico",rate:25,example:"Brake pads, filters, tires, batteries",avgPrice:200},
+{cat:"Steel & Aluminum Products",origin:"Global",rate:25,example:"Construction material, pipes, fasteners",avgPrice:1000},
+{cat:"Solar Panels",origin:"China / SE Asia",rate:50,example:"Residential rooftop solar modules",avgPrice:2500},
+{cat:"Semiconductors & Chips",origin:"Taiwan / China",rate:50,example:"GPUs, CPUs, memory chips",avgPrice:400}];
 const SUGGESTIONS_PRESET=["Baby formula brands","Pet food by breed","School supplies","Prescription glasses","Airfare comparison","Auto insurance","Cell phone plans","Gym memberships"];
 const POPULAR_REQUESTS=[{item:"Specific prescription drug prices by pharmacy",votes:847},{item:"Airfare prices by route / airport",votes:612},{item:"Auto insurance rates by state and age",votes:588},{item:"Cell phone plan comparison by carrier",votes:441},{item:"School supplies / back-to-school basket",votes:389}];
 
@@ -2199,7 +2265,7 @@ let selectedState="",selectedCity="",groceryFilter="all",grocerySearch="",gasFil
 document.addEventListener("DOMContentLoaded",()=>{
   buildTicker(); populateStateDropdown(); buildSignals(); buildGroceries(); buildForecast();
   buildGasGrid(); buildAffordCalc(); buildHousingGrid(); buildUtilitiesGrid(); buildElecGrid();
-  buildTaxTable(); buildTaxCompare(); buildSuggestions(); updateBudget(600); updateHeroStats();
+  buildTaxTable(); buildInsuranceWidget(); buildTaxCompare(); buildTariffCalc(); buildSuggestions(); updateBudget(600); updateHeroStats();
   rxRenderTable(DRUGS);
   setTimeout(()=>{ animateHeroStats(); staggerCards("section-groceries"); },100);
   document.getElementById("rxStatShortage").textContent=DRUGS.filter(d=>d.shortage).length;
@@ -2607,11 +2673,89 @@ function filterHousing(){
     return`<div class="housing-card ${ac}"><div class="housing-city">${h.city}</div><div class="housing-metro">${h.metro}</div><div class="rent-rows"><div class="rent-row"><span class="rent-type">Studio</span><span class="rent-amount">$${adj(h.studio).toLocaleString()}/mo</span></div><div class="rent-row"><span class="rent-type">1 Bedroom</span><span class="rent-amount">$${adj(h.one).toLocaleString()}/mo</span></div><div class="rent-row"><span class="rent-type">2 Bedroom</span><span class="rent-amount">$${adj(h.two).toLocaleString()}/mo</span></div><div class="rent-row"><span class="rent-type">3 Bedroom</span><span class="rent-amount">$${adj(h.three).toLocaleString()}/mo</span></div></div><div style="margin-top:12px;font-family:'DM Mono',monospace;font-size:11px;color:${chgColor}">YoY: ${h.change>0?'+':''}${h.change}% rent change</div></div>`;
   }).join("");}
 function buildUtilitiesGrid(){const grid=document.getElementById("utilitiesGrid");const data=selectedState?UTILITIES_DATA.filter(u=>u.state===selectedState):UTILITIES_DATA;const display=data.length>0?data:UTILITIES_DATA;grid.innerHTML=display.map(u=>`<div class="util-card"><div class="util-icon">⚡</div><div class="util-state">${u.name}</div><div class="util-name">Monthly Utility Costs</div><div class="util-rows"><div class="util-row"><span class="util-label">Electricity (avg mo.)</span><span class="util-val">$${u.monthly_elec}</span></div><div class="util-row"><span class="util-label">Elec. rate per kWh</span><span class="util-val">$${u.elec_kwh.toFixed(3)}</span></div><div class="util-row"><span class="util-label">Water (avg mo.)</span><span class="util-val">$${u.water}</span></div><div class="util-row"><span class="util-label">Nat. Gas (avg mo.)</span><span class="util-val">${u.gas==="N/A"?"N/A":"$"+u.gas}</span></div><div class="util-row"><span class="util-label">Internet (avg mo.)</span><span class="util-val">$${u.internet}</span></div><div class="util-row" style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px"><span class="util-label" style="font-weight:600">Total est. monthly</span><span class="util-val" style="font-weight:700">$${u.monthly_elec+u.water+(u.gas==="N/A"?0:u.gas)+u.internet}</span></div></div></div>`).join("");buildUtilitiesRanking();}
+function buildTariffCalc(){
+  const el=document.getElementById("tariffCalc");
+  const opts=TARIFF_CATEGORIES.map((c,i)=>`<option value="${i}">${c.cat}</option>`).join("");
+  el.innerHTML=`<div class="tariff-widget">
+    <div class="tariff-header">
+      <div class="tariff-title">🛃 Tariff Impact Calculator</div>
+      <select class="tariff-select" id="tariffCat" onchange="calcTariff()"><option value="" disabled>Select a product category…</option>${opts}</select>
+    </div>
+    <div id="tariffResult"></div>
+    <div class="tariff-note">Estimates based on 2025–26 US tariff schedules. Retail impact uses ~65% pass-through rate accounting for retailer margins and partial importer absorption. Actual prices vary.</div>
+  </div>`;
+  document.getElementById("tariffCat").value="0";
+  calcTariff();
+}
+function calcTariff(){
+  const idx=parseInt(document.getElementById("tariffCat").value);
+  if(isNaN(idx))return;
+  const cat=TARIFF_CATEGORIES[idx];
+  const passThru=0.65;
+  const tariffImpact=cat.avgPrice*(cat.rate/100)*passThru;
+  const newPrice=Math.round(cat.avgPrice+tariffImpact);
+  const pctIncrease=Math.round((tariffImpact/cat.avgPrice)*100);
+  const impactColor=pctIncrease>=50?'var(--accent)':pctIncrease>=20?'var(--gold)':'var(--ink)';
+  document.getElementById("tariffResult").innerHTML=`
+    <div class="tariff-result">
+      <div class="tariff-stat">
+        <div class="tariff-stat-num" style="color:var(--accent2)">${cat.rate}%</div>
+        <div class="tariff-stat-lbl">Tariff Rate</div>
+      </div>
+      <div class="tariff-stat">
+        <div class="tariff-stat-num" style="color:${impactColor}">+${pctIncrease}%</div>
+        <div class="tariff-stat-lbl">Retail Price Impact</div>
+      </div>
+      <div class="tariff-stat">
+        <div class="tariff-stat-num">$${newPrice.toLocaleString()}</div>
+        <div class="tariff-stat-lbl">From $${cat.avgPrice.toLocaleString()} avg</div>
+      </div>
+    </div>
+    <div class="tariff-detail">Origin: <strong>${cat.origin}</strong> · Examples: ${cat.example}</div>`;}
+function buildInsuranceWidget(){
+  const el=document.getElementById("insuranceWidget");
+  const sorted=[...INSURANCE_DATA].sort((a,b)=>a.annual-b.annual);
+  const cheapest=sorted.slice(0,5);
+  const priciest=sorted.slice(-5).reverse();
+  const avg=Math.round(INSURANCE_DATA.reduce((s,d)=>s+d.annual,0)/INSURANCE_DATA.length);
+  const makeRows=(arr)=>arr.map((d,i)=>`<div class="ins-row"><span class="ins-pos">${i+1}</span><span class="ins-state">${d.name}</span><span class="ins-val">$${d.annual.toLocaleString()}/yr</span></div>`).join("");
+  el.innerHTML=`<div class="ins-widget">
+    <div class="ins-header">
+      <div class="ins-title">🚗 Auto Insurance by State</div>
+      <div class="ins-avg">Nat'l avg $${avg.toLocaleString()}/yr · Source: NAIC 2024</div>
+    </div>
+    <div class="ins-grid">
+      <div><div class="ins-col-title green-txt">✓ Most Affordable</div>${makeRows(cheapest)}</div>
+      <div><div class="ins-col-title red-txt">↑ Most Expensive</div>${makeRows(priciest)}</div>
+    </div>
+  </div>`;}
 function buildElecGrid(){filterElec();}
 function filterElec(){const search=document.getElementById("elecSearch").value.toLowerCase();const grid=document.getElementById("elecGrid");const data=ELECTRONICS_DATA.filter(e=>!search||e.name.toLowerCase().includes(search)||e.spec.toLowerCase().includes(search));grid.innerHTML=data.map(e=>{const trendClass=e.trendClass==='buy'?'action-buy':e.trendClass==='wait'?'action-wait':'action-watch';const trendLabel=e.trendClass==='buy'?'⬆ Buy Now':e.trendClass==='wait'?'⬇ Wait':'👁 Watch';return`<div class="elec-card"><div class="elec-icon">${e.icon}</div><div class="elec-name">${e.name}</div><div class="elec-spec">${e.spec}</div><div class="elec-price">$${e.price.toLocaleString()}</div><div class="elec-range">${e.range}</div><span class="elec-trend item-action ${trendClass}" style="margin-top:8px">${trendLabel}</span><div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.4">${e.note}</div></div>`;}).join("");}
 function buildTaxTable(){filterTaxes();}
 function filterTaxes(){const search=document.getElementById("taxSearch").value.toLowerCase();const tbody=document.getElementById("taxTableBody");const preFilter=selectedState?TAX_DATA.filter(t=>t.code===selectedState):TAX_DATA;const data=preFilter.filter(t=>!search||t.state.toLowerCase().includes(search));tbody.innerHTML=data.map(t=>{const salesClass=t.sales===0?'no-tax':t.sales>=7?'high-tax':'';const incomeClass=t.income===0?'no-tax':t.income>=9?'high-tax':'';return`<tr><td><strong>${t.state}</strong> <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${t.code}</span></td><td><span class="tax-val ${salesClass}">${t.sales===0?'None':t.sales+'%'}</span></td><td><span class="tax-val ${incomeClass}">${t.income===0?'None':t.income+'%'}</span></td><td><span class="tax-val">${t.property}%</span></td><td><span class="tax-val">${t.gas}¢</span></td><td><span class="tax-val" style="${t.rank>=45?'color:var(--accent)':t.rank<=10?'color:var(--green)':''}">#${t.rank}</span></td></tr>`;}).join("");}
-function updateBudget(val){const v=parseInt(val);const factor=getPriceFactor();const adj=v*factor;const avgChg=GROCERY_DATA.reduce((s,i)=>s+i.change,0)/GROCERY_DATA.length;const infRate=Math.max(0,avgChg)/100;const increase=adj*infRate;const next=adj+increase;const waitItems=GROCERY_DATA.filter(i=>i.action==='wait');const avgWaitSave=waitItems.length?waitItems.reduce((s,i)=>s+Math.abs(i.change),0)/waitItems.length:6.3;const saveRate=Math.min(avgWaitSave/100,0.12);const save=adj*saveRate;document.getElementById("budgetDisplay").textContent="$"+v.toLocaleString();document.getElementById("budgetNext").textContent="$"+Math.round(next).toLocaleString();document.getElementById("budgetDiff").textContent="+$"+Math.round(increase).toLocaleString();document.getElementById("budget90").textContent="+$"+Math.round(increase*3).toLocaleString();document.getElementById("budgetSave").textContent="-$"+Math.round(save).toLocaleString();}
+function updateBudget(val){
+  const v=parseInt(val);const factor=getPriceFactor();const adj=v*factor;
+  const avgChg=GROCERY_DATA.reduce((s,i)=>s+i.change,0)/GROCERY_DATA.length;
+  const infRate=Math.max(0,avgChg)/100;const increase=adj*infRate;const next=adj+increase;
+  const waitItems=GROCERY_DATA.filter(i=>i.action==='wait');
+  const avgWaitSave=waitItems.length?waitItems.reduce((s,i)=>s+Math.abs(i.change),0)/waitItems.length:6.3;
+  const saveRate=Math.min(avgWaitSave/100,0.12);const save=adj*saveRate;
+  document.getElementById("budgetDisplay").textContent="$"+v.toLocaleString();
+  document.getElementById("budgetNext").textContent="$"+Math.round(next).toLocaleString();
+  document.getElementById("budgetDiff").textContent="+$"+Math.round(increase).toLocaleString();
+  document.getElementById("budget90").textContent="+$"+Math.round(increase*3).toLocaleString();
+  document.getElementById("budgetSave").textContent="-$"+Math.round(save).toLocaleString();
+  // Gas: national avg price × 40 gal/mo (avg US driver ~12k mi/yr ÷ 25mpg)
+  const gasNat=GAS_DATA.reduce((s,g)=>s+g.regular,0)/GAS_DATA.length;
+  const gasMonthly=Math.round(40*gasNat*factor);
+  // Utilities: average total across all states from UTILITIES_DATA
+  const utilAvg=UTILITIES_DATA.reduce((s,u)=>s+u.monthly_elec+u.water+(u.gas==="N/A"?0:u.gas)+u.internet,0)/UTILITIES_DATA.length;
+  const utilMonthly=Math.round(utilAvg*factor);
+  const totalHousehold=Math.round(adj)+gasMonthly+utilMonthly;
+  document.getElementById("budgetGas").textContent="$"+gasMonthly.toLocaleString();
+  document.getElementById("budgetUtils").textContent="$"+utilMonthly.toLocaleString();
+  document.getElementById("budgetTotal").textContent="$"+totalHousehold.toLocaleString();
+}
 function buildSuggestions(){document.getElementById("suggestTags").innerHTML=SUGGESTIONS_PRESET.map(s=>`<span class="suggest-tag" onclick="fillSuggest('${s}')">${s}</span>`).join("");document.getElementById("suggestionVotes").innerHTML=POPULAR_REQUESTS.map(r=>`<div class="suggest-vote-item"><span style="flex:1">${r.item}</span><div class="vote-bar-wrap"><div class="vote-bar" style="width:${Math.round(r.votes/10)}%"></div></div><span class="vote-count">${r.votes}</span></div>`).join("");}
 function fillSuggest(text){document.getElementById("suggestInput").value=text;}
 function submitSuggestion(){const val=document.getElementById("suggestInput").value.trim();if(!val)return;document.getElementById("suggestInput").value="";showToast('✓ Thanks! We got your suggestion: "'+val+'"');}
@@ -2664,7 +2808,17 @@ const GROCERY_DATA=[{id:1,name:"Eggs (1 dozen)",emoji:"🥚",cat:"Dairy & Eggs",
 {id:27,name:"All-Purpose Flour (5 lb)",emoji:"🌾",cat:"Grains & Bread",price:4.89,prev:5.49,change:-10.9,trend:"down",unit:"/5lb bag",action:"wait",signal:"Global wheat surplus. Ukraine and Russia posted strong 2025 harvests. Flour prices falling — best price since 2021.",why:"The 2025 global wheat harvest was the largest in 4 years. Ukraine exported a record 18 million metric tons despite the ongoing conflict, and US winter wheat production was 8% above the 5-year average. Global ending stocks are at a 5-year high, and flour millers are passing savings forward to retailers.",sources:["USDA WASDE","CBOT Wheat Futures","BLS"],buy:"No urgency — prices continuing to fall.",wait:"Best strategy — flour prices expected down another 5–8% by summer.",swap:"Store-brand flour is 25–35% cheaper than name brands."},
 {id:28,name:"Heavy Cream (1 pint)",emoji:"🫙",cat:"Dairy",price:5.79,prev:5.19,change:+11.6,trend:"up",unit:"/pint",action:"buy",signal:"Dairy herd consolidation post-2024 bird flu reducing cream supply. Cream requires 10x more milk per unit than skim.",why:"Heavy cream sits at the top of the dairy fat pyramid — it takes about 10 gallons of whole milk to produce 1 quart of heavy cream. The 2024 H5N1 avian flu outbreak forced dairy herd culls that are still rippling through the supply chain. Combined with rising farm milk prices (+8.4% YoY), cream prices are being pushed up fast.",sources:["USDA AMS","USDA NASS Dairy"],buy:"Stock up if baking or cooking-heavy — freezes well.",wait:"Not recommended — prices trending higher through mid-2026.",swap:"Half-and-half or coconut cream for cooking at 40% savings."},
 {id:29,name:"Frozen Pizza (12 inch)",emoji:"🍕",cat:"Frozen Foods",price:8.49,prev:7.29,change:+16.5,trend:"up",unit:"/each",action:"buy",signal:"Double commodity hit: wheat (crust) +12% and dairy cheese +9% both rising simultaneously. Frozen pizza absorbs both shocks.",why:"Frozen pizza is uniquely exposed to two simultaneous commodity pressures: the wheat in the crust and the mozzarella on top. Wheat prices have been volatile, and dairy prices are rising on herd consolidation. Manufacturers tried to absorb costs through shrinkflation (thinner crust, less cheese) in 2024, but are now raising sticker prices.",sources:["BLS CPI Frozen Foods","USDA NASS"],buy:"Stock now — prices unlikely to improve before summer.",wait:"Wait if you have 2+ months supply already.",swap:"Homemade pizza with current flour prices is 60% cheaper per serving."},
-{id:30,name:"Flour Tortillas (10-ct)",emoji:"🫓",cat:"Grains & Bread",price:3.89,prev:3.49,change:+11.5,trend:"up",unit:"/10-count",action:"watch",signal:"Wheat prices elevated despite global surplus; tortilla manufacturing labor costs +6% YoY. Mexican-American brand premium widening.",why:"Flour tortillas are primarily wheat-based, but tortilla manufacturers also face elevated labor costs at their facilities. The top tortilla brands (Mission, Ole) have taken average price increases of 10–12% in the past year. Despite the global wheat surplus benefiting flour prices generally, tortilla manufacturers have been slower to pass savings back to consumers.",sources:["BLS CPI","USDA ERS"],buy:"Stock up if you use regularly — good shelf life.",wait:"Prices may ease slightly if wheat surplus deepens.",swap:"Corn tortillas are 25% cheaper and have different nutritional profile."}];
+{id:30,name:"Flour Tortillas (10-ct)",emoji:"🫓",cat:"Grains & Bread",price:3.89,prev:3.49,change:+11.5,trend:"up",unit:"/10-count",action:"watch",signal:"Wheat prices elevated despite global surplus; tortilla manufacturing labor costs +6% YoY. Mexican-American brand premium widening.",why:"Flour tortillas are primarily wheat-based, but tortilla manufacturers also face elevated labor costs at their facilities. The top tortilla brands (Mission, Ole) have taken average price increases of 10–12% in the past year. Despite the global wheat surplus benefiting flour prices generally, tortilla manufacturers have been slower to pass savings back to consumers.",sources:["BLS CPI","USDA ERS"],buy:"Stock up if you use regularly — good shelf life.",wait:"Prices may ease slightly if wheat surplus deepens.",swap:"Corn tortillas are 25% cheaper and have different nutritional profile."},
+{id:31,name:"White Bread (20 oz loaf)",emoji:"🍞",cat:"Grains & Bread",price:4.29,prev:3.99,change:+5.1,trend:"up",unit:"/loaf",action:"watch",signal:"Wheat surplus lowering flour cost, but bread labor, energy, and packaging remain elevated.",why:"Global wheat prices have softened with the 2025 surplus, but retail bread prices haven't followed. Bakers face rising costs for labor, natural gas (baking ovens), and petroleum-based plastic packaging. Branded bread (Wonder, Pepperidge Farm) absorbs less commodity relief than store brands.",sources:["BLS CPI","USDA ERS","PPI"],buy:"Buy on sale and freeze extra loaves — freeze well up to 3 months.",wait:"Wait for sale cycles — bread promotions run every 2–3 weeks.",swap:"Store-brand bread is 30–40% cheaper with identical nutritional content."},
+{id:32,name:"Atlantic Salmon (1 lb)",emoji:"🐟",cat:"Proteins",price:12.99,prev:12.19,change:+6.8,trend:"up",unit:"/lb",action:"buy",signal:"Norwegian aquaculture costs up 12%. Sea lice outbreaks and rising feed costs reducing farm yields.",why:"Norwegian salmon farms supply 50%+ of US fresh salmon. Sea lice infestations — worsening with warming ocean temperatures — force costly treatments and reduce harvest yields. Chilean operations face similar pressures. These dual supply constraints are pushing prices to multi-year highs.",sources:["FAO","USDA FAS","BLS"],buy:"Salmon freezes perfectly — buy on sale and freeze for 2–3 months.",wait:"No near-term relief; aquaculture cost pressures are multiyear.",swap:"Canned salmon (sockeye or pink) offers the same omega-3 at 70% less per serving."},
+{id:33,name:"Canned Black Beans (15 oz)",emoji:"🫘",cat:"Oils & Pantry",price:1.29,prev:1.34,change:-3.8,trend:"down",unit:"/can",action:"wait",signal:"Strong US dry bean harvest in North Dakota and Michigan driving canned prices lower.",why:"US black bean production was robust in 2024–2025. A record harvest in the Northern Plains and Upper Midwest has lowered commodity prices. Canners are beginning to pass savings forward. Prices approaching a multi-year seasonal low.",sources:["BLS","USDA NASS"],buy:"Already excellent value — always a solid buy.",wait:"Another 5–8% decline likely over the next 4–8 weeks.",swap:"Dry beans are 70% cheaper per serving but require soaking and cooking time."},
+{id:34,name:"Broccoli Crown (1 lb)",emoji:"🥦",cat:"Produce",price:2.19,prev:2.34,change:-6.2,trend:"down",unit:"/lb",action:"wait",signal:"California Salinas Valley spring crop arriving. Supply up, prices falling.",why:"California's Salinas Valley, which produces the majority of US broccoli, is entering spring harvest. Early 2026 yields are strong, boosting supply at a time when retail demand is seasonal but steady. Prices are near their spring low.",sources:["BLS","USDA NASS"],buy:"Freeze blanched florets now for year-round use at current low prices.",wait:"Best prices April–May during peak California spring harvest.",swap:"Frozen broccoli is 40% cheaper and nutritionally equivalent year-round."},
+{id:35,name:"Yellow Onions (3 lb bag)",emoji:"🧅",cat:"Produce",price:2.99,prev:2.89,change:+3.1,trend:"flat",unit:"/3lb bag",action:"watch",signal:"Pacific Northwest onion storage supply adequate. Mild restaurant-sector demand adding modest upward pressure.",why:"US onion production from Oregon and Washington is at normal levels. Prices are slightly elevated from restaurant demand recovery and modest packaging cost increases, but remain one of the most affordable vegetables in the produce aisle. No significant supply disruption expected.",sources:["BLS","USDA NASS"],buy:"Excellent value — stored in a cool dry place, onions last 2–3 months.",wait:"No significant price movement expected either way.",swap:"N/A — onions are among the most affordable vegetables at any time of year."},
+{id:36,name:"Almond Milk (half gallon)",emoji:"🥛",cat:"Beverages",price:4.99,prev:4.69,change:+7.2,trend:"up",unit:"/half gal",action:"watch",signal:"California almond water costs surging. Drought-driven groundwater restrictions cutting San Joaquin Valley almond acreage.",why:"Almonds are among the most water-intensive crops — each almond requires approximately 1.1 gallons of water. California's Central Valley faces tightening groundwater regulations under SGMA, forcing almond growers to reduce planted acreage. Reduced almond supply is flowing through to almond milk pricing.",sources:["BLS","USDA NASS","CA SWRCB"],buy:"Stock if you use regularly — shelf life 6–12 months unopened.",wait:"Prices unlikely to meaningfully ease without California water situation improving.",swap:"Oat milk is priced similarly; store brands are 40% cheaper than name brands."},
+{id:37,name:"Navel Orange (each)",emoji:"🍊",cat:"Produce",price:0.99,prev:1.04,change:-5.1,trend:"down",unit:"/each",action:"wait",signal:"California navel orange season peak Jan–March. Seasonal low prices.",why:"California navel orange season runs November through March — the window when supply is highest and prices lowest. Florida's citrus industry has been decimated by citrus greening disease (HLB), so most US table oranges now originate from California. This is the optimal buying window of the year.",sources:["BLS","USDA NASS"],buy:"Now is the optimal buying window — prices rise sharply after March.",wait:"Wait 2–3 more weeks for absolute seasonal low.",swap:"N/A — this is the cheapest window of the year for fresh oranges."},
+{id:38,name:"American Cheese Slices (16 oz)",emoji:"🧀",cat:"Dairy & Eggs",price:5.49,prev:5.09,change:+9.1,trend:"up",unit:"/16oz pkg",action:"buy",signal:"Process cheese uses NFDM and butterfat as inputs — both rising simultaneously. Emulsifier costs also up.",why:"American process cheese blends non-fat dry milk (NFDM), butterfat, and emulsifier salts. As farm milk prices rise 8.4% YoY, both primary inputs increase simultaneously. Major brands (Kraft, Land O'Lakes) have taken back-to-back price increases in 2024–2025, and retail prices reflect these compounding costs.",sources:["BLS","USDA AMS"],buy:"Stock up — processed cheese freezes well for 6+ months.",wait:"Structural dairy cost increase with no near-term relief expected.",swap:"Store-brand American slices are identical in composition at 25–35% less."},
+{id:39,name:"All-Beef Hot Dogs (1 lb)",emoji:"🌭",cat:"Proteins",price:5.29,prev:4.99,change:+7.8,trend:"up",unit:"/lb pkg",action:"buy",signal:"Beef trim prices elevated as US cattle herd sits at 70-year low. Processed meat costs following live cattle.",why:"Hot dogs use beef trim cuts — lower-value cuts priced off the broader beef market. With the US cattle herd at its smallest since 1951, all beef-derived products including processed meats are structurally elevated. Sodium nitrite and natural casing costs add additional pressure on processors.",sources:["BLS","USDA NASS"],buy:"Buy 2–3 packs and freeze — hot dogs freeze well for 3–4 months.",wait:"Beef prices structurally elevated through 2026 — no near-term drop.",swap:"Chicken or turkey hot dogs are 25–40% cheaper per pack."},
+{id:40,name:"Breakfast Cereal (12–18 oz)",emoji:"🥣",cat:"Grains & Bread",price:5.49,prev:5.19,change:+4.8,trend:"flat",unit:"/box",action:"watch",signal:"Grain costs stabilizing but cereal makers holding elevated prices to rebuild 2022–24 commodity-squeeze margins.",why:"The major cereal manufacturers (General Mills, Kellogg, Post) took large price increases during the 2022–2024 commodity spike. Grain costs have since eased, but manufacturers are maintaining elevated retail prices to restore profit margins, rather than passing savings to consumers — a common post-spike behavior documented by USDA ERS.",sources:["BLS CPI","USDA ERS","Company earnings"],buy:"Wait for promotional sales — cereal has frequent 10-for-$10 type deals.",wait:"Sales cycles make this a strategic buy — never pay full price.",swap:"Store-brand cereals are 40–60% cheaper. Rolled oats cost 80% less per serving."}];
 
 // ═══════════════════════════════════════════════════════════════
 // AIRFARE — AIRPORTS, AIRLINES, STATE, FARE ENGINE
