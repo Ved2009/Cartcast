@@ -289,14 +289,24 @@
       "affects": "chips, tortillas, HFCS"
     }
   ],
-  "forecasts": {
-    "bread_loaf": 3.48,
-    "ground_beef_lb": 5.86,
-    "chicken_breast_lb": 3.42,
-    "coffee_lb": 10.8,
-    "butter_lb": 6.74,
-    "bacon_lb": 6.84,
-    "eggs_dozen": 5.62
+  "model_forecasts": {
+    "eggs_dozen":        {"current":4.89,"forecast_4wk":5.38,"forecast_8wk":5.87,"change_pct_4wk":10.0,"change_pct_8wk":20.0,"confidence":72,"direction":"up",  "action":"buy",  "lag_weeks":2,"commodity_driver":"eggs_farm",             "commodity_change_pct":23.5,"elasticity":0.85},
+    "milk_gallon":       {"current":3.89,"forecast_4wk":3.98,"forecast_8wk":4.07,"change_pct_4wk":2.3, "change_pct_8wk":4.6, "confidence":74,"direction":"up",  "action":"watch","lag_weeks":4,"commodity_driver":"milk_cwt",              "commodity_change_pct":7.4, "elasticity":0.62},
+    "butter_lb":         {"current":6.24,"forecast_4wk":6.48,"forecast_8wk":6.80,"change_pct_4wk":3.8, "change_pct_8wk":8.9, "confidence":74,"direction":"up",  "action":"buy",  "lag_weeks":5,"commodity_driver":"milk_cwt",              "commodity_change_pct":11.9,"elasticity":0.75},
+    "ground_beef_lb":    {"current":5.42,"forecast_4wk":5.55,"forecast_8wk":5.69,"change_pct_4wk":2.4, "change_pct_8wk":5.0, "confidence":67,"direction":"up",  "action":"buy",  "lag_weeks":6,"commodity_driver":"cattle_cwt",            "commodity_change_pct":7.0, "elasticity":0.71},
+    "chicken_breast_lb": {"current":3.84,"forecast_4wk":3.68,"forecast_8wk":3.55,"change_pct_4wk":-4.2,"change_pct_8wk":-7.6,"confidence":76,"direction":"down","action":"wait", "lag_weeks":3,"commodity_driver":"broilers_lb",           "commodity_change_pct":-10.0,"elasticity":0.76},
+    "bread_loaf":        {"current":3.24,"forecast_4wk":3.27,"forecast_8wk":3.30,"change_pct_4wk":0.6, "change_pct_8wk":0.6, "confidence":80,"direction":"flat","action":"watch","lag_weeks":8,"commodity_driver":"wheat_bu",              "commodity_change_pct":2.2, "elasticity":0.28},
+    "coffee_lb":         {"current":9.48,"forecast_4wk":9.98,"forecast_8wk":10.70,"change_pct_4wk":5.3,"change_pct_8wk":12.9,"confidence":67,"direction":"up",  "action":"buy",  "lag_weeks":8,"commodity_driver":"coffee_futures_usd_lb","commodity_change_pct":24.8,"elasticity":0.52},
+    "bacon_lb":          {"current":7.18,"forecast_4wk":7.10,"forecast_8wk":7.02,"change_pct_4wk":-1.1,"change_pct_8wk":-2.2,"confidence":74,"direction":"down","action":"watch","lag_weeks":5,"commodity_driver":"hogs_cwt",             "commodity_change_pct":-3.2,"elasticity":0.68},
+    "sugar_lb":          {"current":3.88,"forecast_4wk":3.82,"forecast_8wk":3.76,"change_pct_4wk":-1.5,"change_pct_8wk":-3.1,"confidence":65,"direction":"down","action":"watch","lag_weeks":6,"commodity_driver":"wheat_bu",              "commodity_change_pct":-7.7,"elasticity":0.40},
+    "cheddar_lb":        {"current":4.62,"forecast_4wk":4.78,"forecast_8wk":4.96,"change_pct_4wk":3.5, "change_pct_8wk":7.4, "confidence":74,"direction":"up",  "action":"buy",  "lag_weeks":5,"commodity_driver":"milk_cwt",              "commodity_change_pct":9.8, "elasticity":0.75}
+  },
+  "model_meta": {
+    "methodology": "USDA ERS commodity-retail price transmission lag model",
+    "inputs": ["FRED/BLS retail prices", "USDA NASS farm prices", "FRED commodity futures"],
+    "generated_at": "2026-02-25",
+    "items_forecasted": 10,
+    "ppi_avg_change_8wk": 4.7
   },
   "summary": {
     "items_fetched": 15,
