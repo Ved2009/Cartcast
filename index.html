@@ -1638,6 +1638,84 @@ input:focus, select:focus, button:focus-visible {
 [data-theme="dark"] .sg-ok    { background:#1e3a5f; color:#93c5fd; }
 [data-theme="dark"] .seasonal-tool,[data-theme="dark"] .col-tool { background:var(--card-bg); }
 
+/* ═══ WATCHLIST STAR ═══ */
+.star-btn { position:absolute; top:8px; right:8px; width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,.9); border:1.5px solid var(--border); cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; transition:background .12s,border-color .12s,transform .12s; z-index:2; line-height:1; }
+.star-btn:hover { transform:scale(1.15); border-color:var(--gold); }
+.star-btn.starred { background:var(--gold); border-color:var(--gold); }
+[data-theme="dark"] .star-btn { background:rgba(255,255,255,.12); }
+
+/* ═══ PRICE ALERT ═══ */
+.alert-bar { position:fixed; top:0; left:0; right:0; z-index:2000; background:#1a3a6b; color:#fff; padding:10px 20px; display:flex; align-items:center; gap:14px; font-size:13px; box-shadow:0 2px 16px rgba(0,0,0,.25); transform:translateY(-100%); transition:transform .3s ease; }
+.alert-bar.show { transform:translateY(0); }
+.alert-bar-icon { font-size:18px; flex-shrink:0; }
+.alert-bar-msg { flex:1; line-height:1.4; }
+.alert-bar-close { background:rgba(255,255,255,.15); border:none; color:#fff; padding:5px 12px; border-radius:6px; cursor:pointer; font-size:12px; flex-shrink:0; }
+.alert-badge { background:#ef4444; color:#fff; font-size:9px; font-weight:700; border-radius:3px; padding:1px 5px; letter-spacing:.04em; vertical-align:middle; margin-left:4px; }
+/* Alert setter in modal */
+.alert-setter { margin-top:16px; padding:14px 16px; background:rgba(37,99,235,.05); border:1px solid rgba(37,99,235,.18); border-radius:10px; }
+.alert-setter-label { font-size:12px; color:var(--muted); font-family:'DM Mono',monospace; text-transform:uppercase; letter-spacing:.07em; margin-bottom:8px; }
+.alert-setter-row { display:flex; gap:8px; align-items:center; }
+.alert-price-input { flex:1; padding:7px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:14px; font-family:'DM Mono',monospace; background:white; color:var(--ink); outline:none; }
+.alert-price-input:focus { border-color:var(--accent2); }
+.alert-set-btn { padding:7px 16px; background:var(--accent2); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition:opacity .15s; white-space:nowrap; }
+.alert-set-btn:hover { opacity:.85; }
+.alert-active-note { font-size:12px; color:var(--green); margin-top:6px; font-weight:600; }
+
+/* ═══ SMART INSIGHTS ═══ */
+.insights-section { margin:24px 0; }
+.insights-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.insights-title { font-family:'Fraunces',serif; font-size:18px; font-weight:400; }
+.insights-badge { font-family:'DM Mono',monospace; font-size:10px; background:var(--accent2); color:#fff; padding:2px 8px; border-radius:3px; letter-spacing:.06em; text-transform:uppercase; }
+.insights-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
+.insight-card { background:white; border:1.5px solid var(--border); border-radius:12px; padding:16px 18px; display:flex; gap:12px; align-items:flex-start; transition:box-shadow .18s; }
+.insight-card:hover { box-shadow:var(--shadow); }
+.insight-icon { font-size:22px; flex-shrink:0; line-height:1; margin-top:1px; }
+.insight-body { flex:1; }
+.insight-title { font-size:13px; font-weight:700; margin-bottom:3px; line-height:1.3; }
+.insight-desc { font-size:12px; color:var(--muted); line-height:1.5; }
+.insight-tag { display:inline-block; margin-top:6px; font-size:10px; font-weight:600; font-family:'DM Mono',monospace; padding:2px 7px; border-radius:3px; text-transform:uppercase; letter-spacing:.04em; }
+.insight-tag.red { background:#fee2e2; color:var(--accent); }
+.insight-tag.green { background:#dcfce7; color:var(--green); }
+.insight-tag.blue { background:#dbeafe; color:#1e40af; }
+.insight-tag.gold { background:#fef3c7; color:#92400e; }
+[data-theme="dark"] .insight-card { background:var(--card-bg); }
+
+/* ═══ CATEGORY BREAKDOWN ═══ */
+.cat-breakdown { background:white; border:1.5px solid var(--border); border-radius:14px; padding:22px; margin-bottom:24px; }
+.cat-bd-header { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+.cat-bd-title { font-family:'Fraunces',serif; font-size:18px; font-weight:400; }
+.cat-bd-sub { font-size:12px; color:var(--muted); margin-top:2px; }
+.cat-bd-total { margin-left:auto; font-family:'DM Mono',monospace; font-size:18px; font-weight:500; color:var(--accent); }
+.cat-bar-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.cat-bar-label { font-size:13px; font-weight:500; min-width:110px; display:flex; align-items:center; gap:6px; }
+.cat-bar-track { flex:1; height:10px; background:var(--warm); border-radius:5px; overflow:hidden; }
+.cat-bar-fill { height:100%; border-radius:5px; transition:width .7s ease; }
+.cat-bar-val { font-family:'DM Mono',monospace; font-size:12px; color:var(--ink); min-width:48px; text-align:right; }
+.cat-bar-pct { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); min-width:36px; text-align:right; }
+[data-theme="dark"] .cat-breakdown { background:var(--card-bg); }
+
+/* ═══ RECIPE CALCULATOR ═══ */
+.recipe-tool { background:white; border:1.5px solid var(--border); border-radius:14px; padding:22px; margin-bottom:24px; }
+.recipe-title { font-family:'Fraunces',serif; font-size:20px; font-weight:400; margin-bottom:4px; }
+.recipe-sub { font-size:13px; color:var(--muted); margin-bottom:18px; }
+.recipe-tabs { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px; }
+.recipe-tab { padding:7px 14px; border:1.5px solid var(--border); border-radius:20px; font-size:12px; font-weight:500; cursor:pointer; background:white; color:var(--ink); transition:all .15s; white-space:nowrap; }
+.recipe-tab:hover { border-color:var(--ink); }
+.recipe-tab.active { background:var(--ink); color:#fff; border-color:var(--ink); }
+.recipe-result { display:none; }
+.recipe-result.show { display:block; }
+.recipe-ing-list { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.recipe-ing-row { display:flex; align-items:center; gap:10px; padding:8px 12px; border:1px solid var(--border); border-radius:8px; background:var(--warm); font-size:13px; }
+.recipe-ing-emoji { font-size:18px; flex-shrink:0; }
+.recipe-ing-name { flex:1; font-weight:500; }
+.recipe-ing-qty { color:var(--muted); font-size:12px; }
+.recipe-ing-cost { font-family:'DM Mono',monospace; font-size:13px; font-weight:600; margin-left:auto; }
+.recipe-total-row { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--ink); color:#fff; border-radius:10px; margin-top:6px; }
+.recipe-total-label { font-size:13px; opacity:.7; }
+.recipe-total-price { font-family:'DM Mono',monospace; font-size:22px; font-weight:500; }
+.recipe-per-serving { font-size:12px; opacity:.6; margin-top:2px; }
+[data-theme="dark"] .recipe-tool { background:var(--card-bg); }
+
 /* ═══ LANGUAGE SWITCHER ═══ */
 .lang-select { padding:4px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:12px; font-family:'DM Mono',monospace; background:var(--paper); color:var(--ink); cursor:pointer; transition:border-color .15s; }
 .lang-select:hover { border-color:var(--accent2); }
@@ -1689,6 +1767,13 @@ input:focus, select:focus, button:focus-visible {
     </div>
   </div>
 </header>
+
+<!-- PRICE ALERT NOTIFICATION BAR -->
+<div class="alert-bar" id="alertBar">
+  <span class="alert-bar-icon">🔔</span>
+  <div class="alert-bar-msg" id="alertBarMsg"></div>
+  <button class="alert-bar-close" onclick="dismissAlertBar()">Dismiss</button>
+</div>
 
 <!-- LOCATION BAR -->
 <div class="location-bar">
@@ -1744,6 +1829,14 @@ input:focus, select:focus, button:focus-visible {
     <p class="section-desc" data-i18n="desc_groceries">Retail prices from BLS Average Price Survey. Commodity signals from USDA NASS + FRED. Forecasts based on 4–8 week commodity-to-retail lag.</p>
     <div class="signals-row" id="signalsRow"></div>
     <div id="marketBar"></div>
+    <!-- SMART INSIGHTS -->
+    <div class="insights-section" id="insightsSection">
+      <div class="insights-header">
+        <div class="insights-title">💡 Smart Insights</div>
+        <span class="insights-badge">Personalized</span>
+      </div>
+      <div class="insights-grid" id="insightsGrid"></div>
+    </div>
     <div class="toolbar">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -1754,6 +1847,7 @@ input:focus, select:focus, button:focus-visible {
         <button class="pill danger" onclick="filterByStatus('buy',this)" data-i18n="badge_hot">🔴 Stock Up Now</button>
         <button class="pill safe" onclick="filterByStatus('wait',this)" data-i18n="badge_down">🟢 Wait to Buy</button>
         <button class="pill" onclick="filterByStatus('watch',this)" data-i18n="badge_flat">🟡 Watch</button>
+        <button class="pill" id="watchlistPill" onclick="filterByStatus('watchlist',this)">⭐ Watchlist <span id="watchlistCount" class="alert-badge" style="display:none">0</span></button>
       </div>
       <div class="data-freshness" style="margin-bottom:0;margin-left:auto;"><div class="fresh-dot"></div><span>BLS + USDA + FRED data</span></div>
     </div>
@@ -1779,6 +1873,27 @@ input:focus, select:focus, button:focus-visible {
       </div>
       <div id="colResult"></div>
     </div>
+
+    <!-- RECIPE COST CALCULATOR -->
+    <div class="recipe-tool">
+      <div class="recipe-title">🍳 Recipe Cost Calculator</div>
+      <p class="recipe-sub">Real ingredient prices adjusted to your location. See exactly what each meal costs you.</p>
+      <div class="recipe-tabs" id="recipeTabs"></div>
+      <div id="recipeResult" class="recipe-result"></div>
+    </div>
+
+    <!-- CATEGORY SPENDING BREAKDOWN -->
+    <div class="cat-breakdown">
+      <div class="cat-bd-header">
+        <div>
+          <div class="cat-bd-title">📦 Spending by Category</div>
+          <div class="cat-bd-sub">Estimated monthly spend based on typical household quantities</div>
+        </div>
+        <div class="cat-bd-total" id="catBdTotal"></div>
+      </div>
+      <div id="catBdBars"></div>
+    </div>
+
   </div>
 
   <!-- GAS -->
@@ -2142,6 +2257,14 @@ input:focus, select:focus, button:focus-visible {
       <div class="modal-section-title">COMMODITY SIGNAL</div>
       <div style="background:var(--warm);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.6" id="modalSignal"></div>
       <div class="data-sources" id="modalSources"></div>
+      <div class="alert-setter" id="modalAlertSetter">
+        <div class="alert-setter-label">🔔 Price Alert</div>
+        <div class="alert-setter-row">
+          <input type="number" class="alert-price-input" id="alertPriceInput" placeholder="Alert me when price drops below $" step="0.01" min="0">
+          <button class="alert-set-btn" onclick="setAlertFromModal()">Set Alert</button>
+        </div>
+        <div class="alert-active-note" id="alertActiveNote" style="display:none"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -2945,15 +3068,273 @@ function runColCompare(){
 let selectedState="",selectedCity="",groceryFilter="all",grocerySearch="",gasFilter="",rxActiveFilter="all",rxSearchQuery="",affordIncome=0;
 
 // ═══════════════════════════════════════════════════════════════
+// WATCHLIST
+// ═══════════════════════════════════════════════════════════════
+let watchlist=new Set();
+function watchlistLoad(){try{const s=localStorage.getItem('cc_watchlist');if(s)watchlist=new Set(JSON.parse(s));}catch(e){watchlist=new Set();}}
+function watchlistSave(){localStorage.setItem('cc_watchlist',JSON.stringify([...watchlist]));}
+function toggleWatchlist(id,e){
+  e.stopPropagation();
+  if(watchlist.has(id))watchlist.delete(id);else watchlist.add(id);
+  watchlistSave();watchlistRefreshUI();
+  if(groceryFilter==='watchlist')buildGroceries();
+}
+function watchlistRefreshUI(){
+  const count=watchlist.size;
+  const badge=document.getElementById('watchlistCount');
+  if(badge){badge.textContent=count;badge.style.display=count>0?'inline':'none';}
+  document.querySelectorAll('.star-btn').forEach(btn=>{
+    const id=parseInt(btn.dataset.itemId);
+    btn.classList.toggle('starred',watchlist.has(id));
+    btn.textContent=watchlist.has(id)?'★':'☆';
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PRICE ALERTS
+// ═══════════════════════════════════════════════════════════════
+let priceAlerts={};// {itemId: targetPrice}
+let _currentModalItemId=null;
+function alertsLoad(){try{const s=localStorage.getItem('cc_alerts');if(s)priceAlerts=JSON.parse(s);}catch(e){priceAlerts={};}}
+function alertsSave(){localStorage.setItem('cc_alerts',JSON.stringify(priceAlerts));}
+function alertsCheck(){
+  const factor=getPriceFactor();
+  const triggered=[];
+  Object.entries(priceAlerts).forEach(([id,target])=>{
+    const item=GROCERY_DATA.find(g=>g.id===parseInt(id));
+    if(!item)return;
+    const cur=item.price*factor;
+    if(cur<=target)triggered.push({item,target,cur});
+  });
+  if(!triggered.length)return;
+  const bar=document.getElementById('alertBar');
+  const msg=document.getElementById('alertBarMsg');
+  if(!bar||!msg)return;
+  if(triggered.length===1){
+    const {item,target,cur}=triggered[0];
+    msg.innerHTML=`<strong>${item.emoji} ${item.name.split(' (')[0]}</strong> has hit your alert — now <strong>$${cur.toFixed(2)}</strong> (target was $${target.toFixed(2)})`;
+  } else {
+    msg.innerHTML=`<strong>${triggered.length} price alerts triggered</strong> — ${triggered.map(t=>`${t.item.emoji} ${t.item.name.split(' (')[0]}`).join(', ')}`;
+  }
+  bar.classList.add('show');
+  // Push body down so content isn't hidden
+  document.body.style.paddingTop='48px';
+}
+function dismissAlertBar(){
+  const bar=document.getElementById('alertBar');
+  if(bar)bar.classList.remove('show');
+  document.body.style.paddingTop='';
+}
+function setAlertFromModal(){
+  if(!_currentModalItemId)return;
+  const inp=document.getElementById('alertPriceInput');
+  const val=parseFloat(inp.value);
+  if(!val||val<=0){showToast('Enter a valid price');return;}
+  priceAlerts[_currentModalItemId]=val;
+  alertsSave();
+  const note=document.getElementById('alertActiveNote');
+  if(note){note.textContent=`✓ Alert set at $${val.toFixed(2)}`;note.style.display='block';}
+  showToast('🔔 Price alert set!');
+}
+function removeAlert(id){
+  delete priceAlerts[id];alertsSave();
+  const note=document.getElementById('alertActiveNote');
+  if(note)note.style.display='none';
+  showToast('Alert removed');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SMART INSIGHTS
+// ═══════════════════════════════════════════════════════════════
+function buildInsights(){
+  const el=document.getElementById('insightsGrid');if(!el)return;
+  const factor=getPriceFactor();
+  const state=selectedState;
+  const cards=[];
+
+  // 1. Location premium/discount
+  if(state&&factor!==1.0){
+    const pct=Math.round(Math.abs(factor-1)*100);
+    const stateName=STATES_CITIES[state]?.name||state;
+    if(factor>1.0){
+      cards.push({icon:'📍',title:`${stateName} runs ${pct}% above national average`,desc:`Grocery prices in ${stateName} are higher than the US average. Your $600 basket costs ~$${Math.round(600*factor)}.`,tag:'red',tagLabel:'Premium Market'});
+    } else {
+      cards.push({icon:'📍',title:`${stateName} is ${pct}% below national average`,desc:`You're in a relatively affordable market. Your $600 basket costs ~$${Math.round(600*factor)} locally.`,tag:'green',tagLabel:'Affordable Market'});
+    }
+  }
+
+  // 2. Biggest mover
+  const topMover=[...GROCERY_DATA].sort((a,b)=>Math.abs(b.change)-Math.abs(a.change))[0];
+  if(topMover){
+    const dir=topMover.change>0?'up':'down';
+    cards.push({icon:topMover.emoji,title:`${topMover.name.split(' (')[0]} is the biggest mover at ${topMover.change>0?'+':''}${topMover.change.toFixed(1)}% YoY`,desc:topMover.signal,tag:dir==='up'?'red':'green',tagLabel:dir==='up'?'Rising Fast':'Falling Fast'});
+  }
+
+  // 3. Best buy opportunity (wait items)
+  const waitItems=GROCERY_DATA.filter(g=>g.action==='wait').sort((a,b)=>a.change-b.change);
+  if(waitItems.length){
+    const best=waitItems[0];
+    cards.push({icon:'⏳',title:`Wait on ${waitItems.length} items — prices are dropping`,desc:`${best.emoji} ${best.name.split(' (')[0]} leads the decline at ${best.change.toFixed(1)}% YoY. Buying now costs more than waiting 4–6 weeks.`,tag:'green',tagLabel:'Save by Waiting'});
+  }
+
+  // 4. Seasonal buy now
+  const curMonth=new Date().getMonth();
+  const peakNow=SEASONAL_DATA.filter(s=>s.months[curMonth]===2);
+  if(peakNow.length){
+    cards.push({icon:'🌱',title:`${peakNow.length} produce items are at PEAK season right now`,desc:`Best time to buy: ${peakNow.map(s=>s.emoji+' '+s.name).slice(0,4).join(', ')} — cheapest and most flavorful this month.`,tag:'green',tagLabel:'Buy Now'});
+  }
+
+  // 5. Stock-up alert
+  const buyItems=GROCERY_DATA.filter(g=>g.action==='buy').sort((a,b)=>b.change-a.change);
+  if(buyItems.length){
+    const worst=buyItems[0];
+    cards.push({icon:'⚠️',title:`${buyItems.length} items forecast to keep rising — stock up`,desc:`${worst.emoji} ${worst.name.split(' (')[0]} is up ${worst.change.toFixed(1)}% YoY with no relief expected. Buy extra now.`,tag:'red',tagLabel:'Price Pressure'});
+  }
+
+  // 6. Rx savings tip (always useful)
+  cards.push({icon:'💊',title:'Switch to Costco or Walmart for Rx drugs',desc:'Our data shows Costco and Walmart consistently price 35–65% lower than CVS/Walgreens on identical generics. Check the Medicine tab.',tag:'blue',tagLabel:'Savings Tip'});
+
+  el.innerHTML=cards.slice(0,5).map(c=>`
+    <div class="insight-card">
+      <div class="insight-icon">${c.icon}</div>
+      <div class="insight-body">
+        <div class="insight-title">${c.title}</div>
+        <div class="insight-desc">${c.desc}</div>
+        <span class="insight-tag ${c.tag}">${c.tagLabel}</span>
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CATEGORY SPENDING BREAKDOWN
+// ═══════════════════════════════════════════════════════════════
+const CAT_QTY={
+  'Dairy & Eggs':4,'Proteins':5,'Produce':8,'Grains & Bread':3,
+  'Oils & Pantry':1,'Beverages':3,'Snacks & Sweets':2
+};
+const CAT_COLORS={
+  'Dairy & Eggs':'#2563eb','Proteins':'#d94f2a','Produce':'#15803d',
+  'Grains & Bread':'#b97d10','Oils & Pantry':'#7c3aed','Beverages':'#0891b2','Snacks & Sweets':'#db2777'
+};
+function buildCatBreakdown(){
+  const el=document.getElementById('catBdBars');const totalEl=document.getElementById('catBdTotal');
+  if(!el)return;
+  const factor=getPriceFactor();
+  const catSpend={};
+  GROCERY_DATA.forEach(item=>{
+    const qty=CAT_QTY[item.cat]||2;
+    catSpend[item.cat]=(catSpend[item.cat]||0)+item.price*factor*qty;
+  });
+  const entries=Object.entries(catSpend).sort((a,b)=>b[1]-a[1]);
+  const total=entries.reduce((s,[,v])=>s+v,0);
+  if(totalEl)totalEl.textContent='$'+Math.round(total)+'/mo est.';
+  el.innerHTML=entries.map(([cat,spend])=>{
+    const pct=Math.round((spend/total)*100);
+    const color=CAT_COLORS[cat]||'#78716c';
+    const catEmoji={'Dairy & Eggs':'🥛','Proteins':'🥩','Produce':'🥦','Grains & Bread':'🍞','Oils & Pantry':'🫒','Beverages':'☕','Snacks & Sweets':'🍫'}[cat]||'📦';
+    return`<div class="cat-bar-row">
+      <div class="cat-bar-label"><span>${catEmoji}</span><span>${cat}</span></div>
+      <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="cat-bar-val">$${Math.round(spend)}</div>
+      <div class="cat-bar-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RECIPE COST CALCULATOR
+// ═══════════════════════════════════════════════════════════════
+const RECIPES=[
+  {id:'tacos',name:'🌮 Beef Tacos',servings:4,ingredients:[
+    {id:4,qty:1.5,unit:'lb',label:'Ground Beef'},
+    {id:7,qty:0.5,unit:'lb',label:'Tomatoes'},
+    {id:6,qty:1,unit:'each',label:'Avocado'},
+    {id:11,qty:0.3,unit:'lb',label:'Rice (side)'},
+  ]},
+  {id:'pasta',name:'🍝 Pasta Marinara',servings:4,ingredients:[
+    {id:13,qty:1,unit:'lb',label:'Pasta'},
+    {id:7,qty:1,unit:'lb',label:'Tomatoes'},
+    {id:8,qty:0.05,unit:'L',label:'Olive Oil'},
+  ]},
+  {id:'breakfast',name:'🍳 Classic Breakfast',servings:2,ingredients:[
+    {id:1,qty:0.5,unit:'doz',label:'Eggs (6)'},
+    {id:3,qty:0.1,unit:'lb',label:'Butter'},
+    {id:2,qty:0.25,unit:'gal',label:'Milk'},
+    {id:9,qty:0.12,unit:'lb',label:'Coffee'},
+  ]},
+  {id:'stirfry',name:'🥦 Chicken Stir Fry',servings:3,ingredients:[
+    {id:5,qty:1.5,unit:'lb',label:'Chicken Breast'},
+    {id:7,qty:0.5,unit:'lb',label:'Tomatoes'},
+    {id:11,qty:0.5,unit:'lb',label:'Rice'},
+    {id:8,qty:0.03,unit:'L',label:'Olive Oil'},
+    {id:6,qty:1,unit:'each',label:'Avocado (garnish)'},
+  ]},
+  {id:'burger',name:'🍔 Burgers',servings:4,ingredients:[
+    {id:4,qty:2,unit:'lb',label:'Ground Beef'},
+    {id:7,qty:0.5,unit:'lb',label:'Tomatoes'},
+    {id:2,qty:0.1,unit:'gal',label:'Milk (buns)'},
+  ]},
+  {id:'coffee',name:'☕ Home Coffee Bar',servings:30,ingredients:[
+    {id:9,qty:1,unit:'lb',label:'Coffee'},
+    {id:2,qty:0.5,unit:'gal',label:'Milk'},
+    {id:15,qty:0.2,unit:'5lb',label:'Sugar'},
+  ]},
+];
+let activeRecipe=null;
+function buildRecipeCalc(){
+  const tabs=document.getElementById('recipeTabs');if(!tabs)return;
+  tabs.innerHTML=RECIPES.map(r=>`<button class="recipe-tab${activeRecipe===r.id?' active':''}" onclick="selectRecipe('${r.id}',this)">${r.name}</button>`).join('');
+  if(activeRecipe)renderRecipeResult(activeRecipe);
+}
+function selectRecipe(id,btn){
+  activeRecipe=id;
+  document.querySelectorAll('.recipe-tab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderRecipeResult(id);
+}
+function renderRecipeResult(id){
+  const recipe=RECIPES.find(r=>r.id===id);
+  const el=document.getElementById('recipeResult');
+  if(!recipe||!el)return;
+  const factor=getPriceFactor();
+  let total=0;
+  const rows=recipe.ingredients.filter(ing=>ing.qty>0).map(ing=>{
+    const item=GROCERY_DATA.find(g=>g.id===ing.id);
+    if(!item)return null;
+    const cost=item.price*factor*ing.qty;
+    total+=cost;
+    return{emoji:item.emoji,name:ing.label,qty:ing.qty,unit:ing.unit,cost};
+  }).filter(Boolean);
+  const perServing=(total/recipe.servings).toFixed(2);
+  el.innerHTML=`
+    <div class="recipe-ing-list">
+      ${rows.map(r=>`<div class="recipe-ing-row">
+        <span class="recipe-ing-emoji">${r.emoji}</span>
+        <span class="recipe-ing-name">${r.name}</span>
+        <span class="recipe-ing-qty">${r.qty} ${r.unit}</span>
+        <span class="recipe-ing-cost">$${r.cost.toFixed(2)}</span>
+      </div>`).join('')}
+    </div>
+    <div class="recipe-total-row">
+      <div><div class="recipe-total-label">Total — ${recipe.name} · ${recipe.servings} servings</div><div class="recipe-per-serving">$${perServing} per serving</div></div>
+      <div class="recipe-total-price">$${total.toFixed(2)}</div>
+    </div>`;
+  el.classList.add('show');
+}
+
+// ═══════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════
 document.addEventListener("DOMContentLoaded",()=>{
   const savedLang=localStorage.getItem('cc_lang')||'en';
   if(savedLang!=='en'){currentLang=savedLang;T=TRANSLATIONS[savedLang]||TRANSLATIONS.en;}
-  cartLoad(); buildTicker(); populateStateDropdown(); buildSignals(); buildGroceries(); buildForecast();
+  cartLoad(); watchlistLoad(); alertsLoad();
+  buildTicker(); populateStateDropdown(); buildSignals(); buildGroceries(); buildForecast();
   buildGasGrid(); buildAffordCalc(); buildHousingGrid(); buildUtilitiesGrid(); buildElecGrid();
   buildTaxTable(); buildInsuranceWidget(); buildTaxCompare(); buildTariffCalc(); buildSuggestions(); updateBudget(600); updateHeroStats();
   buildSeasonalCalendar(); populateColDropdowns();
+  buildInsights(); buildCatBreakdown(); buildRecipeCalc();
+  alertsCheck(); watchlistRefreshUI();
   rxRenderTable(DRUGS);
   // Apply translations to all static data-i18n elements
   document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(T[k]!==undefined)el.innerHTML=T[k];});
@@ -3012,9 +3393,9 @@ function updateLocation(){
   const citySel=document.getElementById("citySelect");
   citySel.innerHTML='<option value="">— Select City —</option>';
   if(selectedState&&STATES_CITIES[selectedState]){STATES_CITIES[selectedState].cities.forEach(c=>{const opt=document.createElement("option");opt.value=c;opt.textContent=c;citySel.appendChild(opt);});}
-  updateLocationInfo();buildGroceries();buildGasGrid();filterTaxes();updateHeroStats();
+  updateLocationInfo();buildGroceries();buildGasGrid();filterTaxes();updateHeroStats();buildInsights();buildCatBreakdown();if(activeRecipe)renderRecipeResult(activeRecipe);populateColDropdowns();alertsCheck();
 }
-function updateCity(){selectedCity=document.getElementById("citySelect").value;updateLocationInfo();buildGroceries();buildGasGrid();}
+function updateCity(){selectedCity=document.getElementById("citySelect").value;updateLocationInfo();buildGroceries();buildGasGrid();buildInsights();buildCatBreakdown();if(activeRecipe)renderRecipeResult(activeRecipe);}
 function getPriceFactor(){return STATE_PRICE_FACTORS[selectedState]||1.0;}
 function updateLocationInfo(){
   const info=document.getElementById("locationInfo");const factor=getPriceFactor();const baseGas=getStateGas();const stateData=TAX_DATA.find(t=>t.code===selectedState);
@@ -3305,7 +3686,7 @@ function renderTaxCompare(){
 }
 function buildGroceries(){
   const factor=getPriceFactor();const grid=document.getElementById("groceryGrid");
-  const items=GROCERY_DATA.filter(item=>{const ms=groceryFilter==="all"||item.action===groceryFilter;const mq=!grocerySearch||item.name.toLowerCase().includes(grocerySearch.toLowerCase())||item.cat.toLowerCase().includes(grocerySearch.toLowerCase());return ms&&mq;});
+  const items=GROCERY_DATA.filter(item=>{const ms=groceryFilter==="all"||(groceryFilter==='watchlist'?watchlist.has(item.id):item.action===groceryFilter);const mq=!grocerySearch||item.name.toLowerCase().includes(grocerySearch.toLowerCase())||item.cat.toLowerCase().includes(grocerySearch.toLowerCase());return ms&&mq;});
   document.getElementById("groceryCount").textContent=`${items.length} items`;
   if(!items.length){grid.innerHTML=`<div class="no-results" style="grid-column:1/-1"><h3>No results</h3><p>Try searching for a different item.</p></div>`;return;}
   grid.innerHTML=items.map(item=>{
@@ -3316,8 +3697,8 @@ function buildGroceries(){
     const changeClass=item.change>0?'up':'down';const changeStr=(item.change>0?'+':'')+item.change.toFixed(1)+'% YoY';
     const actionClass=item.action==='buy'?'action-buy':item.action==='wait'?'action-wait':'action-watch';
     const prevStr=item.prev?`<span class="item-prev">was $${(item.prev*factor).toFixed(2)}</span>`:'';
-    const inCart=!!cart[item.id];
-    return`<div class="item-card ${trendClass}" onclick="openModal(${item.id})"><button class="item-add-btn ${inCart?'in-cart':''}" data-item-id="${item.id}" onclick="cartAddItem(${item.id},event)" title="Add to list">${inCart?'✓':'+'}</button><div class="item-top"><span class="item-emoji">${item.emoji}</span><span class="item-badge ${badgeClass}">${badgeText}</span></div><div class="item-name">${item.name}</div><div class="item-category">${item.cat}</div><div class="item-price-row"><span class="item-price">$${adjPrice}</span><span class="item-unit">${item.unit}</span>${prevStr}</div><div class="item-change ${changeClass}">${changeStr}</div><div class="item-signal">${item.signal}</div><div class="item-sparkline">${buildSparkline(item,factor)}<span class="spark-label">8-wk trend</span></div><span class="item-action ${actionClass}">${item.action==='buy'?T.act_buy:item.action==='wait'?T.act_wait:T.act_watch}</span></div>`;
+    const inCart=!!cart[item.id];const isStarred=watchlist.has(item.id);const hasAlert=!!priceAlerts[item.id];
+    return`<div class="item-card ${trendClass}" onclick="openModal(${item.id})"><button class="item-add-btn ${inCart?'in-cart':''}" data-item-id="${item.id}" onclick="cartAddItem(${item.id},event)" title="Add to list">${inCart?'✓':'+'}</button><button class="star-btn ${isStarred?'starred':''}" data-item-id="${item.id}" onclick="toggleWatchlist(${item.id},event)" title="Watchlist">${isStarred?'★':'☆'}</button><div class="item-top"><span class="item-emoji">${item.emoji}</span><span class="item-badge ${badgeClass}">${badgeText}${hasAlert?' 🔔':''}</span></div><div class="item-name">${item.name}</div><div class="item-category">${item.cat}</div><div class="item-price-row"><span class="item-price">$${adjPrice}</span><span class="item-unit">${item.unit}</span>${prevStr}</div><div class="item-change ${changeClass}">${changeStr}</div><div class="item-signal">${item.signal}</div><div class="item-sparkline">${buildSparkline(item,factor)}<span class="spark-label">8-wk trend</span></div><span class="item-action ${actionClass}">${item.action==='buy'?T.act_buy:item.action==='wait'?T.act_wait:T.act_watch}</span></div>`;
   }).join("");
   buildMarketBar();
 }
@@ -3453,7 +3834,8 @@ function buildSuggestions(){document.getElementById("suggestTags").innerHTML=SUG
 function fillSuggest(text){document.getElementById("suggestInput").value=text;}
 function submitSuggestion(){const val=document.getElementById("suggestInput").value.trim();if(!val)return;document.getElementById("suggestInput").value="";showToast('✓ Thanks! We got your suggestion: "'+val+'"');}
 function showToast(msg){const t=document.getElementById("toast");document.getElementById("t-msg").textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3500);}
-function openModal(id){const item=GROCERY_DATA.find(i=>i.id===id);if(!item)return;const factor=getPriceFactor();const adjPrice=(item.price*factor).toFixed(2);const changeClass=item.change>0?'up':'down';const badgeClass=item.action==='buy'?'badge-hot':item.action==='wait'?'badge-down':'badge-flat';const badgeText=item.action==='buy'?T.badge_hot:item.action==='wait'?T.badge_down:T.badge_flat;document.getElementById("modalEmoji").textContent=item.emoji;document.getElementById("modalName").textContent=item.name;document.getElementById("modalCategory").textContent=item.cat+(selectedState&&selectedCity?` · ${selectedCity}, ${selectedState}`:selectedState?` · ${STATES_CITIES[selectedState]?.name||''}`:'');document.getElementById("modalPrice").textContent="$"+adjPrice+item.unit;document.getElementById("modalChange").textContent=(item.change>0?"+":"")+item.change.toFixed(1)+"% YoY";document.getElementById("modalChange").className="item-change "+changeClass;document.getElementById("modalBadge").innerHTML=`<span class="item-badge ${badgeClass}">${badgeText}</span>`;document.getElementById("modalWhy").textContent=item.why;document.getElementById("modalSignal").textContent=item.signal;document.getElementById("modalActions").innerHTML=`<div class="modal-action buy"><div class="modal-action-label">Stock Up</div>${item.buy}</div><div class="modal-action wait"><div class="modal-action-label">Wait</div>${item.wait}</div><div class="modal-action swap"><div class="modal-action-label">Substitute</div>${item.swap}</div>`;document.getElementById("modalSources").innerHTML=item.sources.map(s=>`<span class="source-tag">${s}</span>`).join("");document.getElementById("modalBackdrop").classList.add("open");document.body.style.overflow="hidden";}
+function openModal(id){const item=GROCERY_DATA.find(i=>i.id===id);if(!item)return;_currentModalItemId=id;const factor=getPriceFactor();const adjPrice=(item.price*factor).toFixed(2);const changeClass=item.change>0?'up':'down';const badgeClass=item.action==='buy'?'badge-hot':item.action==='wait'?'badge-down':'badge-flat';const badgeText=item.action==='buy'?T.badge_hot:item.action==='wait'?T.badge_down:T.badge_flat;document.getElementById("modalEmoji").textContent=item.emoji;document.getElementById("modalName").textContent=item.name;document.getElementById("modalCategory").textContent=item.cat+(selectedState&&selectedCity?` · ${selectedCity}, ${selectedState}`:selectedState?` · ${STATES_CITIES[selectedState]?.name||''}`:'');document.getElementById("modalPrice").textContent="$"+adjPrice+item.unit;document.getElementById("modalChange").textContent=(item.change>0?"+":"")+item.change.toFixed(1)+"% YoY";document.getElementById("modalChange").className="item-change "+changeClass;document.getElementById("modalBadge").innerHTML=`<span class="item-badge ${badgeClass}">${badgeText}</span>`;document.getElementById("modalWhy").textContent=item.why;document.getElementById("modalSignal").textContent=item.signal;document.getElementById("modalActions").innerHTML=`<div class="modal-action buy"><div class="modal-action-label">Stock Up</div>${item.buy}</div><div class="modal-action wait"><div class="modal-action-label">Wait</div>${item.wait}</div><div class="modal-action swap"><div class="modal-action-label">Substitute</div>${item.swap}</div>`;document.getElementById("modalSources").innerHTML=item.sources.map(s=>`<span class="source-tag">${s}</span>`).join("");// Alert setter
+const inp=document.getElementById('alertPriceInput');const note=document.getElementById('alertActiveNote');if(inp){inp.value='';inp.placeholder=`Alert below $${adjPrice}`;}if(note){if(priceAlerts[id]){note.textContent=`✓ Alert active at $${priceAlerts[id].toFixed(2)}`;note.style.display='block';}else{note.style.display='none';}}document.getElementById("modalBackdrop").classList.add("open");document.body.style.overflow="hidden";}
 function closeModal(){document.getElementById("modalBackdrop").classList.remove("open");document.body.style.overflow="";}
 function closeModalBackdrop(e){if(e.target===document.getElementById("modalBackdrop"))closeModal();}
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeModal();closeRxModal();}});
