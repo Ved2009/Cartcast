@@ -1555,6 +1555,89 @@ input:focus, select:focus, button:focus-visible {
 /* ═══════════════════════════════════════════
    PRINT
 ═══════════════════════════════════════════ */
+/* ═══ SHOPPING CART ═══ */
+.cart-fab { position:fixed; bottom:84px; right:18px; width:52px; height:52px; background:var(--accent); color:#fff; border:none; border-radius:50%; font-size:22px; cursor:pointer; box-shadow:0 4px 18px rgba(217,79,42,0.38); z-index:900; display:flex; align-items:center; justify-content:center; transition:transform .15s,box-shadow .15s; }
+.cart-fab:hover { transform:scale(1.08); box-shadow:0 6px 24px rgba(217,79,42,0.45); }
+.cart-fab-badge { position:absolute; top:-4px; right:-4px; background:#111; color:#fff; font-size:10px; font-family:'DM Mono',monospace; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid var(--paper); }
+.cart-panel { position:fixed; top:0; right:0; width:360px; max-width:100vw; height:100vh; background:var(--paper); border-left:1.5px solid var(--border); z-index:1100; transform:translateX(100%); transition:transform .28s cubic-bezier(.4,0,.2,1); display:flex; flex-direction:column; box-shadow:-8px 0 40px rgba(0,0,0,.12); }
+.cart-panel.open { transform:translateX(0); }
+.cart-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:1099; opacity:0; pointer-events:none; transition:opacity .28s; }
+.cart-backdrop.open { opacity:1; pointer-events:all; }
+.cart-header { display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1.5px solid var(--border); flex-shrink:0; }
+.cart-header h3 { font-family:'Fraunces',serif; font-size:20px; font-weight:400; }
+.cart-close { background:none; border:none; font-size:22px; cursor:pointer; color:var(--muted); padding:0 4px; }
+.cart-body { flex:1; overflow-y:auto; padding:14px 16px; }
+.cart-empty { text-align:center; padding:48px 20px; color:var(--muted); }
+.cart-empty .ce-icon { font-size:48px; margin-bottom:12px; }
+.cart-item { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
+.cart-item-emoji { font-size:24px; flex-shrink:0; }
+.cart-item-info { flex:1; min-width:0; }
+.cart-item-name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cart-item-price { font-size:12px; color:var(--muted); font-family:'DM Mono',monospace; }
+.cart-qty { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+.cart-qty button { width:26px; height:26px; border:1.5px solid var(--border); background:var(--paper); border-radius:6px; cursor:pointer; font-size:14px; font-weight:700; color:var(--ink); display:flex; align-items:center; justify-content:center; transition:background .12s; }
+.cart-qty button:hover { background:var(--border); }
+.cart-qty-num { font-family:'DM Mono',monospace; font-size:13px; min-width:18px; text-align:center; }
+.cart-item-total { font-family:'DM Mono',monospace; font-size:13px; font-weight:600; min-width:44px; text-align:right; }
+.cart-footer { padding:16px; border-top:1.5px solid var(--border); flex-shrink:0; }
+.cart-summary { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.cart-summary-label { font-size:13px; color:var(--muted); }
+.cart-total-val { font-family:'DM Mono',monospace; font-size:20px; font-weight:700; color:var(--accent); }
+.cart-actions { display:flex; gap:8px; }
+.cart-btn { flex:1; padding:9px 0; border-radius:9px; border:none; cursor:pointer; font-size:13px; font-weight:600; transition:opacity .15s; }
+.cart-btn.primary { background:var(--accent); color:#fff; }
+.cart-btn.secondary { background:var(--border); color:var(--ink); }
+.cart-btn:hover { opacity:.85; }
+.cart-savings-note { font-size:11px; color:var(--green); margin-top:8px; font-weight:600; }
+/* Add-to-cart button on item card */
+.item-add-btn { position:absolute; top:8px; left:8px; width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,.92); border:1.5px solid var(--border); cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; transition:background .12s,border-color .12s; z-index:2; }
+.item-add-btn:hover,.item-add-btn.in-cart { background:var(--accent); border-color:var(--accent); color:#fff; }
+[data-theme="dark"] .item-add-btn { background:rgba(255,255,255,.12); }
+.item-card { position:relative; }
+
+/* ═══ COST OF LIVING COMPARISON ═══ */
+.col-tool { background:white; border:1.5px solid var(--border); border-radius:14px; padding:22px; margin-bottom:24px; }
+.col-tool-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+.col-tool-title { font-family:'Fraunces',serif; font-size:20px; font-weight:400; }
+.col-selects { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.col-state-sel { padding:8px 14px; border:1.5px solid var(--border); border-radius:9px; font-size:13px; font-family:'Outfit',sans-serif; background:var(--paper); color:var(--ink); cursor:pointer; min-width:170px; }
+.col-vs { font-family:'DM Mono',monospace; font-size:12px; color:var(--muted); font-weight:700; }
+.col-compare-btn { padding:8px 18px; background:var(--accent); color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; transition:opacity .15s; }
+.col-compare-btn:hover { opacity:.85; }
+.col-table { width:100%; border-collapse:collapse; margin-top:4px; }
+.col-table th { font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); font-family:'DM Mono',monospace; padding:8px 10px; text-align:left; border-bottom:1.5px solid var(--border); }
+.col-table th.right { text-align:right; }
+.col-table td { padding:11px 10px; border-bottom:1px solid var(--border); font-size:14px; vertical-align:middle; }
+.col-table td.right { text-align:right; font-family:'DM Mono',monospace; }
+.col-cat-icon { margin-right:6px; }
+.col-win { font-weight:700; color:var(--green); }
+.col-lose { color:var(--accent); }
+.col-result-bar { display:flex; gap:4px; align-items:center; margin-top:2px; }
+.col-bar-a { height:6px; border-radius:3px; background:var(--accent2); min-width:4px; }
+.col-bar-b { height:6px; border-radius:3px; background:var(--accent); min-width:4px; }
+.col-verdict { margin-top:16px; padding:14px 16px; border-radius:10px; background:rgba(37,99,235,.06); border:1px solid rgba(37,99,235,.18); font-size:13px; line-height:1.6; }
+.col-verdict strong { color:var(--accent2); }
+[data-theme="dark"] .col-tool { background:var(--card-bg); }
+
+/* ═══ SEASONAL CALENDAR ═══ */
+.seasonal-tool { background:white; border:1.5px solid var(--border); border-radius:14px; padding:22px; margin-bottom:24px; }
+.seasonal-title { font-family:'Fraunces',serif; font-size:20px; font-weight:400; margin-bottom:6px; }
+.seasonal-sub { font-size:13px; color:var(--muted); margin-bottom:18px; }
+.seasonal-grid { display:grid; grid-template-columns:140px repeat(12,1fr); gap:2px; font-size:11px; }
+.sg-header { font-family:'DM Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); text-align:center; padding:4px 0; }
+.sg-item-label { font-size:12px; font-weight:500; padding:5px 6px 5px 0; display:flex; align-items:center; gap:4px; white-space:nowrap; overflow:hidden; }
+.sg-cell { border-radius:4px; height:28px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; cursor:default; }
+.sg-peak  { background:#dcfce7; color:#15803d; }
+.sg-good  { background:#fef9c3; color:#854d0e; }
+.sg-poor  { background:#fee2e2; color:#991b1b; }
+.sg-ok    { background:#dbeafe; color:#1e40af; }
+.sg-current { outline:2px solid var(--accent); outline-offset:-2px; }
+[data-theme="dark"] .sg-peak  { background:#14532d; color:#86efac; }
+[data-theme="dark"] .sg-good  { background:#3f2e00; color:#fde047; }
+[data-theme="dark"] .sg-poor  { background:#450a0a; color:#fca5a5; }
+[data-theme="dark"] .sg-ok    { background:#1e3a5f; color:#93c5fd; }
+[data-theme="dark"] .seasonal-tool,[data-theme="dark"] .col-tool { background:var(--card-bg); }
+
 /* ═══ LANGUAGE SWITCHER ═══ */
 .lang-select { padding:4px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:12px; font-family:'DM Mono',monospace; background:var(--paper); color:var(--ink); cursor:pointer; transition:border-color .15s; }
 .lang-select:hover { border-color:var(--accent2); }
@@ -1675,6 +1758,27 @@ input:focus, select:focus, button:focus-visible {
       <div class="data-freshness" style="margin-bottom:0;margin-left:auto;"><div class="fresh-dot"></div><span>BLS + USDA + FRED data</span></div>
     </div>
     <div class="items-grid" id="groceryGrid"></div>
+
+    <!-- SEASONAL BUYING CALENDAR -->
+    <div class="seasonal-tool" style="margin-top:28px">
+      <div class="seasonal-title">🌱 Seasonal Produce Buying Calendar</div>
+      <p class="seasonal-sub">Best months to buy fresh produce — <span style="background:#dcfce7;color:#15803d;border-radius:4px;padding:1px 6px;font-size:11px;font-weight:700">PEAK</span> = cheapest &amp; most flavorful · <span style="background:#fef9c3;color:#854d0e;border-radius:4px;padding:1px 6px;font-size:11px;font-weight:700">GOOD</span> = available · <span style="background:#dbeafe;color:#1e40af;border-radius:4px;padding:1px 6px;font-size:11px;font-weight:700">OK</span> = decent · <span style="background:#fee2e2;color:#991b1b;border-radius:4px;padding:1px 6px;font-size:11px;font-weight:700">HIGH</span> = avoid</p>
+      <div style="overflow-x:auto"><div class="seasonal-grid" id="seasonalGrid"></div></div>
+    </div>
+
+    <!-- COST OF LIVING COMPARISON -->
+    <div class="col-tool">
+      <div class="col-tool-header">
+        <div class="col-tool-title">⚖️ Cost of Living Comparison</div>
+        <div class="col-selects">
+          <select class="col-state-sel" id="colStateA"><option value="">— State A —</option></select>
+          <span class="col-vs">VS</span>
+          <select class="col-state-sel" id="colStateB"><option value="">— State B —</option></select>
+          <button class="col-compare-btn" onclick="runColCompare()">Compare</button>
+        </div>
+      </div>
+      <div id="colResult"></div>
+    </div>
   </div>
 
   <!-- GAS -->
@@ -2104,6 +2208,38 @@ input:focus, select:focus, button:focus-visible {
   <button class="mn-btn" onclick="mnSwitch('airfare',this)"><span class="mn-icon">✈️</span><span class="mn-label" data-i18n="nav_airfare">Airfare</span></button>
   <button class="mn-btn" onclick="mnSwitch('forecast',this)"><span class="mn-icon">📈</span><span class="mn-label" data-i18n="nav_forecast">Forecast</span></button>
 </nav>
+
+<!-- SHOPPING CART FAB -->
+<button class="cart-fab" id="cartFab" onclick="openCart()" title="Shopping List" aria-label="Shopping List">
+  🛒<span class="cart-fab-badge" id="cartBadge" style="display:none">0</span>
+</button>
+
+<!-- SHOPPING CART PANEL -->
+<div class="cart-backdrop" id="cartBackdrop" onclick="closeCart()"></div>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header">
+    <h3>🛒 Shopping List</h3>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty">
+      <div class="ce-icon">🛒</div>
+      <p style="font-weight:600;margin-bottom:6px">Your list is empty</p>
+      <p style="font-size:13px;color:var(--muted)">Click the <strong>+</strong> on any grocery item to add it to your list.</p>
+    </div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-summary">
+      <span class="cart-summary-label">Estimated Total</span>
+      <span class="cart-total-val" id="cartTotal">$0.00</span>
+    </div>
+    <div id="cartSavingsNote" class="cart-savings-note"></div>
+    <div class="cart-actions" style="margin-top:10px">
+      <button class="cart-btn secondary" onclick="exportCart()">📋 Export</button>
+      <button class="cart-btn primary" onclick="clearCart()">🗑 Clear</button>
+    </div>
+  </div>
+</div>
 
 <footer>
   <span class="footer-brand">CartCast</span>
@@ -2543,6 +2679,267 @@ const SUGGESTIONS_PRESET=["Baby formula brands","Pet food by breed","School supp
 const POPULAR_REQUESTS=[{item:"Specific prescription drug prices by pharmacy",votes:847},{item:"Airfare prices by route / airport",votes:612},{item:"Auto insurance rates by state and age",votes:588},{item:"Cell phone plan comparison by carrier",votes:441},{item:"School supplies / back-to-school basket",votes:389}];
 
 // ═══════════════════════════════════════════════════════════════
+// SHOPPING CART
+// ═══════════════════════════════════════════════════════════════
+let cart={};// {id: qty}
+function cartLoad(){try{const s=localStorage.getItem('cc_cart');if(s)cart=JSON.parse(s);}catch(e){cart={};}}
+function cartSave(){localStorage.setItem('cc_cart',JSON.stringify(cart));}
+function cartCount(){return Object.values(cart).reduce((s,q)=>s+q,0);}
+function cartTotal(){
+  const factor=getPriceFactor();
+  return Object.entries(cart).reduce((s,[id,qty])=>{
+    const item=GROCERY_DATA.find(g=>g.id===parseInt(id));
+    return s+(item?item.price*factor*qty:0);
+  },0);
+}
+function cartAddItem(id,e){
+  e.stopPropagation();
+  cart[id]=(cart[id]||0)+1;
+  cartSave();cartRefreshUI();renderCartPanel();
+}
+function cartSetQty(id,delta){
+  cart[id]=(cart[id]||0)+delta;
+  if(cart[id]<=0)delete cart[id];
+  cartSave();cartRefreshUI();renderCartPanel();
+}
+function cartRefreshUI(){
+  const count=cartCount();
+  const badge=document.getElementById('cartBadge');
+  if(badge){badge.textContent=count;badge.style.display=count>0?'flex':'none';}
+  // Refresh add-btn in-cart states
+  document.querySelectorAll('.item-add-btn').forEach(btn=>{
+    const id=parseInt(btn.dataset.itemId);
+    btn.classList.toggle('in-cart',!!cart[id]);
+    btn.textContent=cart[id]?'✓':'+';
+  });
+}
+function renderCartPanel(){
+  const body=document.getElementById('cartBody');
+  const footer=document.getElementById('cartFooter');
+  if(!body)return;
+  const items=Object.entries(cart).map(([id,qty])=>{
+    const item=GROCERY_DATA.find(g=>g.id===parseInt(id));
+    return item?{item,qty}:null;
+  }).filter(Boolean);
+  if(!items.length){
+    body.innerHTML=`<div class="cart-empty"><div class="ce-icon">🛒</div><p style="font-weight:600;margin-bottom:6px">Your list is empty</p><p style="font-size:13px;color:var(--muted)">Click the <strong>+</strong> on any grocery item to add it to your list.</p></div>`;
+    if(footer)footer.style.display='none';
+    return;
+  }
+  const factor=getPriceFactor();
+  body.innerHTML=items.map(({item,qty})=>{
+    const lineTotal=(item.price*factor*qty).toFixed(2);
+    return`<div class="cart-item">
+      <span class="cart-item-emoji">${item.emoji}</span>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">$${(item.price*factor).toFixed(2)}${item.unit}</div>
+      </div>
+      <div class="cart-qty">
+        <button onclick="cartSetQty(${item.id},-1)">−</button>
+        <span class="cart-qty-num">${qty}</span>
+        <button onclick="cartSetQty(${item.id},1)">+</button>
+      </div>
+      <div class="cart-item-total">$${lineTotal}</div>
+    </div>`;
+  }).join('');
+  const total=cartTotal();
+  document.getElementById('cartTotal').textContent='$'+total.toFixed(2);
+  // Savings note: show if any "wait" items are in cart
+  const waitInCart=items.filter(({item})=>item.action==='wait');
+  const note=document.getElementById('cartSavingsNote');
+  if(note&&waitInCart.length){
+    note.textContent=`💡 ${waitInCart.length} item${waitInCart.length>1?'s':''} dropping in price — consider waiting.`;
+  } else if(note){note.textContent='';}
+  if(footer)footer.style.display='block';
+}
+function openCart(){
+  renderCartPanel();
+  document.getElementById('cartPanel').classList.add('open');
+  document.getElementById('cartBackdrop').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeCart(){
+  document.getElementById('cartPanel').classList.remove('open');
+  document.getElementById('cartBackdrop').classList.remove('open');
+  document.body.style.overflow='';
+}
+function exportCart(){
+  const factor=getPriceFactor();
+  const lines=['CartCast Shopping List','='.repeat(30),''];
+  Object.entries(cart).forEach(([id,qty])=>{
+    const item=GROCERY_DATA.find(g=>g.id===parseInt(id));
+    if(item)lines.push(`${item.emoji} ${item.name} x${qty}  →  $${(item.price*factor*qty).toFixed(2)}`);
+  });
+  lines.push('','─'.repeat(30));
+  lines.push(`Total: $${cartTotal().toFixed(2)}`);
+  lines.push(`Location: ${selectedCity?selectedCity+', ':''}${selectedState||'National avg'}`);
+  lines.push(`cartcast.vercel.app`);
+  const blob=new Blob([lines.join('\n')],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='shopping-list.txt';a.click();
+}
+function clearCart(){if(!confirm('Clear your shopping list?'))return;cart={};cartSave();cartRefreshUI();renderCartPanel();}
+
+// ═══════════════════════════════════════════════════════════════
+// SEASONAL PRODUCE CALENDAR
+// ═══════════════════════════════════════════════════════════════
+const SEASONAL_DATA=[
+  {emoji:'🍓',name:'Strawberries', months:[0,0,1,2,2,2,1,0,0,0,0,0]},
+  {emoji:'🫐',name:'Blueberries',  months:[0,0,0,0,1,2,2,1,0,0,0,0]},
+  {emoji:'🍅',name:'Tomatoes',     months:[0,0,0,1,1,2,2,2,1,1,0,0]},
+  {emoji:'🥑',name:'Avocados',     months:[1,1,2,2,2,1,1,1,1,1,1,1]},
+  {emoji:'🍎',name:'Apples',       months:[1,1,0,0,0,0,1,2,2,2,1,1]},
+  {emoji:'🍊',name:'Oranges',      months:[2,2,2,1,0,0,0,0,0,0,1,2]},
+  {emoji:'🥦',name:'Broccoli',     months:[2,2,1,1,0,0,0,0,1,1,2,2]},
+  {emoji:'🌽',name:'Corn',         months:[0,0,0,0,1,2,2,2,1,0,0,0]},
+  {emoji:'🥝',name:'Kiwi',         months:[1,1,1,0,0,0,0,0,1,2,2,2]},
+  {emoji:'🍑',name:'Peaches',      months:[0,0,0,0,1,2,2,1,0,0,0,0]},
+  {emoji:'🍇',name:'Grapes',       months:[0,0,0,0,0,1,2,2,2,1,0,0]},
+  {emoji:'🥕',name:'Carrots',      months:[2,2,1,1,1,1,1,1,1,2,2,2]},
+  {emoji:'🧅',name:'Onions',       months:[2,2,2,2,2,2,2,2,2,2,2,2]},
+  {emoji:'🥬',name:'Spinach',      months:[2,2,2,1,0,0,0,0,0,1,2,2]},
+  {emoji:'🍋',name:'Lemons',       months:[2,2,2,1,1,0,0,0,1,1,2,2]},
+];
+// 0=poor(high price), 1=ok/good, 2=peak(cheapest)
+const MONTH_LABELS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function buildSeasonalCalendar(){
+  const el=document.getElementById('seasonalGrid');if(!el)return;
+  const curMonth=new Date().getMonth();
+  let html='<div class="sg-item-label" style="font-weight:700;font-size:10px;color:var(--muted)">ITEM</div>';
+  MONTH_LABELS.forEach((m,i)=>html+=`<div class="sg-header${i===curMonth?' sg-current':''}">${m}</div>`);
+  SEASONAL_DATA.forEach(item=>{
+    html+=`<div class="sg-item-label">${item.emoji} ${item.name}</div>`;
+    item.months.forEach((v,i)=>{
+      const cls=v===2?'sg-peak':v===1?'sg-good':'sg-poor';
+      const label=v===2?'PEAK':v===1?'OK':'HIGH';
+      html+=`<div class="sg-cell ${cls}${i===curMonth?' sg-current':''}" title="${item.name} — ${MONTH_LABELS[i]}: ${label}">${v===2?'★':v===1?'·':'✕'}</div>`;
+    });
+  });
+  el.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// COST OF LIVING COMPARISON
+// ═══════════════════════════════════════════════════════════════
+// Per-state monthly cost estimates (USD). Groceries=index multiplied by $600 baseline, Gas=state avg×40gal, Utilities from UTILITIES_DATA, Housing=1BR HUD FMR approx, Insurance annual/12.
+const COL_DATA={
+  AL:{grocIdx:0.89,gas:3.05,util:162,housing:750,ins:1392},
+  AK:{grocIdx:1.25,gas:3.95,util:198,housing:1050,ins:1250},
+  AZ:{grocIdx:1.03,gas:3.55,util:175,housing:1200,ins:1450},
+  AR:{grocIdx:0.87,gas:2.98,util:155,housing:680,ins:1580},
+  CA:{grocIdx:1.22,gas:4.85,util:215,housing:2200,ins:2190},
+  CO:{grocIdx:1.10,gas:3.45,util:168,housing:1600,ins:1850},
+  CT:{grocIdx:1.18,gas:3.65,util:225,housing:1450,ins:1960},
+  DE:{grocIdx:1.04,gas:3.30,util:170,housing:1150,ins:1580},
+  FL:{grocIdx:1.07,gas:3.40,util:192,housing:1500,ins:3900},
+  GA:{grocIdx:0.98,gas:3.10,util:172,housing:1100,ins:1520},
+  HI:{grocIdx:1.48,gas:4.65,util:248,housing:2100,ins:1200},
+  ID:{grocIdx:0.96,gas:3.50,util:148,housing:1050,ins:1050},
+  IL:{grocIdx:1.08,gas:3.65,util:185,housing:1100,ins:1480},
+  IN:{grocIdx:0.93,gas:3.20,util:158,housing:880,ins:1420},
+  IA:{grocIdx:0.91,gas:3.05,util:150,housing:780,ins:1420},
+  KS:{grocIdx:0.92,gas:3.00,util:152,housing:800,ins:1680},
+  KY:{grocIdx:0.88,gas:3.10,util:155,housing:750,ins:1840},
+  LA:{grocIdx:0.95,gas:3.05,util:165,housing:880,ins:2860},
+  ME:{grocIdx:1.12,gas:3.55,util:205,housing:1050,ins:980},
+  MD:{grocIdx:1.14,gas:3.45,util:190,housing:1500,ins:1760},
+  MA:{grocIdx:1.22,gas:3.60,util:220,housing:2000,ins:1580},
+  MI:{grocIdx:1.02,gas:3.35,util:170,housing:950,ins:2980},
+  MN:{grocIdx:1.06,gas:3.30,util:168,housing:1100,ins:1580},
+  MS:{grocIdx:0.84,gas:2.95,util:152,housing:680,ins:1740},
+  MO:{grocIdx:0.94,gas:3.00,util:155,housing:820,ins:1700},
+  MT:{grocIdx:1.04,gas:3.45,util:155,housing:980,ins:1200},
+  NE:{grocIdx:0.96,gas:3.05,util:152,housing:820,ins:1680},
+  NV:{grocIdx:1.08,gas:3.85,util:175,housing:1350,ins:1980},
+  NH:{grocIdx:1.16,gas:3.50,util:205,housing:1350,ins:1030},
+  NJ:{grocIdx:1.18,gas:3.50,util:215,housing:1750,ins:1710},
+  NM:{grocIdx:0.96,gas:3.20,util:155,housing:850,ins:1340},
+  NY:{grocIdx:1.20,gas:3.75,util:215,housing:1900,ins:1750},
+  NC:{grocIdx:0.99,gas:3.15,util:168,housing:1100,ins:1620},
+  ND:{grocIdx:0.98,gas:3.10,util:152,housing:780,ins:1210},
+  OH:{grocIdx:0.97,gas:3.20,util:162,housing:880,ins:1630},
+  OK:{grocIdx:0.90,gas:2.98,util:155,housing:780,ins:2060},
+  OR:{grocIdx:1.12,gas:3.80,util:162,housing:1400,ins:1480},
+  PA:{grocIdx:1.06,gas:3.45,util:185,housing:1100,ins:1480},
+  RI:{grocIdx:1.16,gas:3.60,util:215,housing:1300,ins:1660},
+  SC:{grocIdx:0.98,gas:3.10,util:168,housing:1000,ins:1750},
+  SD:{grocIdx:0.96,gas:3.05,util:148,housing:780,ins:1310},
+  TN:{grocIdx:0.95,gas:3.10,util:162,housing:1000,ins:1730},
+  TX:{grocIdx:1.02,gas:3.10,util:172,housing:1200,ins:2040},
+  UT:{grocIdx:1.04,gas:3.55,util:155,housing:1250,ins:1200},
+  VT:{grocIdx:1.18,gas:3.55,util:215,housing:1200,ins:1100},
+  VA:{grocIdx:1.08,gas:3.30,util:175,housing:1400,ins:1340},
+  WA:{grocIdx:1.14,gas:3.95,util:168,housing:1700,ins:1480},
+  WV:{grocIdx:0.88,gas:3.15,util:152,housing:650,ins:1310},
+  WI:{grocIdx:1.01,gas:3.20,util:162,housing:900,ins:1380},
+  WY:{grocIdx:0.98,gas:3.30,util:148,housing:780,ins:1150}
+};
+function populateColDropdowns(){
+  const states=Object.entries(COL_DATA).map(([code])=>({code,name:STATES_CITIES[code]?.name||code})).sort((a,b)=>a.name.localeCompare(b.name));
+  const opts=states.map(s=>`<option value="${s.code}">${s.name}</option>`).join('');
+  const a=document.getElementById('colStateA');const b=document.getElementById('colStateB');
+  if(a)a.innerHTML='<option value="">— State A —</option>'+opts;
+  if(b)b.innerHTML='<option value="">— State B —</option>'+opts;
+  // pre-select user's current state if set
+  if(selectedState&&a&&b){a.value=selectedState;}
+}
+function runColCompare(){
+  const cA=document.getElementById('colStateA').value;
+  const cB=document.getElementById('colStateB').value;
+  const el=document.getElementById('colResult');
+  if(!cA||!cB){el.innerHTML='<p style="color:var(--muted);font-size:13px;padding:8px 0">Please select two states to compare.</p>';return;}
+  if(cA===cB){el.innerHTML='<p style="color:var(--muted);font-size:13px;padding:8px 0">Please select two different states.</p>';return;}
+  const A=COL_DATA[cA];const B=COL_DATA[cB];
+  const nA=STATES_CITIES[cA]?.name||cA;const nB=STATES_CITIES[cB]?.name||cB;
+  const baseBudget=600;
+  const rows=[
+    {cat:'🛒 Groceries',  vA:Math.round(baseBudget*A.grocIdx),  vB:Math.round(baseBudget*B.grocIdx),  unit:'/mo'},
+    {cat:'⛽ Gas',         vA:Math.round(40*A.gas),               vB:Math.round(40*B.gas),               unit:'/mo'},
+    {cat:'⚡ Utilities',  vA:A.util,                             vB:B.util,                             unit:'/mo'},
+    {cat:'🏠 Housing',    vA:A.housing,                          vB:B.housing,                          unit:'/mo (1BR)'},
+    {cat:'🚗 Auto Ins',   vA:Math.round(A.ins/12),               vB:Math.round(B.ins/12),               unit:'/mo'},
+  ];
+  const totalA=rows.reduce((s,r)=>s+r.vA,0);
+  const totalB=rows.reduce((s,r)=>s+r.vB,0);
+  const diff=Math.abs(totalA-totalB);
+  const cheaper=totalA<totalB?nA:nB;
+  const pct=Math.round((diff/Math.max(totalA,totalB))*100);
+
+  let html=`<table class="col-table">
+    <thead><tr><th>Category</th><th class="right">${nA}</th><th class="right">${nB}</th></tr></thead>
+    <tbody>`;
+  rows.forEach(r=>{
+    const winA=r.vA<r.vB;const winB=r.vB<r.vA;
+    const maxV=Math.max(r.vA,r.vB)||1;
+    const wA=Math.round((r.vA/maxV)*80);const wB=Math.round((r.vB/maxV)*80);
+    html+=`<tr>
+      <td>${r.cat}</td>
+      <td class="right ${winA?'col-win':winB?'col-lose':''}">
+        $${r.vA.toLocaleString()}<span style="font-size:11px;color:var(--muted)">${r.unit}</span>
+        <div class="col-result-bar"><div class="col-bar-a" style="width:${wA}px"></div></div>
+      </td>
+      <td class="right ${winB?'col-win':winA?'col-lose':''}">
+        $${r.vB.toLocaleString()}<span style="font-size:11px;color:var(--muted)">${r.unit}</span>
+        <div class="col-result-bar"><div class="col-bar-b" style="width:${wB}px"></div></div>
+      </td>
+    </tr>`;
+  });
+  html+=`<tr style="font-weight:700;border-top:2px solid var(--border)">
+    <td>📊 Total / month</td>
+    <td class="right ${totalA<totalB?'col-win':totalA>totalB?'col-lose':''}" style="font-size:16px">$${totalA.toLocaleString()}</td>
+    <td class="right ${totalB<totalA?'col-win':totalB>totalA?'col-lose':''}" style="font-size:16px">$${totalB.toLocaleString()}</td>
+  </tr>`;
+  html+=`</tbody></table>`;
+  html+=`<div class="col-verdict">
+    <strong>${cheaper}</strong> is <strong>$${diff.toLocaleString()}/mo (${pct}%) cheaper</strong> overall.
+    Moving from ${totalA>totalB?nA:nB} → ${cheaper} could save approximately <strong>$${(diff*12).toLocaleString()}/year</strong> in living costs
+    (based on $600/mo grocery budget, 40 gal gas/mo, avg 1BR housing).
+  </div>`;
+  el.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════════
 // CARTCAST STATE
 // ═══════════════════════════════════════════════════════════════
 let selectedState="",selectedCity="",groceryFilter="all",grocerySearch="",gasFilter="",rxActiveFilter="all",rxSearchQuery="",affordIncome=0;
@@ -2553,9 +2950,10 @@ let selectedState="",selectedCity="",groceryFilter="all",grocerySearch="",gasFil
 document.addEventListener("DOMContentLoaded",()=>{
   const savedLang=localStorage.getItem('cc_lang')||'en';
   if(savedLang!=='en'){currentLang=savedLang;T=TRANSLATIONS[savedLang]||TRANSLATIONS.en;}
-  buildTicker(); populateStateDropdown(); buildSignals(); buildGroceries(); buildForecast();
+  cartLoad(); buildTicker(); populateStateDropdown(); buildSignals(); buildGroceries(); buildForecast();
   buildGasGrid(); buildAffordCalc(); buildHousingGrid(); buildUtilitiesGrid(); buildElecGrid();
   buildTaxTable(); buildInsuranceWidget(); buildTaxCompare(); buildTariffCalc(); buildSuggestions(); updateBudget(600); updateHeroStats();
+  buildSeasonalCalendar(); populateColDropdowns();
   rxRenderTable(DRUGS);
   // Apply translations to all static data-i18n elements
   document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(T[k]!==undefined)el.innerHTML=T[k];});
@@ -2918,7 +3316,8 @@ function buildGroceries(){
     const changeClass=item.change>0?'up':'down';const changeStr=(item.change>0?'+':'')+item.change.toFixed(1)+'% YoY';
     const actionClass=item.action==='buy'?'action-buy':item.action==='wait'?'action-wait':'action-watch';
     const prevStr=item.prev?`<span class="item-prev">was $${(item.prev*factor).toFixed(2)}</span>`:'';
-    return`<div class="item-card ${trendClass}" onclick="openModal(${item.id})"><div class="item-top"><span class="item-emoji">${item.emoji}</span><span class="item-badge ${badgeClass}">${badgeText}</span></div><div class="item-name">${item.name}</div><div class="item-category">${item.cat}</div><div class="item-price-row"><span class="item-price">$${adjPrice}</span><span class="item-unit">${item.unit}</span>${prevStr}</div><div class="item-change ${changeClass}">${changeStr}</div><div class="item-signal">${item.signal}</div><div class="item-sparkline">${buildSparkline(item,factor)}<span class="spark-label">8-wk trend</span></div><span class="item-action ${actionClass}">${item.action==='buy'?T.act_buy:item.action==='wait'?T.act_wait:T.act_watch}</span></div>`;
+    const inCart=!!cart[item.id];
+    return`<div class="item-card ${trendClass}" onclick="openModal(${item.id})"><button class="item-add-btn ${inCart?'in-cart':''}" data-item-id="${item.id}" onclick="cartAddItem(${item.id},event)" title="Add to list">${inCart?'✓':'+'}</button><div class="item-top"><span class="item-emoji">${item.emoji}</span><span class="item-badge ${badgeClass}">${badgeText}</span></div><div class="item-name">${item.name}</div><div class="item-category">${item.cat}</div><div class="item-price-row"><span class="item-price">$${adjPrice}</span><span class="item-unit">${item.unit}</span>${prevStr}</div><div class="item-change ${changeClass}">${changeStr}</div><div class="item-signal">${item.signal}</div><div class="item-sparkline">${buildSparkline(item,factor)}<span class="spark-label">8-wk trend</span></div><span class="item-action ${actionClass}">${item.action==='buy'?T.act_buy:item.action==='wait'?T.act_wait:T.act_watch}</span></div>`;
   }).join("");
   buildMarketBar();
 }
