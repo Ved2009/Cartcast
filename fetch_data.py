@@ -5,6 +5,11 @@ Sources: BLS, USDA NASS, FRED, EIA (gas + electricity), HUD (rent), Census, Open
 Generates: data.json used by the CartCast website
 """
 
+import sys
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
 import json
 import os
 import requests
@@ -46,7 +51,7 @@ output = {
 FRED_GROCERY_SERIES = {
     "eggs_dozen":        "APU0000708111",   # Eggs, grade A, large
     "milk_gallon":       "APU0000709112",   # Milk, whole, per gallon
-    "butter_lb":         "APU0000FS11101",  # Butter, salted
+    "butter_lb":         "APU0000710411",   # Butter, salted, per pound
     "ground_beef_lb":    "APU0000703112",   # Ground beef, 100% beef
     "chicken_breast_lb": "APU0000706111",   # Chicken, boneless
     "bread_loaf":        "APU0000702111",   # Bread, white, pan
@@ -134,80 +139,117 @@ for name, series_id in FRED_COMMODITY_SERIES.items():
         output["errors"].append(f"FRED signal {name}: {str(e)}")
 
 # ─────────────────────────────────────────
-# 3. GAS PRICES BY STATE — EIA API
+# 3. GAS PRICES BY STATE — EIA API v2
 # ─────────────────────────────────────────
 print("\n⛽ Fetching gas prices from EIA...")
-EIA_GAS_SERIES = {
-    # Weekly retail gasoline prices by region/state
-    # EIA Series IDs for weekly motor gasoline retail prices
-    "national_regular":  "EMM_EPMR_PTE_NUS_DPG",
-    "east_coast":        "EMM_EPMR_PTE_R1X_DPG",
-    "midwest":           "EMM_EPMR_PTE_R20_DPG",
-    "gulf_coast":        "EMM_EPMR_PTE_R30_DPG",
-    "rocky_mountain":    "EMM_EPMR_PTE_R40_DPG",
-    "west_coast":        "EMM_EPMR_PTE_R50_DPG",
-    "california":        "EMM_EPMR_PTE_SCA_DPG",
-    "new_york":          "EMM_EPMR_PTE_SNY_DPG",
-    "florida":           "EMM_EPMR_PTE_SFL_DPG",
-    "texas":             "EMM_EPMR_PTE_STX_DPG",
-    "ohio":              "EMM_EPMR_PTE_SOH_DPG",
-    "minnesota":         "EMM_EPMR_PTE_SMN_DPG",
+# EIA v2: petroleum/pri/gnd/data/ — weekly retail gasoline
+# duoarea codes: NUS=national, R1X=East, R20=Midwest, R30=Gulf, R40=Rocky, R50=WestCoast
+# SCA=CA, SNY=NY, SFL=FL, STX=TX, SOH=OH
+EIA_GAS_AREAS = {
+    "national_regular": "NUS",
+    "east_coast":        "R1X",
+    "midwest":           "R20",
+    "gulf_coast":        "R30",
+    "rocky_mountain":    "R40",
+    "west_coast":        "R50",
+    "california":        "SCA",
+    "new_york":          "SNY",
+    "florida":           "SFL",
+    "texas":             "STX",
+    "ohio":              "SOH",
 }
 
-for region, series_id in EIA_GAS_SERIES.items():
-    try:
-        url = "https://api.eia.gov/v2/seriesid/" + series_id
-        params = {"api_key": EIA_KEY, "data[0]": "value", "length": 2, "sort[0][column]": "period", "sort[0][direction]": "desc"}
-        r = requests.get(url, params=params, timeout=10)
-        r.raise_for_status()
-        data = r.json().get("response", {}).get("data", [])
-        if data:
-            val = float(data[0]["value"])
-            output["gas"][region] = {"price_per_gallon": round(val / 100, 3), "period": data[0]["period"]}  # EIA stores in cents
-            print(f"  ✓ {region}: ${val/100:.3f}/gal")
-        else:
-            # Try alternate endpoint format
-            url2 = f"https://api.eia.gov/series/?api_key={EIA_KEY}&series_id={series_id}"
-            r2 = requests.get(url2, timeout=10)
-            r2.raise_for_status()
-            series_data = r2.json().get("series", [])
-            if series_data and series_data[0].get("data"):
-                val = float(series_data[0]["data"][0][1])
-                output["gas"][region] = {"price_per_gallon": round(val / 100, 3), "period": series_data[0]["data"][0][0]}
-                print(f"  ✓ {region}: ${val/100:.3f}/gal (alt endpoint)")
-    except Exception as e:
-        print(f"  ✗ gas/{region}: {e}")
-        output["errors"].append(f"EIA gas {region}: {str(e)}")
+try:
+    # Fetch all regions at once
+    url = "https://api.eia.gov/v2/petroleum/pri/gnd/data/"
+    # Use list of tuples so duplicate keys work correctly
+    params = [
+        ("api_key", EIA_KEY),
+        ("frequency", "weekly"),
+        ("data[0]", "value"),
+        ("facets[product][]", "EPMR"),   # regular grade
+        ("sort[0][column]", "period"),
+        ("sort[0][direction]", "desc"),
+        ("length", "50"),
+    ]
+    r = requests.get(url, params=params, timeout=15)
+    if r.status_code == 200:
+        records = r.json().get("response", {}).get("data", [])
+        seen = set()
+        for rec in records:
+            area = rec.get("duoarea", "")
+            if area in EIA_GAS_AREAS.values() and area not in seen:
+                val = rec.get("value")
+                if val is not None:
+                    region = next(k for k, v in EIA_GAS_AREAS.items() if v == area)
+                    output["gas"][region] = {
+                        "price_per_gallon": round(float(val), 3),
+                        "period": rec.get("period", "")
+                    }
+                    seen.add(area)
+        print(f"  ✓ Gas prices fetched for {len(output['gas'])} regions")
+        for k, v in output["gas"].items():
+            print(f"    {k}: ${v['price_per_gallon']:.3f}/gal")
+    else:
+        print(f"  ✗ EIA gas v2: {r.status_code} — {r.text[:200]}")
+        output["errors"].append(f"EIA gas: {r.status_code}")
+except Exception as e:
+    print(f"  ✗ EIA gas: {e}")
+    output["errors"].append(f"EIA gas: {str(e)}")
 
 # ─────────────────────────────────────────
 # 4. ELECTRICITY RATES BY STATE — EIA API
 # ─────────────────────────────────────────
 print("\n⚡ Fetching electricity rates from EIA...")
+# EIA v1 series for residential electricity price by state: ELEC.PRICE.{ST}-RES.M
+ELEC_STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA",
+               "KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ",
+               "NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT",
+               "VA","WA","WV","WI","WY"]
+# Batch: fetch all states in one call using the v2 API with correct format
 try:
     url = "https://api.eia.gov/v2/electricity/retail-sales/data/"
-    params = {
-        "api_key": EIA_KEY,
-        "data[0]": "price",
-        "facets[sectorName][]": "residential",
-        "sort[0][column]": "period",
-        "sort[0][direction]": "desc",
-        "length": 60,
-        "frequency": "monthly"
-    }
+    # Use list of tuples for correct bracket-param encoding
+    params = [
+        ("api_key", EIA_KEY),
+        ("frequency", "monthly"),
+        ("data[0]", "price"),
+        ("facets[sectorid][]", "RES"),
+        ("sort[0][column]", "period"),
+        ("sort[0][direction]", "desc"),
+        ("length", "60"),
+    ]
     r = requests.get(url, params=params, timeout=15)
-    r.raise_for_status()
-    records = r.json().get("response", {}).get("data", [])
-    if records:
-        for rec in records[:20]:
+    if r.status_code == 200:
+        records = r.json().get("response", {}).get("data", [])
+        for rec in records:
             state = rec.get("stateid", "")
-            if state and state not in output["electricity"]:
-                output["electricity"][state] = {
-                    "cents_per_kwh": float(rec.get("price", 0)),
-                    "period": rec.get("period", "")
-                }
+            if state and state not in output["electricity"] and len(state) == 2:
+                price = rec.get("price")
+                if price is not None:
+                    output["electricity"][state] = {
+                        "cents_per_kwh": float(price),
+                        "period": rec.get("period", "")
+                    }
         print(f"  ✓ Retrieved electricity rates for {len(output['electricity'])} states")
     else:
-        print("  ✗ No electricity data returned")
+        # Fallback: fetch per-state via v1 API for key states
+        key_states = ["CA","NY","TX","FL","WA","IL","MA","AZ","CO","NV"]
+        for st in key_states:
+            try:
+                series_id = f"ELEC.PRICE.{st}-RES.M"
+                r2 = requests.get("https://api.eia.gov/series/",
+                                  params={"api_key": EIA_KEY, "series_id": series_id, "num": 1},
+                                  timeout=8)
+                if r2.status_code == 200:
+                    s = r2.json().get("series", [])
+                    if s and s[0].get("data"):
+                        val = float(s[0]["data"][0][1])
+                        output["electricity"][st] = {"cents_per_kwh": val, "period": s[0]["data"][0][0]}
+            except Exception:
+                pass
+        print(f"  ~ Fallback: electricity for {len(output['electricity'])} key states (v2 returned {r.status_code})")
+        output["errors"].append(f"EIA electricity v2: {r.status_code}")
 except Exception as e:
     print(f"  ✗ EIA electricity: {e}")
     output["errors"].append(f"EIA electricity: {str(e)}")
@@ -228,28 +270,33 @@ HUD_METROS = [
     ("METRO37980M37980", "Philadelphia Metro"),
     ("METRO12060M12060", "Atlanta Metro"),
 ]
-for entityid, name in HUD_METROS:
-    try:
-        url = f"https://www.huduser.gov/hudapi/public/fmr/listCounties/{entityid}"
-        headers = {"Authorization": f"Bearer {HUD_TOKEN}"} if HUD_TOKEN else {}
-        r = requests.get(url, headers=headers, timeout=10)
-        if r.status_code == 200:
-            data = r.json()
-            if data:
-                d = data[0]
-                output["housing"][name] = {
-                    "efficiency": d.get("Efficiency", 0),
-                    "one_br": d.get("One-Bedroom", 0),
-                    "two_br": d.get("Two-Bedroom", 0),
-                    "three_br": d.get("Three-Bedroom", 0),
-                    "source": "HUD FMR"
-                }
-                print(f"  ✓ {name}: 1BR ${d.get('One-Bedroom','N/A')}")
-        else:
-            print(f"  ✗ HUD {name}: {r.status_code} (token may need refresh)")
-    except Exception as e:
-        print(f"  ✗ HUD {name}: {e}")
-        output["errors"].append(f"HUD {name}: {str(e)}")
+if not HUD_TOKEN:
+    print("  ~ HUD token not set — skipping live HUD fetch (set HUD_API_KEY env var)")
+    output["errors"].append("HUD: token not configured")
+else:
+    for entityid, name in HUD_METROS:
+        try:
+            url = f"https://www.huduser.gov/hudapi/public/fmr/listCounties/{entityid}"
+            headers = {"Authorization": f"Bearer {HUD_TOKEN}"}
+            r = requests.get(url, headers=headers, timeout=10)
+            if r.status_code == 200:
+                data = r.json()
+                if data:
+                    d = data[0]
+                    output["housing"][name] = {
+                        "efficiency": d.get("Efficiency", 0),
+                        "one_br": d.get("One-Bedroom", 0),
+                        "two_br": d.get("Two-Bedroom", 0),
+                        "three_br": d.get("Three-Bedroom", 0),
+                        "source": "HUD FMR"
+                    }
+                    print(f"  ✓ {name}: 1BR ${d.get('One-Bedroom','N/A')}")
+            else:
+                print(f"  ✗ HUD {name}: {r.status_code}")
+                output["errors"].append(f"HUD {name}: {r.status_code}")
+        except Exception as e:
+            print(f"  ✗ HUD {name}: {e}")
+            output["errors"].append(f"HUD {name}: {str(e)}")
 
 # ─────────────────────────────────────────
 # 6. FARM PRICES — USDA NASS
@@ -257,7 +304,7 @@ for entityid, name in HUD_METROS:
 USDA_ITEMS = [
     ("CATTLE", "PRICE RECEIVED", "$ / CWT", "cattle_cwt"),
     ("HOGS",   "PRICE RECEIVED", "$ / CWT", "hogs_cwt"),
-    ("CHICKENS, BROILERS", "PRICE RECEIVED", "$ / LB", "broilers_lb"),
+    ("CHICKENS", "PRICE RECEIVED", "$ / LB", "broilers_lb"),  # use class_desc=BROILERS filter
     ("MILK",   "PRICE RECEIVED", "$ / CWT", "milk_cwt"),
     ("WHEAT",  "PRICE RECEIVED", "$ / BU",  "wheat_bu"),
     ("CORN",   "PRICE RECEIVED", "$ / BU",  "corn_bu"),
@@ -272,7 +319,6 @@ for commodity, statcat, unit, key in USDA_ITEMS:
         params = {
             "key": USDA_KEY,
             "source_desc": "SURVEY",
-            "sector_desc": "CROPS" if commodity in ["WHEAT","CORN","SOYBEANS","POTATOES"] else "ANIMALS & PRODUCTS",
             "commodity_desc": commodity,
             "statisticcat_desc": statcat,
             "unit_desc": unit,
@@ -281,9 +327,14 @@ for commodity, statcat, unit, key in USDA_ITEMS:
             "year__GE": "2024",
             "format": "JSON"
         }
+        if commodity in ["WHEAT","CORN","SOYBEANS","POTATOES"]:
+            params["sector_desc"] = "CROPS"
         r = requests.get(url, params=params, timeout=15)
         r.raise_for_status()
         data = r.json().get("data", [])
+        # For CHICKENS, filter to BROILERS class
+        if commodity == "CHICKENS":
+            data = [d for d in data if d.get("class_desc","").upper() == "BROILERS"]
         if data:
             data_sorted = sorted(data, key=lambda x: (x.get("year",""), x.get("reference_period_desc","")), reverse=True)
             latest = data_sorted[0]
