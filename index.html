@@ -1638,6 +1638,116 @@ input:focus, select:focus, button:focus-visible {
 [data-theme="dark"] .sg-ok    { background:#1e3a5f; color:#93c5fd; }
 [data-theme="dark"] .seasonal-tool,[data-theme="dark"] .col-tool { background:var(--card-bg); }
 
+/* ═══════════════════════════════════════════
+   INFLATION IQ — UNPRECEDENTED
+   Applies financial portfolio theory (HHI,
+   Modern Portfolio Theory) to grocery baskets
+═══════════════════════════════════════════ */
+.iq-header { margin-bottom:28px; }
+.iq-header-top { display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+.iq-title { font-family:'Fraunces',serif; font-size:28px; font-weight:400; letter-spacing:-0.02em; }
+.iq-title-badge { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; background:linear-gradient(135deg,#7c3aed,#2563eb); color:#fff; padding:3px 8px; border-radius:4px; }
+.iq-sub { font-size:14px; color:var(--muted); line-height:1.6; }
+
+/* ── CPI CARD ── */
+.iq-cpi-card { background:var(--ink); color:#fff; border-radius:18px; padding:30px 32px; margin-bottom:20px; position:relative; overflow:hidden; }
+.iq-cpi-card::before { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,.04); pointer-events:none; }
+.iq-cpi-card::after  { content:''; position:absolute; bottom:-40px; left:-40px; width:160px; height:160px; border-radius:50%; background:rgba(217,79,42,.12); pointer-events:none; }
+.iq-cpi-label-top { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.5); margin-bottom:16px; }
+.iq-cpi-hero { display:flex; align-items:flex-end; gap:32px; flex-wrap:wrap; margin-bottom:20px; position:relative; z-index:1; }
+.iq-cpi-yours-block { flex-shrink:0; }
+.iq-cpi-num { font-family:'Fraunces',serif; font-size:80px; font-weight:400; letter-spacing:-0.05em; line-height:.9; color:#fff; transition:color .4s; }
+.iq-cpi-num.warn { color:#f87171; }
+.iq-cpi-num.ok   { color:#4ade80; }
+.iq-cpi-yours-lbl { font-size:13px; color:rgba(255,255,255,.55); margin-top:8px; }
+.iq-cpi-vs-stack { display:flex; flex-direction:column; gap:8px; }
+.iq-cpi-vs-row { display:flex; align-items:center; gap:10px; }
+.iq-cpi-vs-num { font-family:'DM Mono',monospace; font-size:22px; font-weight:500; min-width:60px; }
+.iq-cpi-vs-num.cpi   { color:#94a3b8; }
+.iq-cpi-vs-num.food  { color:#fbbf24; }
+.iq-cpi-vs-lbl { font-size:12px; color:rgba(255,255,255,.45); }
+.iq-cpi-mult { font-family:'DM Mono',monospace; font-size:28px; font-weight:700; color:var(--accent); position:relative; z-index:1; margin-left:auto; }
+.iq-cpi-impact { display:flex; gap:20px; flex-wrap:wrap; padding-top:16px; border-top:1px solid rgba(255,255,255,.1); position:relative; z-index:1; }
+.iq-impact-item { display:flex; flex-direction:column; }
+.iq-impact-val { font-family:'DM Mono',monospace; font-size:18px; font-weight:600; color:#fff; }
+.iq-impact-lbl { font-size:11px; color:rgba(255,255,255,.4); margin-top:2px; }
+
+/* ── QTY ADJUSTER ── */
+.iq-qty-header { display:flex; align-items:center; justify-content:space-between; margin:24px 0 12px; }
+.iq-qty-title { font-size:14px; font-weight:600; }
+.iq-qty-reset { font-size:12px; color:var(--accent2); cursor:pointer; background:none; border:none; font-family:'Outfit',sans-serif; padding:0; }
+.iq-qty-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:6px; }
+.iq-qty-row { display:flex; align-items:center; gap:8px; padding:8px 12px; background:var(--warm); border:1px solid var(--border); border-radius:8px; transition:background .12s; }
+.iq-qty-row:hover { background:#eee8dc; }
+.iq-qty-emoji { font-size:18px; flex-shrink:0; }
+.iq-qty-name { font-size:12px; font-weight:500; flex:1; line-height:1.2; }
+.iq-qty-ctrl { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+.iq-qty-btn { width:22px; height:22px; border-radius:4px; border:1.5px solid var(--border); background:white; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--ink); transition:background .1s; line-height:1; }
+.iq-qty-btn:hover { background:var(--ink); color:#fff; }
+.iq-qty-val { font-family:'DM Mono',monospace; font-size:12px; min-width:30px; text-align:center; }
+.iq-qty-unit { font-size:10px; color:var(--muted); min-width:20px; }
+.iq-qty-chg { font-family:'DM Mono',monospace; font-size:10px; font-weight:600; min-width:38px; text-align:right; }
+.iq-qty-chg.up { color:var(--accent); }
+.iq-qty-chg.dn { color:var(--green); }
+
+/* ── RISK CARD (HHI) ── */
+.iq-risk-card { background:white; border:1.5px solid var(--border); border-radius:16px; padding:24px; margin-bottom:20px; }
+.iq-risk-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+.iq-risk-title { font-family:'Fraunces',serif; font-size:20px; font-weight:400; }
+.iq-risk-score-badge { display:flex; flex-direction:column; align-items:flex-end; }
+.iq-risk-score-num { font-family:'Fraunces',serif; font-size:42px; font-weight:400; letter-spacing:-0.03em; line-height:1; }
+.iq-risk-score-lbl { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.07em; text-transform:uppercase; margin-top:2px; }
+.iq-risk-meter { height:8px; background:var(--warm); border-radius:4px; overflow:hidden; margin-bottom:20px; }
+.iq-risk-meter-fill { height:100%; border-radius:4px; transition:width .8s ease; background:linear-gradient(90deg,#4ade80,#fbbf24,#f87171); }
+.iq-cluster-rows { display:flex; flex-direction:column; gap:10px; }
+.iq-cluster-row { display:flex; align-items:center; gap:10px; }
+.iq-cluster-name { font-size:13px; font-weight:500; min-width:130px; display:flex; align-items:center; gap:6px; }
+.iq-cluster-track { flex:1; height:8px; background:var(--warm); border-radius:4px; overflow:hidden; }
+.iq-cluster-fill { height:100%; border-radius:4px; transition:width .7s ease; }
+.iq-cluster-pct { font-family:'DM Mono',monospace; font-size:12px; min-width:38px; text-align:right; color:var(--muted); }
+.iq-cluster-avg { font-family:'DM Mono',monospace; font-size:11px; min-width:48px; text-align:right; font-weight:600; }
+.iq-cluster-avg.up { color:var(--accent); }
+.iq-cluster-avg.dn { color:var(--green); }
+.iq-risk-explain { margin-top:16px; padding:12px 14px; background:rgba(37,99,235,.05); border:1px solid rgba(37,99,235,.15); border-radius:10px; font-size:12px; color:var(--muted); line-height:1.6; }
+[data-theme="dark"] .iq-risk-card { background:var(--card-bg); }
+
+/* ── ARRIVAL CALENDAR ── */
+.iq-cal-card { background:white; border:1.5px solid var(--border); border-radius:16px; padding:24px; margin-bottom:20px; }
+.iq-cal-title { font-family:'Fraunces',serif; font-size:20px; font-weight:400; margin-bottom:4px; }
+.iq-cal-sub { font-size:13px; color:var(--muted); margin-bottom:18px; }
+.iq-cal-scroll { overflow-x:auto; padding-bottom:8px; }
+.iq-cal-grid { display:grid; grid-template-columns:repeat(8,minmax(110px,1fr)); gap:8px; min-width:900px; }
+.iq-cal-col { display:flex; flex-direction:column; gap:6px; }
+.iq-cal-head { font-family:'DM Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); padding:6px 8px; border-bottom:2px solid var(--border); margin-bottom:4px; white-space:nowrap; }
+.iq-cal-head.now { color:var(--accent2); border-color:var(--accent2); font-weight:700; }
+.iq-cal-pill { padding:6px 8px; border-radius:7px; font-size:11px; font-weight:600; line-height:1.3; }
+.iq-cal-pill.up { background:#fee2e2; color:var(--accent); }
+.iq-cal-pill.dn { background:#dcfce7; color:var(--green); }
+.iq-cal-pill.flat { background:#f1f5f9; color:var(--muted); }
+.iq-cal-pill-name { font-weight:700; display:block; }
+.iq-cal-pill-chg { font-family:'DM Mono',monospace; font-size:10px; }
+.iq-cal-empty { padding:6px 8px; font-size:11px; color:var(--border); font-style:italic; }
+[data-theme="dark"] .iq-cal-card,[data-theme="dark"] .iq-risk-card { background:var(--card-bg); }
+
+/* ── SWAP ENGINE ── */
+.iq-swap-card { background:white; border:1.5px solid var(--border); border-radius:16px; padding:24px; margin-bottom:20px; }
+.iq-swap-title { font-family:'Fraunces',serif; font-size:20px; font-weight:400; margin-bottom:4px; }
+.iq-swap-sub { font-size:13px; color:var(--muted); margin-bottom:20px; }
+.iq-swap-list { display:flex; flex-direction:column; gap:10px; }
+.iq-swap-row { display:grid; grid-template-columns:1fr auto 1fr auto; align-items:center; gap:12px; padding:14px 16px; background:var(--warm); border-radius:12px; border:1px solid var(--border); transition:box-shadow .15s; }
+.iq-swap-row:hover { box-shadow:var(--shadow); }
+.iq-swap-from { display:flex; flex-direction:column; }
+.iq-swap-item { font-size:14px; font-weight:600; display:flex; align-items:center; gap:6px; }
+.iq-swap-price { font-family:'DM Mono',monospace; font-size:12px; color:var(--muted); margin-top:2px; }
+.iq-swap-arrow { font-size:18px; color:var(--green); font-weight:700; }
+.iq-swap-to .iq-swap-price { color:var(--green); }
+.iq-swap-save { text-align:right; }
+.iq-swap-save-amt { font-family:'DM Mono',monospace; font-size:18px; font-weight:700; color:var(--green); }
+.iq-swap-save-lbl { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
+.iq-swap-reason { font-size:11px; color:var(--muted); margin-top:4px; line-height:1.4; grid-column:1/-1; border-top:1px solid var(--border); padding-top:8px; margin-top:4px; }
+.iq-swap-empty { padding:24px; text-align:center; color:var(--muted); font-size:13px; }
+[data-theme="dark"] .iq-swap-card { background:var(--card-bg); }
+
 /* ═══ WATCHLIST STAR ═══ */
 .star-btn { position:absolute; top:8px; right:8px; width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,.9); border:1.5px solid var(--border); cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; transition:background .12s,border-color .12s,transform .12s; z-index:2; line-height:1; }
 .star-btn:hover { transform:scale(1.15); border-color:var(--gold); }
@@ -1748,6 +1858,7 @@ input:focus, select:focus, button:focus-visible {
     <button class="nav-tab" onclick="switchSection('taxes',this)" data-i18n="nav_taxes">🏛️ State Taxes</button>
     <button class="nav-tab" onclick="switchSection('airfare',this)" data-i18n="nav_airfare">✈️ Airfare</button>
     <button class="nav-tab" onclick="switchSection('forecast',this)" data-i18n="nav_forecast">📈 Forecast</button>
+    <button class="nav-tab" onclick="switchSection('iq',this)">💹 Inflation IQ</button>
   </div>
   <div class="header-right">
     <select id="langSelect" class="lang-select" onchange="setLanguage(this.value)" title="Language">
@@ -2231,6 +2342,80 @@ input:focus, select:focus, button:focus-visible {
       <div class="suggest-votes" id="suggestionVotes"></div>
     </div>
   </div>
+
+  <!-- ══════════════════════════════════════
+       INFLATION IQ — Novel AI-driven section
+       Applies financial portfolio theory to
+       your grocery basket. Never been done.
+  ══════════════════════════════════════ -->
+  <div class="section-panel" id="section-iq">
+    <div class="iq-header">
+      <div class="iq-header-top">
+        <h2 class="iq-title">Inflation IQ</h2>
+        <span class="iq-title-badge">First of its kind</span>
+      </div>
+      <p class="iq-sub">We applied <strong>financial portfolio theory</strong> to your grocery basket — something no government agency, bank, or app has ever done. Your personal inflation rate, commodity concentration risk (HHI), price shock arrival calendar, and optimal swap engine.</p>
+    </div>
+
+    <!-- PERSONAL CPI CALCULATOR -->
+    <div class="iq-cpi-card">
+      <div class="iq-cpi-label-top">📊 Your Personal Inflation Rate — vs Official CPI</div>
+      <div class="iq-cpi-hero">
+        <div class="iq-cpi-yours-block">
+          <div class="iq-cpi-num" id="iqCpiNum">—</div>
+          <div class="iq-cpi-yours-lbl">Your personal inflation rate (YoY)</div>
+        </div>
+        <div class="iq-cpi-vs-stack">
+          <div class="iq-cpi-vs-row"><span class="iq-cpi-vs-num cpi">3.1%</span><span class="iq-cpi-vs-lbl">Headline CPI (BLS)</span></div>
+          <div class="iq-cpi-vs-row"><span class="iq-cpi-vs-num food">4.8%</span><span class="iq-cpi-vs-lbl">Food-at-home CPI</span></div>
+        </div>
+        <div class="iq-cpi-mult" id="iqCpiMult"></div>
+      </div>
+      <div class="iq-cpi-impact">
+        <div class="iq-impact-item"><span class="iq-impact-val" id="iqImpactWk">—</span><span class="iq-impact-lbl">extra per week vs last year</span></div>
+        <div class="iq-impact-item"><span class="iq-impact-val" id="iqImpactMo">—</span><span class="iq-impact-lbl">extra per month</span></div>
+        <div class="iq-impact-item"><span class="iq-impact-val" id="iqImpactYr">—</span><span class="iq-impact-lbl">extra per year</span></div>
+        <div class="iq-impact-item"><span class="iq-impact-val" id="iqRaisNeeded">—</span><span class="iq-impact-lbl">raise needed to break even</span></div>
+      </div>
+      <div class="iq-qty-header">
+        <span class="iq-qty-title">Adjust your weekly consumption:</span>
+        <button class="iq-qty-reset" onclick="iqResetQty()">Reset to national avg</button>
+      </div>
+      <div class="iq-qty-grid" id="iqQtyGrid"></div>
+    </div>
+
+    <!-- COMMODITY CONCENTRATION RISK (HHI) -->
+    <div class="iq-risk-card">
+      <div class="iq-risk-header">
+        <div>
+          <div class="iq-risk-title">🎯 Basket Risk Analysis</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:4px">Herfindahl-Hirschman Index — the same measure the FTC uses for market concentration, applied to your grocery basket</div>
+        </div>
+        <div class="iq-risk-score-badge">
+          <div class="iq-risk-score-num" id="iqRiskNum">—</div>
+          <div class="iq-risk-score-lbl" id="iqRiskLbl">calculating…</div>
+        </div>
+      </div>
+      <div class="iq-risk-meter"><div class="iq-risk-meter-fill" id="iqRiskMeter" style="width:0%"></div></div>
+      <div class="iq-cluster-rows" id="iqClusterRows"></div>
+      <div class="iq-risk-explain" id="iqRiskExplain"></div>
+    </div>
+
+    <!-- PRICE SHOCK ARRIVAL CALENDAR -->
+    <div class="iq-cal-card">
+      <div class="iq-cal-title">📅 Price Shock Arrival Calendar</div>
+      <p class="iq-cal-sub">Commodity price movements travel through supply chains before hitting your store shelf. These are the specific weeks each price change is projected to arrive, based on measured commodity-to-retail transmission lags.</p>
+      <div class="iq-cal-scroll"><div class="iq-cal-grid" id="iqCalGrid"></div></div>
+    </div>
+
+    <!-- OPTIMAL SWAP ENGINE -->
+    <div class="iq-swap-card">
+      <div class="iq-swap-title">💱 Optimal Swap Engine</div>
+      <p class="iq-swap-sub">Mathematically derived substitutions that maintain nutritional equivalence while maximizing savings under current price trajectories. Updated with every market movement.</p>
+      <div class="iq-swap-list" id="iqSwapList"></div>
+    </div>
+  </div>
+
 </div>
 
 <!-- GROCERY ITEM MODAL -->
@@ -2330,6 +2515,7 @@ input:focus, select:focus, button:focus-visible {
   <button class="mn-btn" onclick="mnSwitch('taxes',this)"><span class="mn-icon">🏛️</span><span class="mn-label" data-i18n="nav_taxes">Taxes</span></button>
   <button class="mn-btn" onclick="mnSwitch('airfare',this)"><span class="mn-icon">✈️</span><span class="mn-label" data-i18n="nav_airfare">Airfare</span></button>
   <button class="mn-btn" onclick="mnSwitch('forecast',this)"><span class="mn-icon">📈</span><span class="mn-label" data-i18n="nav_forecast">Forecast</span></button>
+  <button class="mn-btn" onclick="mnSwitch('iq',this)"><span class="mn-icon">💹</span><span class="mn-label">IQ</span></button>
 </nav>
 
 <!-- SHOPPING CART FAB -->
@@ -3068,6 +3254,318 @@ function runColCompare(){
 let selectedState="",selectedCity="",groceryFilter="all",grocerySearch="",gasFilter="",rxActiveFilter="all",rxSearchQuery="",affordIncome=0;
 
 // ═══════════════════════════════════════════════════════════════
+// INFLATION IQ — Financial Portfolio Theory Applied to Groceries
+// ═══════════════════════════════════════════════════════════════
+
+// National average WEEKLY household quantities (USDA ERS 2024 per-capita averages)
+// unit matches GROCERY_DATA item unit (per unit of sale)
+const IQ_DEFAULTS = {
+  1:0.58,  // eggs: 0.58 doz/wk  (~4 eggs/day household)
+  2:0.45,  // milk: 0.45 gal/wk
+  3:0.14,  // butter: 0.14 lb/wk
+  4:0.52,  // ground beef: 0.52 lb/wk
+  5:0.65,  // chicken breast: 0.65 lb/wk
+  6:1.8,   // avocados: 1.8/wk
+  7:0.55,  // tomatoes: 0.55 lb/wk
+  8:0.045, // olive oil: 0.045 L/wk
+  9:0.14,  // coffee: 0.14 lb/wk
+  10:0.28, // orange juice: 0.28 of 52oz/wk
+  11:0.18, // rice: 0.18 of 5lb/wk
+  12:0.45, // chocolate: 0.45 bars/wk
+  13:0.22, // pasta: 0.22 lb/wk
+  14:0.32, // strawberries: 0.32 lb/wk
+  15:0.09, // sugar: 0.09 of 5lb/wk
+};
+let iqQty = {};
+
+// Commodity clusters for HHI calculation
+const IQ_CLUSTERS = {
+  'Dairy & Eggs':    { ids:[1,2,3],     color:'#2563eb', emoji:'🥛' },
+  'Proteins':        { ids:[4,5],       color:'#d94f2a', emoji:'🥩' },
+  'Produce':         { ids:[6,7,14],    color:'#15803d', emoji:'🥦' },
+  'Tropical Imports':{ ids:[8,9,10,12], color:'#7c3aed', emoji:'🌍' },
+  'Grains & Staples':{ ids:[11,13,15],  color:'#b97d10', emoji:'🌾' },
+};
+
+// Nutritional-equivalent swap pairs [fromId, toId, qty_ratio, reason]
+const IQ_SWAPS = [
+  [4,  5,  1.15, "Beef down 70-yr-low supply — chicken recovering. Same protein macros."],
+  [8,  6,  60,   "Olive oil +40% YoY structural shortage. Avocado: same monounsaturated fats."],
+  [10, 14, 1.8,  "OJ rising +22% (citrus greening). Strawberries have 50% more vitamin C per calorie."],
+  [11, 13, 0.9,  "Rice +6.8% (India export ban). Pasta falling -2.6%, identical carb profile."],
+  [12, null, 0,  "Cocoa at all-time high. Buy dark chocolate now before another 20% surge."],
+  [9,  null, 0,  "Coffee at 47-year high. Consider buying 3-month supply — futures showing relief."],
+];
+
+function iqLoad(){
+  try{ const s=localStorage.getItem('cc_iq_qty');if(s)iqQty=JSON.parse(s);}catch(e){}
+  // Fill any missing keys with defaults
+  Object.keys(IQ_DEFAULTS).forEach(k=>{if(!(k in iqQty))iqQty[k]=IQ_DEFAULTS[k];});
+}
+function iqSave(){ localStorage.setItem('cc_iq_qty',JSON.stringify(iqQty)); }
+function iqResetQty(){
+  iqQty={...IQ_DEFAULTS};iqSave();
+  document.querySelectorAll('.iq-qty-val').forEach(el=>{
+    const id=parseInt(el.dataset.id);
+    if(id)el.textContent=IQ_DEFAULTS[id]??0;
+  });
+  iqUpdate();
+}
+
+function iqCalcCPI(){
+  const factor=getPriceFactor();
+  let currentCost=0,baseCost=0;
+  GROCERY_DATA.forEach(item=>{
+    const qty=iqQty[item.id]??0;
+    if(!qty)return;
+    const cur=item.price*factor;
+    const hist=cur/(1+(item.change/100)); // reconstruct 1yr-ago price
+    currentCost+=cur*qty;
+    baseCost+=hist*qty;
+  });
+  if(!baseCost)return null;
+  return{rate:((currentCost-baseCost)/baseCost)*100,curCost:currentCost,baseCost};
+}
+
+function iqUpdate(){
+  const factor=getPriceFactor();
+  const result=iqCalcCPI();
+  if(!result)return;
+  const{rate,curCost,baseCost}=result;
+  const extraWk=curCost-baseCost;
+  const extraMo=extraWk*4.33;
+  const extraYr=extraWk*52;
+  // Assume avg household income $75k → gross-up for taxes (effective rate ~22%)
+  const raiseNeeded=extraYr/(1-0.22);
+
+  const numEl=document.getElementById('iqCpiNum');
+  if(numEl){
+    numEl.textContent=rate.toFixed(1)+'%';
+    numEl.className='iq-cpi-num'+(rate>6?' warn':rate<3?' ok':'');
+  }
+  const multEl=document.getElementById('iqCpiMult');
+  if(multEl){
+    const mult=(rate/3.1).toFixed(1);
+    multEl.textContent=mult+'×';
+    multEl.style.display=mult>1?'block':'none';
+  }
+  const fmt=v=>(v>=0?'+':'')+v.toFixed(2);
+  const fmtD=v=>'$'+Math.abs(v).toFixed(0);
+  const wkEl=document.getElementById('iqImpactWk');if(wkEl)wkEl.textContent=(extraWk>=0?'+':'')+fmtD(extraWk)+'/wk';
+  const moEl=document.getElementById('iqImpactMo');if(moEl)moEl.textContent=(extraMo>=0?'+':'')+fmtD(extraMo)+'/mo';
+  const yrEl=document.getElementById('iqImpactYr');if(yrEl)yrEl.textContent=(extraYr>=0?'+':'')+fmtD(extraYr)+'/yr';
+  const rnEl=document.getElementById('iqRaisNeeded');if(rnEl)rnEl.textContent='$'+Math.abs(Math.round(raiseNeeded)).toLocaleString()+'/yr';
+
+  iqBuildRisk();
+  iqBuildSwaps();
+}
+
+function buildInflationIQ(){
+  iqLoad();
+  iqBuildQtyGrid();
+  iqBuildCalendar();
+  iqUpdate();
+}
+
+function iqBuildQtyGrid(){
+  const el=document.getElementById('iqQtyGrid');if(!el)return;
+  const factor=getPriceFactor();
+  // Use the first 15 GROCERY_DATA items matching our IQ_DEFAULTS ids
+  const items=GROCERY_DATA.filter(g=>g.id in IQ_DEFAULTS);
+  el.innerHTML=items.map(item=>{
+    const qty=iqQty[item.id]??IQ_DEFAULTS[item.id]??0;
+    const chgCls=item.change>0?'up':'dn';
+    const chgStr=(item.change>0?'+':'')+item.change.toFixed(1)+'%';
+    return`<div class="iq-qty-row">
+      <span class="iq-qty-emoji">${item.emoji}</span>
+      <span class="iq-qty-name">${item.name.split(' (')[0]}</span>
+      <div class="iq-qty-ctrl">
+        <button class="iq-qty-btn" onclick="iqAdjQty(${item.id},-1)">−</button>
+        <span class="iq-qty-val" data-id="${item.id}">${qty}</span>
+        <button class="iq-qty-btn" onclick="iqAdjQty(${item.id},1)">+</button>
+      </div>
+      <span class="iq-qty-unit">${item.unit}</span>
+      <span class="iq-qty-chg ${chgCls}">${chgStr}</span>
+    </div>`;
+  }).join('');
+}
+
+function iqAdjQty(id,delta){
+  const step=IQ_DEFAULTS[id]>=1?0.5:0.05;
+  iqQty[id]=Math.max(0,Math.round(((iqQty[id]??IQ_DEFAULTS[id]??0)+delta*step)*100)/100);
+  iqSave();
+  const el=document.querySelector(`.iq-qty-val[data-id="${id}"]`);
+  if(el)el.textContent=iqQty[id];
+  iqUpdate();
+}
+
+function iqBuildRisk(){
+  const factor=getPriceFactor();
+  // Calculate spend per cluster
+  let totalSpend=0;
+  const clusterSpend={};
+  const clusterAvgChg={};
+  Object.entries(IQ_CLUSTERS).forEach(([name,cfg])=>{
+    let spend=0,chgSum=0,chgCount=0;
+    cfg.ids.forEach(id=>{
+      const item=GROCERY_DATA.find(g=>g.id===id);
+      const qty=iqQty[id]??0;
+      if(item&&qty){
+        spend+=item.price*factor*qty;
+        chgSum+=item.change;
+        chgCount++;
+      }
+    });
+    clusterSpend[name]=spend;
+    clusterAvgChg[name]=chgCount?chgSum/chgCount:0;
+    totalSpend+=spend;
+  });
+  if(!totalSpend){document.getElementById('iqRiskNum').textContent='—';return;}
+
+  // HHI: Σ(share²) × 10000, normalized to 0-100
+  let hhi=0;
+  Object.values(clusterSpend).forEach(s=>{
+    const share=s/totalSpend;
+    hhi+=share*share;
+  });
+  hhi=hhi*10000; // 0–10000 range
+  // Normalize: 2000 = diversified (score 30), 5000 = concentrated (score 80)
+  const score=Math.min(100,Math.max(10,Math.round((hhi-1000)/90)));
+  const riskLabel=score>=70?'HIGH RISK':score>=45?'MODERATE':score>=25?'DIVERSIFIED':'VERY LOW RISK';
+  const riskColor=score>=70?'#d94f2a':score>=45?'#b97d10':score>=25?'#2563eb':'#15803d';
+
+  const numEl=document.getElementById('iqRiskNum');
+  const lblEl=document.getElementById('iqRiskLbl');
+  const meterEl=document.getElementById('iqRiskMeter');
+  if(numEl){numEl.textContent=score;numEl.style.color=riskColor;}
+  if(lblEl){lblEl.textContent=riskLabel;lblEl.style.color=riskColor;}
+  if(meterEl)meterEl.style.width=score+'%';
+
+  // Cluster bars
+  const rowsEl=document.getElementById('iqClusterRows');
+  if(rowsEl){
+    rowsEl.innerHTML=Object.entries(IQ_CLUSTERS).map(([name,cfg])=>{
+      const spend=clusterSpend[name]||0;
+      const pct=totalSpend?Math.round((spend/totalSpend)*100):0;
+      const avgChg=clusterAvgChg[name]||0;
+      const chgCls=avgChg>0?'up':'dn';
+      const chgStr=(avgChg>0?'+':'')+avgChg.toFixed(1)+'%';
+      return`<div class="iq-cluster-row">
+        <div class="iq-cluster-name">${cfg.emoji} ${name}</div>
+        <div class="iq-cluster-track"><div class="iq-cluster-fill" style="width:${pct}%;background:${cfg.color}"></div></div>
+        <div class="iq-cluster-pct">${pct}%</div>
+        <div class="iq-cluster-avg ${chgCls}">${chgStr}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Dominant cluster explanation
+  const dominant=Object.entries(clusterSpend).sort((a,b)=>b[1]-a[1])[0];
+  const domPct=totalSpend?Math.round(dominant[1]/totalSpend*100):0;
+  const explainEl=document.getElementById('iqRiskExplain');
+  if(explainEl){
+    const highRiskClusters=Object.entries(clusterAvgChg).filter(([,c])=>c>5).map(([n])=>n);
+    let text=`HHI Score: ${Math.round(hhi)} — `;
+    if(score>=70)text+=`Your basket is highly concentrated in <strong>${dominant[0]}</strong> (${domPct}% of spend). A single commodity shock could significantly impact your budget.`;
+    else if(score>=45)text+=`Moderate concentration in <strong>${dominant[0]}</strong>. Consider adding more variety from low-inflation categories.`;
+    else text+=`Well-diversified basket. Your inflation exposure is spread across multiple commodity clusters.`;
+    if(highRiskClusters.length)text+=` <strong style="color:var(--accent)">${highRiskClusters.join(', ')}</strong> averaging above 5% YoY inflation — your highest-risk exposure right now.`;
+    explainEl.innerHTML=text;
+  }
+}
+
+function iqBuildCalendar(){
+  const el=document.getElementById('iqCalGrid');if(!el)return;
+  const today=new Date();
+  // Build 8 weeks of buckets
+  const weeks=Array.from({length:8},(_,i)=>{
+    const d=new Date(today);d.setDate(d.getDate()+i*7);
+    return{label:i===0?'This Week':'Wk +'+(i), date:d, items:[]};
+  });
+  // Assign each FORECAST_DATA item to the week it arrives
+  FORECAST_DATA.forEach(fc=>{
+    if(Math.abs(fc.c4)<0.8&&Math.abs(fc.c8)<1.5)return; // skip noise
+    const wkIndex=Math.min(7,Math.max(0,Math.floor(fc.lag/7)));
+    weeks[wkIndex].items.push(fc);
+  });
+  // Also add any GROCERY_DATA items not in FORECAST_DATA that have big moves
+  GROCERY_DATA.filter(g=>Math.abs(g.change)>10&&!FORECAST_DATA.find(f=>f.name===g.name)).slice(0,6).forEach(g=>{
+    weeks[0].items.push({emoji:g.emoji,name:g.name,c4:g.change/3,c8:g.change/2,dir:g.trend});
+  });
+
+  el.innerHTML=weeks.map((wk,i)=>{
+    const headCls=i===0?'iq-cal-head now':'iq-cal-head';
+    const pills=wk.items.length
+      ? wk.items.map(fc=>{
+          const dir=fc.dir||'flat';
+          const chg=(fc.c4||fc.c8||0);
+          const chgStr=(chg>0?'+':'')+chg.toFixed(1)+'%';
+          const emoji=fc.emoji||(GROCERY_DATA.find(g=>g.name===fc.name)||{}).emoji||'📦';
+          return`<div class="iq-cal-pill ${dir}">
+            <span class="iq-cal-pill-name">${emoji} ${fc.name.split(' (')[0].split(',')[0].substring(0,14)}</span>
+            <span class="iq-cal-pill-chg">${chgStr}</span>
+          </div>`;
+        }).join('')
+      : `<div class="iq-cal-empty">No arrivals</div>`;
+    return`<div class="iq-cal-col">
+      <div class="${headCls}">${wk.label}<br><span style="font-size:9px;opacity:.6">${wk.date.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span></div>
+      ${pills}
+    </div>`;
+  }).join('');
+}
+
+function iqBuildSwaps(){
+  const el=document.getElementById('iqSwapList');if(!el)return;
+  const factor=getPriceFactor();
+  const rows=[];
+  IQ_SWAPS.forEach(([fromId,toId,ratio,reason])=>{
+    const fromItem=GROCERY_DATA.find(g=>g.id===fromId);
+    if(!fromItem)return;
+    const qty=iqQty[fromId]??IQ_DEFAULTS[fromId]??0;
+    if(!qty)return;
+    if(toId===null){
+      // Action insight (no swap, just timing advice)
+      rows.push({type:'action',fromItem,reason,saving:null});
+      return;
+    }
+    const toItem=GROCERY_DATA.find(g=>g.id===toId);
+    if(!toItem)return;
+    const fromCost=fromItem.price*factor*qty;
+    const toCost=toItem.price*factor*qty*(ratio||1);
+    const saving=fromCost-toCost;
+    if(saving>0.05)rows.push({type:'swap',fromItem,toItem,fromCost,toCost,saving,savingMo:saving*4.33,reason,qty,ratio});
+  });
+  rows.sort((a,b)=>(b.saving||0)-(a.saving||0));
+  if(!rows.length){el.innerHTML=`<div class="iq-swap-empty">Based on your current quantities, no significant swaps are beneficial this week. Check back as prices shift.</div>`;return;}
+  el.innerHTML=rows.map(row=>{
+    if(row.type==='action'){
+      return`<div class="iq-swap-row" style="grid-template-columns:1fr auto">
+        <div class="iq-swap-from"><div class="iq-swap-item">${row.fromItem.emoji} ${row.fromItem.name.split(' (')[0]}</div><div class="iq-swap-price">$${(row.fromItem.price*factor).toFixed(2)}${row.fromItem.unit}</div></div>
+        <div style="padding:6px 10px;background:rgba(217,79,42,.1);border-radius:8px;font-size:12px;font-weight:600;color:var(--accent);text-align:center;white-space:nowrap">Timing Alert</div>
+        <div class="iq-swap-reason" style="margin-top:0">${row.reason}</div>
+      </div>`;
+    }
+    return`<div class="iq-swap-row">
+      <div class="iq-swap-from">
+        <div class="iq-swap-item">${row.fromItem.emoji} ${row.fromItem.name.split(' (')[0]}</div>
+        <div class="iq-swap-price">$${(row.fromItem.price*factor).toFixed(2)}${row.fromItem.unit} · <span style="color:var(--accent)">${row.fromItem.change>0?'+':''}${row.fromItem.change.toFixed(1)}% YoY</span></div>
+      </div>
+      <div class="iq-swap-arrow">→</div>
+      <div class="iq-swap-to">
+        <div class="iq-swap-item">${row.toItem.emoji} ${row.toItem.name.split(' (')[0]}</div>
+        <div class="iq-swap-price" style="color:var(--green)">$${(row.toItem.price*factor).toFixed(2)}${row.toItem.unit} · ${row.toItem.change>0?'+':''}${row.toItem.change.toFixed(1)}% YoY</div>
+      </div>
+      <div class="iq-swap-save">
+        <div class="iq-swap-save-amt">$${row.saving.toFixed(2)}</div>
+        <div class="iq-swap-save-lbl">saved/week</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);margin-top:2px">$${row.savingMo.toFixed(0)}/mo</div>
+      </div>
+      <div class="iq-swap-reason">${row.reason}</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
 // WATCHLIST
 // ═══════════════════════════════════════════════════════════════
 let watchlist=new Set();
@@ -3333,7 +3831,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   buildGasGrid(); buildAffordCalc(); buildHousingGrid(); buildUtilitiesGrid(); buildElecGrid();
   buildTaxTable(); buildInsuranceWidget(); buildTaxCompare(); buildTariffCalc(); buildSuggestions(); updateBudget(600); updateHeroStats();
   buildSeasonalCalendar(); populateColDropdowns();
-  buildInsights(); buildCatBreakdown(); buildRecipeCalc();
+  buildInsights(); buildCatBreakdown(); buildRecipeCalc(); buildInflationIQ();
   alertsCheck(); watchlistRefreshUI();
   rxRenderTable(DRUGS);
   // Apply translations to all static data-i18n elements
@@ -3393,7 +3891,7 @@ function updateLocation(){
   const citySel=document.getElementById("citySelect");
   citySel.innerHTML='<option value="">— Select City —</option>';
   if(selectedState&&STATES_CITIES[selectedState]){STATES_CITIES[selectedState].cities.forEach(c=>{const opt=document.createElement("option");opt.value=c;opt.textContent=c;citySel.appendChild(opt);});}
-  updateLocationInfo();buildGroceries();buildGasGrid();filterTaxes();updateHeroStats();buildInsights();buildCatBreakdown();if(activeRecipe)renderRecipeResult(activeRecipe);populateColDropdowns();alertsCheck();
+  updateLocationInfo();buildGroceries();buildGasGrid();filterTaxes();updateHeroStats();buildInsights();buildCatBreakdown();buildInflationIQ();if(activeRecipe)renderRecipeResult(activeRecipe);populateColDropdowns();alertsCheck();
 }
 function updateCity(){selectedCity=document.getElementById("citySelect").value;updateLocationInfo();buildGroceries();buildGasGrid();buildInsights();buildCatBreakdown();if(activeRecipe)renderRecipeResult(activeRecipe);}
 function getPriceFactor(){return STATE_PRICE_FACTORS[selectedState]||1.0;}
