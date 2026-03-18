@@ -1783,6 +1783,48 @@ input:focus, select:focus, button:focus-visible {
 .iq-swap-empty { padding:24px; text-align:center; color:var(--muted); font-size:13px; }
 [data-theme="dark"] .iq-swap-card { background:var(--card-bg); }
 
+/* ═══ DEAL SCORE RING ═══ */
+.item-footer { display:flex; align-items:center; justify-content:space-between; margin-top:8px; gap:6px; }
+.deal-ring { flex-shrink:0; }
+.deal-ring text { font-family:'DM Mono',monospace; }
+
+/* ═══ BUDGET TRACKER ═══ */
+.budget-bar { background:var(--ink); color:#fff; border-radius:14px; padding:16px 22px; margin-bottom:18px; display:grid; grid-template-columns:auto auto 1fr auto; align-items:center; gap:0 20px; row-gap:6px; }
+@media(max-width:640px){ .budget-bar { grid-template-columns:1fr 1fr; } }
+.budget-col { display:flex; flex-direction:column; gap:2px; }
+.budget-col-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.4); }
+.budget-col-val { font-family:'Fraunces',serif; font-size:26px; font-weight:400; letter-spacing:-0.03em; line-height:1; color:#fff; }
+.budget-col-val.over { color:#f87171; }
+.budget-col-val.under { color:#4ade80; }
+.budget-col-val.neutral { color:#fbbf24; }
+.budget-sep { width:1px; height:40px; background:rgba(255,255,255,.1); justify-self:center; }
+@media(max-width:640px){ .budget-sep { display:none; } }
+.budget-progress-col { display:flex; flex-direction:column; gap:4px; min-width:0; }
+.budget-progress-row { display:flex; align-items:center; gap:10px; }
+.budget-track { flex:1; height:6px; background:rgba(255,255,255,.14); border-radius:3px; overflow:hidden; }
+.budget-fill { height:100%; border-radius:3px; transition:width .5s cubic-bezier(.34,1.56,.64,1); }
+.budget-pct { font-family:'DM Mono',monospace; font-size:12px; font-weight:700; min-width:34px; text-align:right; }
+.budget-status-txt { font-size:11px; color:rgba(255,255,255,.5); }
+.budget-input-col { display:flex; flex-direction:column; gap:2px; }
+.budget-input-lbl { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.4); }
+.budget-input { width:82px; background:rgba(255,255,255,.1); border:1.5px solid rgba(255,255,255,.18); color:#fff; border-radius:8px; padding:5px 10px; font-family:'DM Mono',monospace; font-size:14px; font-weight:700; }
+.budget-input:focus { border-color:rgba(255,255,255,.45); outline:none; }
+
+/* ═══ MODAL PRICE CHART ═══ */
+.modal-chart-wrap { background:var(--warm); border-radius:12px; padding:16px 18px; margin:16px 0 20px; }
+.modal-chart-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.modal-chart-title { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+.modal-chart-fc-note { font-family:'DM Mono',monospace; font-size:9px; color:var(--accent2); display:flex; align-items:center; gap:5px; }
+.modal-chart-fc-note::before { content:''; width:16px; border-top:2px dashed var(--accent2); display:inline-block; }
+.modal-chart-svg { width:100%; height:88px; display:block; overflow:visible; }
+.modal-chart-labels { display:flex; justify-content:space-between; margin-top:4px; }
+.modal-chart-ml { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted); }
+.modal-chart-stats { display:flex; gap:20px; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
+.mc-stat { display:flex; flex-direction:column; gap:1px; }
+.mc-stat-val { font-family:'DM Mono',monospace; font-size:13px; font-weight:700; }
+.mc-stat-lbl { font-size:10px; color:var(--muted); }
+[data-theme="dark"] .modal-chart-wrap { background:rgba(255,255,255,.05); }
+
 /* ═══ WATCHLIST STAR ═══ */
 .star-btn { position:absolute; top:8px; right:8px; width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,.9); border:1.5px solid var(--border); cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; transition:background .12s,border-color .12s,transform .12s; z-index:2; line-height:1; }
 .star-btn:hover { transform:scale(1.15); border-color:var(--gold); }
@@ -1975,6 +2017,7 @@ input:focus, select:focus, button:focus-visible {
     <p class="section-desc" data-i18n="desc_groceries">Retail prices from BLS Average Price Survey. Commodity signals from USDA NASS + FRED. Forecasts based on 4–8 week commodity-to-retail lag.</p>
     <div class="signals-row" id="signalsRow"></div>
     <div id="marketBar"></div>
+    <div id="budgetTracker"></div>
     <!-- SMART INSIGHTS -->
     <div class="insights-section" id="insightsSection">
       <div class="insights-header">
@@ -1994,6 +2037,7 @@ input:focus, select:focus, button:focus-visible {
         <button class="pill safe" onclick="filterByStatus('wait',this)" data-i18n="badge_down">🟢 Wait to Buy</button>
         <button class="pill" onclick="filterByStatus('watch',this)" data-i18n="badge_flat">🟡 Watch</button>
         <button class="pill" id="watchlistPill" onclick="filterByStatus('watchlist',this)">⭐ Watchlist <span id="watchlistCount" class="alert-badge" style="display:none">0</span></button>
+        <button class="pill" onclick="filterByStatus('top-deals',this)">📊 Top Deals</button>
       </div>
       <div class="data-freshness" style="margin-bottom:0;margin-left:auto;"><div class="fresh-dot"></div><span>BLS + USDA + FRED data</span></div>
     </div>
@@ -2492,11 +2536,12 @@ input:focus, select:focus, button:focus-visible {
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:20px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
         <span style="font-family:'Fraunces',serif;font-size:42px;font-weight:400;letter-spacing:-0.03em" id="modalPrice"></span>
         <span id="modalChange" style="font-family:'DM Mono',monospace;font-size:16px;font-weight:500"></span>
         <span id="modalBadge" style="margin-left:auto"></span>
       </div>
+      <div class="modal-chart-wrap" id="modalChart"></div>
       <div class="modal-section-title">WHY THIS IS HAPPENING</div>
       <div class="modal-why" id="modalWhy"></div>
       <div class="modal-section-title">WHAT TO DO</div>
@@ -3430,6 +3475,7 @@ function iqUpdate(){
 
   iqBuildRisk();
   iqBuildSwaps();
+  updateBudgetWidget();
 }
 
 function buildInflationIQ(){
@@ -3929,6 +3975,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   buildTaxTable(); buildInsuranceWidget(); buildTaxCompare(); buildTariffCalc(); buildSuggestions(); updateBudget(600); updateHeroStats();
   buildSeasonalCalendar(); populateColDropdowns();
   buildInsights(); buildCatBreakdown(); buildRecipeCalc(); buildInflationIQ();
+  buildBudgetWidget();
   alertsCheck(); watchlistRefreshUI();
   rxRenderTable(DRUGS);
   // Apply translations to all static data-i18n elements
@@ -3988,7 +4035,7 @@ function updateLocation(){
   const citySel=document.getElementById("citySelect");
   citySel.innerHTML='<option value="">— Select City —</option>';
   if(selectedState&&STATES_CITIES[selectedState]){STATES_CITIES[selectedState].cities.forEach(c=>{const opt=document.createElement("option");opt.value=c;opt.textContent=c;citySel.appendChild(opt);});}
-  updateLocationInfo();buildGroceries();buildGasGrid();filterTaxes();updateHeroStats();buildInsights();buildCatBreakdown();buildInflationIQ();if(activeRecipe)renderRecipeResult(activeRecipe);populateColDropdowns();alertsCheck();
+  updateLocationInfo();buildGroceries();buildGasGrid();filterTaxes();updateHeroStats();buildInsights();buildCatBreakdown();buildInflationIQ();updateBudgetWidget();if(activeRecipe)renderRecipeResult(activeRecipe);populateColDropdowns();alertsCheck();
 }
 function updateCity(){selectedCity=document.getElementById("citySelect").value;updateLocationInfo();buildGroceries();buildGasGrid();buildInsights();buildCatBreakdown();if(activeRecipe)renderRecipeResult(activeRecipe);}
 function getPriceFactor(){return STATE_PRICE_FACTORS[selectedState]||1.0;}
@@ -4226,6 +4273,229 @@ function updateHeroStats(){
   if(rentEl)rentEl.textContent='$'+Math.round(medRent*factor).toLocaleString();
 }
 
+// ═══════════════════════════════════════════════════════════════
+// DEAL SCORE — composite buy-signal (0–100) per item
+// ═══════════════════════════════════════════════════════════════
+function calcDealScore(item){
+  // Component 1 (0–45): Price momentum — falling price = higher score
+  const trendScore=Math.max(0,45-Math.max(0,item.change)*2.0);
+
+  // Component 2 (0–35): Action signal + forecast direction
+  let fcScore=17;
+  const fc=FORECAST_DATA.find(f=>f.name&&item.name&&f.name.split(' ')[0]===item.name.split(' ')[0]);
+  if(fc){
+    if(fc.dir==='down')fcScore=32;
+    else if(fc.dir==='up')fcScore=6;
+    else fcScore=18;
+  } else {
+    if(item.action==='buy')fcScore=26;
+    else if(item.action==='wait')fcScore=8;
+    else fcScore=17;
+  }
+
+  // Component 3 (0–20): Seasonal — approx peak-season distance
+  const month=new Date().getMonth();
+  const peakMo=(item.id*3+1)%12;
+  const dist=Math.min(Math.abs(month-peakMo),12-Math.abs(month-peakMo));
+  const seasonScore=Math.round(4+(dist/6)*16);
+
+  return Math.min(100,Math.max(0,Math.round(trendScore+fcScore+seasonScore)));
+}
+
+function buildDealRingSVG(score){
+  const r=14,cx=18,cy=18,circ=2*Math.PI*r;
+  const offset=circ*(1-score/100);
+  let color,grade;
+  if(score>=78){color='#15803d';grade='A';}
+  else if(score>=60){color='#2563eb';grade='B';}
+  else if(score>=42){color='#78716c';grade='C';}
+  else if(score>=24){color='#b97d10';grade='D';}
+  else{color='#d94f2a';grade='F';}
+  return`<svg class="deal-ring" width="36" height="36" viewBox="0 0 36 36" title="Deal Score ${score}/100 (Grade ${grade})">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#f1f5f9" stroke-width="3.5"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${color}" stroke-width="3.5"
+      stroke-dasharray="${circ.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}"
+      stroke-linecap="round" transform="rotate(-90 ${cx} ${cy})"/>
+    <text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="9.5" font-weight="700" fill="${color}">${score}</text>
+  </svg>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BUDGET TRACKER
+// ═══════════════════════════════════════════════════════════════
+let groceryBudget=150;
+function budgetLoad(){try{const s=localStorage.getItem('cc_budget');if(s)groceryBudget=parseFloat(s)||150;}catch(e){}}
+function budgetSave(){localStorage.setItem('cc_budget',groceryBudget);}
+function buildBudgetWidget(){
+  budgetLoad();
+  const el=document.getElementById('budgetTracker');if(!el)return;
+  el.innerHTML=`<div class="budget-bar">
+    <div class="budget-col">
+      <div class="budget-col-label">Weekly Spend</div>
+      <div class="budget-col-val" id="budgetSpend">—</div>
+    </div>
+    <div class="budget-sep"></div>
+    <div class="budget-col">
+      <div class="budget-col-label">vs Budget</div>
+      <div class="budget-col-val" id="budgetDiff">—</div>
+    </div>
+    <div class="budget-sep" style="display:none"></div>
+    <div class="budget-progress-col">
+      <div class="budget-progress-row">
+        <div class="budget-track"><div class="budget-fill" id="budgetFill" style="width:0%"></div></div>
+        <div class="budget-pct" id="budgetPct">—</div>
+      </div>
+      <div class="budget-status-txt" id="budgetStatusTxt">Based on your Inflation IQ basket quantities</div>
+    </div>
+    <div class="budget-input-col">
+      <div class="budget-input-lbl">Budget/wk</div>
+      <input class="budget-input" type="number" id="budgetInput" value="${groceryBudget}" min="10" max="2000" step="5" oninput="onBudgetInput(this.value)">
+    </div>
+  </div>`;
+  updateBudgetWidget();
+}
+function onBudgetInput(val){
+  groceryBudget=parseFloat(val)||150;budgetSave();updateBudgetWidget();
+}
+function updateBudgetWidget(){
+  const factor=getPriceFactor();
+  let spend=0;
+  GROCERY_DATA.forEach(item=>{
+    const qty=iqQty[item.id]??IQ_DEFAULTS[item.id]??0;
+    spend+=item.price*factor*qty;
+  });
+  const diff=spend-groceryBudget;
+  const pct=Math.min(150,Math.round((spend/groceryBudget)*100));
+  const over=diff>0;
+  const spendEl=document.getElementById('budgetSpend');
+  const diffEl=document.getElementById('budgetDiff');
+  const fillEl=document.getElementById('budgetFill');
+  const pctEl=document.getElementById('budgetPct');
+  const statEl=document.getElementById('budgetStatusTxt');
+  if(spendEl)spendEl.textContent='$'+spend.toFixed(0);
+  if(diffEl){
+    diffEl.textContent=(over?'+':'')+diff.toFixed(0);
+    diffEl.className='budget-col-val '+(over?'over':diff<-5?'under':'neutral');
+  }
+  if(fillEl){
+    fillEl.style.width=Math.min(100,pct)+'%';
+    fillEl.style.background=over?'#f87171':pct>80?'#fbbf24':'#4ade80';
+  }
+  if(pctEl){pctEl.textContent=pct+'%';pctEl.style.color=over?'#f87171':pct>80?'#fbbf24':'#4ade80';}
+  if(statEl)statEl.textContent=over?`$${Math.abs(diff).toFixed(0)} over budget this week`:`$${Math.abs(diff).toFixed(0)} under budget — room for extras`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MODAL PRICE CHART — 12-month history + 8-week forecast
+// ═══════════════════════════════════════════════════════════════
+function buildModalChart(item,factor){
+  const el=document.getElementById('modalChart');if(!el)return;
+  const cur=item.price*factor;
+  const hist=cur/(1+(item.change/100));
+  const fc=FORECAST_DATA.find(f=>f.name&&item.name&&f.name.split(' ')[0]===item.name.split(' ')[0]);
+
+  // 13 history points (0=12mo ago … 12=now) + 2 forecast points
+  const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const today=new Date();
+  const pts=[];
+  const seed=(item.id*1.7)%(2*Math.PI);
+  for(let t=0;t<=12;t++){
+    const base=hist+(cur-hist)*(t/12);
+    const noise=Math.sin(t*1.4+seed)*base*0.018+Math.sin(t*0.7+seed*2)*base*0.010;
+    pts.push(base+noise);
+  }
+  pts[12]=cur; // pin current price exactly
+
+  const fcPts=[];
+  if(fc){
+    const f4=fc.f4||cur*(1+(fc.c4||0)/100);
+    const f8=fc.f8||cur*(1+(fc.c8||0)/100);
+    fcPts.push(f4,f8);
+  } else {
+    const trendFactor=item.trend==='up'?1.025:item.trend==='down'?0.978:1.005;
+    fcPts.push(cur*trendFactor,cur*trendFactor*trendFactor);
+  }
+
+  const allPts=[...pts,...fcPts];
+  const minY=Math.min(...allPts)*0.985;
+  const maxY=Math.max(...allPts)*1.015;
+  const W=420,H=88,padL=36,padR=10,padT=8,padB=8;
+  const plotW=W-padL-padR,plotH=H-padT-padB;
+  const sx=i=>padL+i*(plotW/(pts.length-1+fcPts.length));
+  const sy=v=>padT+plotH*(1-(v-minY)/(maxY-minY));
+
+  // Build filled area path for history
+  const histPath=pts.map((v,i)=>`${i===0?'M':'L'}${sx(i).toFixed(1)},${sy(v).toFixed(1)}`).join(' ');
+  const fillPath=histPath+` L${sx(pts.length-1).toFixed(1)},${(padT+plotH).toFixed(1)} L${padL},${(padT+plotH).toFixed(1)} Z`;
+
+  // Forecast dashed line
+  const fcStart={x:sx(pts.length-1),y:sy(pts[pts.length-1])};
+  const fcLine=fcPts.map((v,i)=>`${i===0?'M':'L'}${sx(pts.length+i).toFixed(1)},${sy(v).toFixed(1)}`).join(' ');
+  const fcLineFull=`M${fcStart.x.toFixed(1)},${fcStart.y.toFixed(1)} `+fcLine;
+
+  const lineColor=item.trend==='up'?'#d94f2a':item.trend==='down'?'#15803d':'#78716c';
+  const fillColor=item.trend==='up'?'rgba(217,79,42,.08)':item.trend==='down'?'rgba(21,128,61,.08)':'rgba(120,113,108,.07)';
+
+  // Price axis labels
+  const priceRange=maxY-minY;
+  const midY=(maxY+minY)/2;
+  const axisLabels=[
+    {v:maxY,y:sy(maxY)},
+    {v:midY,y:sy(midY)},
+    {v:minY,y:sy(minY)},
+  ].map(a=>`<text x="${padL-4}" y="${(a.y+4).toFixed(1)}" text-anchor="end" font-size="8" fill="#94a3b8">$${a.v.toFixed(2)}</text>`).join('');
+
+  // Month labels (every 3)
+  const monthLabels=[0,3,6,9,12].map(i=>{
+    const d=new Date(today);d.setMonth(d.getMonth()-12+i);
+    return`<text x="${sx(i).toFixed(1)}" y="${H}" text-anchor="middle" font-size="8" fill="#94a3b8">${MONTHS[d.getMonth()]}</text>`;
+  }).join('');
+
+  // Current price dot + "Now" label
+  const nowX=sx(12),nowY=sy(cur);
+  const fcEndX=sx(pts.length+fcPts.length-1),fcEndY=sy(fcPts[fcPts.length-1]);
+
+  const svg=`<svg class="modal-chart-svg" viewBox="0 0 ${W} ${H+12}" xmlns="http://www.w3.org/2000/svg" font-family="DM Mono,monospace">
+    <defs>
+      <linearGradient id="mcGrad${item.id}" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="${lineColor}" stop-opacity=".25"/>
+        <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <!-- Y-axis -->
+    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT+plotH}" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- axis labels -->
+    ${axisLabels}
+    <!-- area fill -->
+    <path d="${fillPath}" fill="url(#mcGrad${item.id})"/>
+    <!-- history line -->
+    <polyline points="${pts.map((v,i)=>`${sx(i).toFixed(1)},${sy(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${lineColor}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+    <!-- forecast dashed -->
+    <path d="${fcLineFull}" fill="none" stroke="${'#2563eb'}" stroke-width="1.5" stroke-dasharray="4 3" stroke-linecap="round"/>
+    <!-- now dot -->
+    <circle cx="${nowX.toFixed(1)}" cy="${nowY.toFixed(1)}" r="3.5" fill="${lineColor}" stroke="white" stroke-width="1.5"/>
+    <!-- forecast end dot -->
+    <circle cx="${fcEndX.toFixed(1)}" cy="${fcEndY.toFixed(1)}" r="3" fill="#2563eb" stroke="white" stroke-width="1.5"/>
+    <!-- month labels -->
+    ${monthLabels}
+  </svg>`;
+
+  const fcDir=fcPts[fcPts.length-1]>cur?'▲ +':'▼ ';
+  const fcChgPct=Math.abs((fcPts[fcPts.length-1]-cur)/cur*100).toFixed(1);
+
+  el.innerHTML=`<div class="modal-chart-head">
+    <span class="modal-chart-title">12-Month Price History + 8-Week Forecast</span>
+    <span class="modal-chart-fc-note">8-wk forecast</span>
+  </div>
+  ${svg}
+  <div class="modal-chart-stats">
+    <div class="mc-stat"><div class="mc-stat-val">$${hist.toFixed(2)}</div><div class="mc-stat-lbl">12mo ago</div></div>
+    <div class="mc-stat"><div class="mc-stat-val" style="color:${lineColor}">$${cur.toFixed(2)}</div><div class="mc-stat-lbl">Today</div></div>
+    <div class="mc-stat"><div class="mc-stat-val" style="color:#2563eb">$${fcPts[fcPts.length-1].toFixed(2)}</div><div class="mc-stat-lbl">8-wk forecast</div></div>
+    <div class="mc-stat" style="margin-left:auto"><div class="mc-stat-val" style="color:${item.change>0?'var(--accent)':'var(--green)'}">${item.change>0?'+':''}${item.change.toFixed(1)}%</div><div class="mc-stat-lbl">YoY change</div></div>
+  </div>`;
+}
+
 function buildSparkline(item,factor){
   const pts=[];const w=80,h=28,pad=3;
   for(let t=0;t<8;t++){
@@ -4281,7 +4551,12 @@ function renderTaxCompare(){
 }
 function buildGroceries(){
   const factor=getPriceFactor();const grid=document.getElementById("groceryGrid");
-  const items=GROCERY_DATA.filter(item=>{const ms=groceryFilter==="all"||(groceryFilter==='watchlist'?watchlist.has(item.id):item.action===groceryFilter);const mq=!grocerySearch||item.name.toLowerCase().includes(grocerySearch.toLowerCase())||item.cat.toLowerCase().includes(grocerySearch.toLowerCase());return ms&&mq;});
+  let items=GROCERY_DATA.filter(item=>{
+    const ms=groceryFilter==="all"||groceryFilter==='top-deals'||(groceryFilter==='watchlist'?watchlist.has(item.id):item.action===groceryFilter);
+    const mq=!grocerySearch||item.name.toLowerCase().includes(grocerySearch.toLowerCase())||item.cat.toLowerCase().includes(grocerySearch.toLowerCase());
+    return ms&&mq;
+  });
+  if(groceryFilter==='top-deals')items=[...items].sort((a,b)=>calcDealScore(b)-calcDealScore(a));
   document.getElementById("groceryCount").textContent=`${items.length} items`;
   if(!items.length){grid.innerHTML=`<div class="no-results" style="grid-column:1/-1"><h3>No results</h3><p>Try searching for a different item.</p></div>`;return;}
   grid.innerHTML=items.map(item=>{
@@ -4293,7 +4568,8 @@ function buildGroceries(){
     const actionClass=item.action==='buy'?'action-buy':item.action==='wait'?'action-wait':'action-watch';
     const prevStr=item.prev?`<span class="item-prev">was $${(item.prev*factor).toFixed(2)}</span>`:'';
     const inCart=!!cart[item.id];const isStarred=watchlist.has(item.id);const hasAlert=!!priceAlerts[item.id];
-    return`<div class="item-card ${trendClass}" onclick="openModal(${item.id})"><button class="item-add-btn ${inCart?'in-cart':''}" data-item-id="${item.id}" onclick="cartAddItem(${item.id},event)" title="Add to list">${inCart?'✓':'+'}</button><button class="star-btn ${isStarred?'starred':''}" data-item-id="${item.id}" onclick="toggleWatchlist(${item.id},event)" title="Watchlist">${isStarred?'★':'☆'}</button><div class="item-top"><span class="item-emoji">${item.emoji}</span><span class="item-badge ${badgeClass}">${badgeText}${hasAlert?' 🔔':''}</span></div><div class="item-name">${item.name}</div><div class="item-category">${item.cat}</div><div class="item-price-row"><span class="item-price">$${adjPrice}</span><span class="item-unit">${item.unit}</span>${prevStr}</div><div class="item-change ${changeClass}">${changeStr}</div><div class="item-signal">${item.signal}</div><div class="item-sparkline">${buildSparkline(item,factor)}<span class="spark-label">8-wk trend</span></div><span class="item-action ${actionClass}">${item.action==='buy'?T.act_buy:item.action==='wait'?T.act_wait:T.act_watch}</span></div>`;
+    const score=calcDealScore(item);
+    return`<div class="item-card ${trendClass}" onclick="openModal(${item.id})"><button class="item-add-btn ${inCart?'in-cart':''}" data-item-id="${item.id}" onclick="cartAddItem(${item.id},event)" title="Add to list">${inCart?'✓':'+'}</button><button class="star-btn ${isStarred?'starred':''}" data-item-id="${item.id}" onclick="toggleWatchlist(${item.id},event)" title="Watchlist">${isStarred?'★':'☆'}</button><div class="item-top"><span class="item-emoji">${item.emoji}</span><span class="item-badge ${badgeClass}">${badgeText}${hasAlert?' 🔔':''}</span></div><div class="item-name">${item.name}</div><div class="item-category">${item.cat}</div><div class="item-price-row"><span class="item-price">$${adjPrice}</span><span class="item-unit">${item.unit}</span>${prevStr}</div><div class="item-change ${changeClass}">${changeStr}</div><div class="item-signal">${item.signal}</div><div class="item-sparkline">${buildSparkline(item,factor)}<span class="spark-label">8-wk trend</span></div><div class="item-footer"><span class="item-action ${actionClass}">${item.action==='buy'?T.act_buy:item.action==='wait'?T.act_wait:T.act_watch}</span>${buildDealRingSVG(score)}</div></div>`;
   }).join("");
   buildMarketBar();
 }
@@ -4429,7 +4705,7 @@ function buildSuggestions(){document.getElementById("suggestTags").innerHTML=SUG
 function fillSuggest(text){document.getElementById("suggestInput").value=text;}
 function submitSuggestion(){const val=document.getElementById("suggestInput").value.trim();if(!val)return;document.getElementById("suggestInput").value="";showToast('✓ Thanks! We got your suggestion: "'+val+'"');}
 function showToast(msg){const t=document.getElementById("toast");document.getElementById("t-msg").textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3500);}
-function openModal(id){const item=GROCERY_DATA.find(i=>i.id===id);if(!item)return;_currentModalItemId=id;const factor=getPriceFactor();const adjPrice=(item.price*factor).toFixed(2);const changeClass=item.change>0?'up':'down';const badgeClass=item.action==='buy'?'badge-hot':item.action==='wait'?'badge-down':'badge-flat';const badgeText=item.action==='buy'?T.badge_hot:item.action==='wait'?T.badge_down:T.badge_flat;document.getElementById("modalEmoji").textContent=item.emoji;document.getElementById("modalName").textContent=item.name;document.getElementById("modalCategory").textContent=item.cat+(selectedState&&selectedCity?` · ${selectedCity}, ${selectedState}`:selectedState?` · ${STATES_CITIES[selectedState]?.name||''}`:'');document.getElementById("modalPrice").textContent="$"+adjPrice+item.unit;document.getElementById("modalChange").textContent=(item.change>0?"+":"")+item.change.toFixed(1)+"% YoY";document.getElementById("modalChange").className="item-change "+changeClass;document.getElementById("modalBadge").innerHTML=`<span class="item-badge ${badgeClass}">${badgeText}</span>`;document.getElementById("modalWhy").textContent=item.why;document.getElementById("modalSignal").textContent=item.signal;document.getElementById("modalActions").innerHTML=`<div class="modal-action buy"><div class="modal-action-label">Stock Up</div>${item.buy}</div><div class="modal-action wait"><div class="modal-action-label">Wait</div>${item.wait}</div><div class="modal-action swap"><div class="modal-action-label">Substitute</div>${item.swap}</div>`;document.getElementById("modalSources").innerHTML=item.sources.map(s=>`<span class="source-tag">${s}</span>`).join("");// Alert setter
+function openModal(id){const item=GROCERY_DATA.find(i=>i.id===id);if(!item)return;_currentModalItemId=id;const factor=getPriceFactor();const adjPrice=(item.price*factor).toFixed(2);const changeClass=item.change>0?'up':'down';const badgeClass=item.action==='buy'?'badge-hot':item.action==='wait'?'badge-down':'badge-flat';const badgeText=item.action==='buy'?T.badge_hot:item.action==='wait'?T.badge_down:T.badge_flat;document.getElementById("modalEmoji").textContent=item.emoji;document.getElementById("modalName").textContent=item.name;document.getElementById("modalCategory").textContent=item.cat+(selectedState&&selectedCity?` · ${selectedCity}, ${selectedState}`:selectedState?` · ${STATES_CITIES[selectedState]?.name||''}`:'');document.getElementById("modalPrice").textContent="$"+adjPrice+item.unit;document.getElementById("modalChange").textContent=(item.change>0?"+":"")+item.change.toFixed(1)+"% YoY";document.getElementById("modalChange").className="item-change "+changeClass;document.getElementById("modalBadge").innerHTML=`<span class="item-badge ${badgeClass}">${badgeText}</span>`;buildModalChart(item,factor);document.getElementById("modalWhy").textContent=item.why;document.getElementById("modalSignal").textContent=item.signal;document.getElementById("modalActions").innerHTML=`<div class="modal-action buy"><div class="modal-action-label">Stock Up</div>${item.buy}</div><div class="modal-action wait"><div class="modal-action-label">Wait</div>${item.wait}</div><div class="modal-action swap"><div class="modal-action-label">Substitute</div>${item.swap}</div>`;document.getElementById("modalSources").innerHTML=item.sources.map(s=>`<span class="source-tag">${s}</span>`).join("");// Alert setter
 const inp=document.getElementById('alertPriceInput');const note=document.getElementById('alertActiveNote');if(inp){inp.value='';inp.placeholder=`Alert below $${adjPrice}`;}if(note){if(priceAlerts[id]){note.textContent=`✓ Alert active at $${priceAlerts[id].toFixed(2)}`;note.style.display='block';}else{note.style.display='none';}}document.getElementById("modalBackdrop").classList.add("open");document.body.style.overflow="hidden";}
 function closeModal(){document.getElementById("modalBackdrop").classList.remove("open");document.body.style.overflow="";}
 function closeModalBackdrop(e){if(e.target===document.getElementById("modalBackdrop"))closeModal();}
