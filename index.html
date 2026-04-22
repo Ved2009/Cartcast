@@ -1783,6 +1783,96 @@ input:focus, select:focus, button:focus-visible {
 .iq-swap-empty { padding:24px; text-align:center; color:var(--muted); font-size:13px; }
 [data-theme="dark"] .iq-swap-card { background:var(--card-bg); }
 
+/* ═══════════════════════════════════════════
+   MY BUDGET — Monthly COL Calculator (S10)
+═══════════════════════════════════════════ */
+.col-hero { background:var(--ink); color:#fff; border-radius:18px; padding:28px 32px; margin-bottom:20px; position:relative; overflow:hidden; }
+.col-hero::before { content:''; position:absolute; top:-80px; right:-80px; width:260px; height:260px; border-radius:50%; background:rgba(255,255,255,.03); pointer-events:none; }
+.col-hero-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.col-hero-label::after { content:''; flex:1; height:1px; background:rgba(255,255,255,.08); }
+.col-hero-top { display:flex; align-items:flex-end; gap:32px; flex-wrap:wrap; margin-bottom:20px; position:relative; z-index:1; }
+.col-hero-total-block { flex-shrink:0; }
+.col-hero-total { font-family:'Fraunces',serif; font-size:72px; font-weight:400; letter-spacing:-0.04em; line-height:.9; color:#fff; }
+.col-hero-total-lbl { font-size:12px; color:rgba(255,255,255,.45); margin-top:8px; font-family:'DM Mono',monospace; letter-spacing:.04em; text-transform:uppercase; }
+.col-hero-vs { display:flex; flex-direction:column; gap:10px; }
+.col-hero-vs-row { display:flex; align-items:center; gap:12px; padding:8px 14px; background:rgba(255,255,255,.06); border-radius:10px; }
+.col-hero-vs-num { font-family:'DM Mono',monospace; font-size:18px; font-weight:600; min-width:64px; }
+.col-hero-vs-num.nat { color:#94a3b8; }
+.col-hero-vs-num.diff.over { color:#f87171; }
+.col-hero-vs-num.diff.under { color:#4ade80; }
+.col-hero-vs-lbl { font-size:12px; color:rgba(255,255,255,.45); }
+.col-hero-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding-top:18px; border-top:1px solid rgba(255,255,255,.08); position:relative; z-index:1; }
+@media(max-width:540px){ .col-hero-stats { grid-template-columns:repeat(2,1fr); } }
+.col-hero-stat { padding:12px 14px; background:rgba(255,255,255,.06); border-radius:10px; border:1px solid rgba(255,255,255,.08); }
+.col-hero-stat-val { font-family:'DM Mono',monospace; font-size:17px; font-weight:700; color:#fff; margin-bottom:3px; }
+.col-hero-stat-lbl { font-size:10px; color:rgba(255,255,255,.38); letter-spacing:.03em; }
+
+/* category rows */
+.col-cats-card { background:white; border:1.5px solid var(--border); border-radius:16px; padding:24px; margin-bottom:18px; }
+.col-cats-title { font-family:'Fraunces',serif; font-size:20px; font-weight:400; margin-bottom:4px; }
+.col-cats-sub { font-size:12px; color:var(--muted); margin-bottom:20px; }
+.col-cat-rows { display:flex; flex-direction:column; gap:6px; }
+.col-cat-row { display:grid; grid-template-columns:36px 1fr 90px 42px 80px; align-items:center; gap:10px; padding:10px 14px; background:var(--warm); border-radius:10px; border:1px solid var(--border); transition:background .12s; }
+.col-cat-row:hover { background:#eee8dc; }
+.col-cat-emoji { font-size:20px; text-align:center; }
+.col-cat-info { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.col-cat-label { font-size:13px; font-weight:600; }
+.col-cat-sub { font-size:10px; color:var(--muted); }
+.col-cat-bar-wrap { height:6px; background:rgba(0,0,0,.08); border-radius:3px; overflow:hidden; }
+.col-cat-bar-fill { height:100%; border-radius:3px; transition:width .5s ease; }
+.col-cat-amt { display:flex; align-items:center; gap:4px; justify-content:flex-end; }
+.col-cat-input { width:80px; text-align:right; border:1.5px solid var(--border); border-radius:8px; padding:5px 8px; font-family:'DM Mono',monospace; font-size:13px; font-weight:700; background:white; color:var(--ink); outline:none; }
+.col-cat-input:focus { border-color:var(--accent2); }
+.col-cat-link-tag { font-size:9px; color:var(--accent2); font-family:'DM Mono',monospace; letter-spacing:.04em; cursor:pointer; }
+.col-cat-link-tag:hover { text-decoration:underline; }
+[data-theme="dark"] .col-cats-card { background:var(--card-bg); }
+[data-theme="dark"] .col-cat-row { background:rgba(255,255,255,.05); }
+
+/* insights row */
+.col-insights-row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
+@media(max-width:700px){ .col-insights-row { grid-template-columns:1fr; } }
+.col-insight-card { background:white; border:1.5px solid var(--border); border-top:3px solid var(--col-accent,var(--accent2)); border-radius:14px; padding:18px 20px; display:flex; flex-direction:column; gap:8px; }
+.col-insight-icon { font-size:26px; }
+.col-insight-title { font-size:13px; font-weight:700; }
+.col-insight-body { font-size:12px; color:var(--muted); line-height:1.5; }
+.col-insight-val { font-family:'DM Mono',monospace; font-size:22px; font-weight:400; letter-spacing:-0.02em; }
+.col-insight-desc { font-size:11px; color:var(--muted); line-height:1.5; }
+.col-insight-card.red-accent { border-top:3px solid var(--accent); }
+.col-insight-card.green-accent { border-top:3px solid var(--green); }
+.col-insight-card.blue-accent { border-top:3px solid var(--accent2); }
+[data-theme="dark"] .col-insight-card { background:var(--card-bg); }
+
+/* ═══ ACTION PLAN WIDGET ═══ */
+.action-plan { background:white; border:1.5px solid var(--border); border-radius:14px; padding:20px 24px; margin-bottom:18px; }
+.action-plan-head { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.action-plan-title { font-family:'Fraunces',serif; font-size:20px; font-weight:400; }
+.action-plan-badge { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; background:var(--accent); color:#fff; padding:3px 8px; border-radius:4px; }
+.action-rows { display:flex; flex-direction:column; gap:8px; }
+.action-row { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border-radius:10px; border:1px solid transparent; }
+.action-row.act-buy  { background:#fff1f1; border-color:#fecaca; }
+.action-row.act-wait { background:#f0fdf4; border-color:#bbf7d0; }
+.action-row.act-swap { background:#eff6ff; border-color:#bfdbfe; }
+.action-row.act-timing { background:#fffbeb; border-color:#fde68a; }
+.action-row.act-store { background:#faf5ff; border-color:#e9d5ff; }
+.action-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
+.action-body { flex:1; min-width:0; }
+.action-title { font-size:13px; font-weight:700; margin-bottom:2px; }
+.action-desc { font-size:11.5px; color:var(--muted); line-height:1.5; }
+.action-cta { font-family:'DM Mono',monospace; font-size:10px; font-weight:700; flex-shrink:0; padding:4px 10px; border-radius:6px; border:1.5px solid; cursor:pointer; background:transparent; transition:background .12s; }
+.action-row.act-buy  .action-cta { color:var(--accent); border-color:var(--accent); }
+.action-row.act-wait .action-cta { color:var(--green); border-color:var(--green); }
+.action-row.act-swap .action-cta { color:var(--accent2); border-color:var(--accent2); }
+.action-row.act-timing .action-cta { color:#b97d10; border-color:#b97d10; }
+.action-row.act-store .action-cta { color:#7c3aed; border-color:#7c3aed; }
+.action-plan-sub { font-size:12px; color:var(--muted); margin-bottom:14px; }
+.action-num { font-family:'DM Mono',monospace; font-size:11px; font-weight:700; color:var(--muted); flex-shrink:0; min-width:16px; }
+.action-savings { font-family:'DM Mono',monospace; font-size:12px; font-weight:700; color:var(--green); flex-shrink:0; white-space:nowrap; align-self:center; }
+.col-link-badge { font-size:10px; }
+.col-cat-pct { font-family:'DM Mono',monospace; font-size:12px; font-weight:600; text-align:right; color:var(--muted); }
+.col-cat-delta { font-family:'DM Mono',monospace; font-size:10px; text-align:right; }
+@media(max-width:600px){ .col-cat-row { grid-template-columns:28px 1fr 72px; } .col-cat-pct,.col-cat-delta { display:none; } }
+[data-theme="dark"] .action-plan { background:var(--card-bg); }
+
 /* ═══ PRICE MOVERS STRIP ═══ */
 .movers-strip { display:flex; gap:0; background:white; border:1.5px solid var(--border); border-radius:12px; padding:0; margin-bottom:16px; overflow:hidden; }
 .movers-half { flex:1; padding:14px 18px; display:flex; flex-direction:column; gap:6px; min-width:0; }
@@ -1984,6 +2074,7 @@ input:focus, select:focus, button:focus-visible {
     <button class="nav-tab" onclick="switchSection('airfare',this)" data-i18n="nav_airfare">✈️ Airfare</button>
     <button class="nav-tab" onclick="switchSection('forecast',this)" data-i18n="nav_forecast">📈 Forecast</button>
     <button class="nav-tab" onclick="switchSection('iq',this)">💹 Inflation IQ</button>
+    <button class="nav-tab" onclick="switchSection('budget',this)">💰 My Budget</button>
   </div>
   <div class="header-right">
     <select id="langSelect" class="lang-select" onchange="setLanguage(this.value)" title="Language">
@@ -2065,6 +2156,7 @@ input:focus, select:focus, button:focus-visible {
     <p class="section-desc" data-i18n="desc_groceries">Retail prices from BLS Average Price Survey. Commodity signals from USDA NASS + FRED. Forecasts based on 4–8 week commodity-to-retail lag.</p>
     <div class="signals-row" id="signalsRow"></div>
     <div id="marketBar"></div>
+    <div id="actionPlan"></div>
     <div id="moversStrip"></div>
     <div id="storeOptimizer"></div>
     <div id="budgetTracker"></div>
@@ -2572,6 +2664,51 @@ input:focus, select:focus, button:focus-visible {
     </div>
   </div>
 
+  <!-- ═══ MY BUDGET — Monthly COL Calculator ═══ -->
+  <div class="section-panel" id="section-budget">
+    <div class="section-header">
+      <h2 class="section-title">Monthly Budget</h2>
+      <span class="section-count">All categories · Location-adjusted</span>
+    </div>
+    <p class="section-desc">Your complete monthly cost of living — assembled from every section of CartCast, adjusted for your location. Edit any amount to personalize. Linked categories auto-update from live data.</p>
+
+    <!-- Hero Total Card -->
+    <div class="col-hero">
+      <div class="col-hero-label">📊 Monthly Cost of Living — <span id="colLocationLbl">National Average</span></div>
+      <div class="col-hero-top">
+        <div class="col-hero-total-block">
+          <div class="col-hero-total" id="colTotal">—</div>
+          <div class="col-hero-total-lbl">estimated monthly total</div>
+        </div>
+        <div class="col-hero-vs">
+          <div class="col-hero-vs-row">
+            <span class="col-hero-vs-num nat" id="colNatAvg">$4,077</span>
+            <span class="col-hero-vs-lbl">National average (BLS CEX 2024)</span>
+          </div>
+          <div class="col-hero-vs-row">
+            <span class="col-hero-vs-num diff" id="colDiff">—</span>
+            <span class="col-hero-vs-lbl" id="colDiffLbl">vs national avg</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-hero-stats">
+        <div class="col-hero-stat"><div class="col-hero-stat-val" id="colInflationHit">—</div><div class="col-hero-stat-lbl">Extra/mo from inflation vs last year</div></div>
+        <div class="col-hero-stat"><div class="col-hero-stat-val" id="colSavingOpp">—</div><div class="col-hero-stat-lbl">Potential monthly savings from app tips</div></div>
+        <div class="col-hero-stat"><div class="col-hero-stat-val" id="colBestStore">—</div><div class="col-hero-stat-lbl">Best store for your grocery basket</div></div>
+      </div>
+    </div>
+
+    <!-- Insight cards -->
+    <div class="col-insights-row" id="colInsightRow"></div>
+
+    <!-- Category Breakdown -->
+    <div class="col-cats-card">
+      <div class="col-cats-title">Monthly Spending by Category</div>
+      <div class="col-cats-sub">Linked categories (🔗) auto-fill from CartCast's live data for your location. Edit any amount to match your actual spending.</div>
+      <div class="col-cat-rows" id="colCatRows"></div>
+    </div>
+  </div>
+
 </div>
 
 <!-- GROCERY ITEM MODAL -->
@@ -2673,6 +2810,7 @@ input:focus, select:focus, button:focus-visible {
   <button class="mn-btn" onclick="mnSwitch('airfare',this)"><span class="mn-icon">✈️</span><span class="mn-label" data-i18n="nav_airfare">Airfare</span></button>
   <button class="mn-btn" onclick="mnSwitch('forecast',this)"><span class="mn-icon">📈</span><span class="mn-label" data-i18n="nav_forecast">Forecast</span></button>
   <button class="mn-btn" onclick="mnSwitch('iq',this)"><span class="mn-icon">💹</span><span class="mn-label">IQ</span></button>
+  <button class="mn-btn" onclick="mnSwitch('budget',this)"><span class="mn-icon">💰</span><span class="mn-label">Budget</span></button>
 </nav>
 
 <!-- SHOPPING CART FAB -->
@@ -4027,6 +4165,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   buildSeasonalCalendar(); populateColDropdowns();
   buildInsights(); buildCatBreakdown(); buildRecipeCalc(); buildInflationIQ();
   buildBudgetWidget(); buildMoversStrip(); buildStoreOptimizer();
+  buildBudgetSection(); buildActionPlan();
   loadLiveData();
   alertsCheck(); watchlistRefreshUI();
   rxRenderTable(DRUGS);
@@ -4087,7 +4226,7 @@ function updateLocation(){
   const citySel=document.getElementById("citySelect");
   citySel.innerHTML='<option value="">— Select City —</option>';
   if(selectedState&&STATES_CITIES[selectedState]){STATES_CITIES[selectedState].cities.forEach(c=>{const opt=document.createElement("option");opt.value=c;opt.textContent=c;citySel.appendChild(opt);});}
-  updateLocationInfo();buildGroceries();buildGasGrid();filterTaxes();updateHeroStats();buildInsights();buildCatBreakdown();buildInflationIQ();updateBudgetWidget();buildStoreOptimizer();if(activeRecipe)renderRecipeResult(activeRecipe);populateColDropdowns();alertsCheck();
+  updateLocationInfo();buildGroceries();buildGasGrid();filterTaxes();updateHeroStats();buildInsights();buildCatBreakdown();buildInflationIQ();updateBudgetWidget();buildStoreOptimizer();buildBudgetSection();buildActionPlan();if(activeRecipe)renderRecipeResult(activeRecipe);populateColDropdowns();alertsCheck();
 }
 function updateCity(){selectedCity=document.getElementById("citySelect").value;updateLocationInfo();buildGroceries();buildGasGrid();buildInsights();buildCatBreakdown();if(activeRecipe)renderRecipeResult(activeRecipe);}
 function getPriceFactor(){return STATE_PRICE_FACTORS[selectedState]||1.0;}
@@ -5599,6 +5738,253 @@ function afStartTimer(){
 function afDoRefresh(){AF.secs=1800;AF.fares=afSimFares(Date.now().toString(36));afRenderStats();afRenderScorecard();afRenderTable();afTriggerAI();showToast(`✈ Fares refreshed · ${new Date().toLocaleTimeString()}`);}
 function afForceRefresh(){afDoRefresh();}
 function afGoBack(){clearInterval(AF.timer);document.getElementById('af-screen-results').style.display='none';document.getElementById('af-screen-search').style.display='block';}
+
+// ═══════════════════════════════════════════════════════════════
+// MY BUDGET — Monthly Cost of Living Calculator
+// ═══════════════════════════════════════════════════════════════
+const COL_NATIONAL_AVG = 4077; // BLS CEX 2024 avg monthly expenditure
+
+const COL_CATEGORIES = [
+  { id:'groceries', emoji:'🛒', label:'Food at Home',    base:412,  linked:true },
+  { id:'housing',   emoji:'🏠', label:'Rent / Mortgage', base:1784, linked:true },
+  { id:'gas',       emoji:'⛽', label:'Gas & Transport',  base:267,  linked:true },
+  { id:'utilities', emoji:'⚡', label:'Utilities',        base:258,  linked:true },
+  { id:'health',    emoji:'💊', label:'Healthcare',       base:431,  linked:false },
+  { id:'dine',      emoji:'🍽️', label:'Dining Out',       base:312,  linked:false },
+  { id:'entertain', emoji:'🎬', label:'Entertainment',    base:267,  linked:false },
+  { id:'clothing',  emoji:'👗', label:'Clothing',         base:146,  linked:false },
+  { id:'misc',      emoji:'📦', label:'Miscellaneous',    base:200,  linked:false },
+];
+
+let colValues = {}; // user-edited monthly amounts per category id
+
+function colGetLinkedValue(cat) {
+  const factor = getPriceFactor();
+  if (cat.id === 'groceries') {
+    // Inflation IQ basket × 4.33 weeks/mo
+    let weekly = 0;
+    GROCERY_DATA.forEach(item => {
+      const qty = iqQty[item.id] ?? IQ_DEFAULTS[item.id] ?? 0;
+      weekly += item.price * factor * qty;
+    });
+    return Math.round(weekly * 4.33);
+  }
+  if (cat.id === 'housing') {
+    // Use median 1BR rent for selected state, else national median
+    const stateEntry = selectedState
+      ? HOUSING_DATA.find(h => h.city.includes(', ' + selectedState) || h.metro.toLowerCase().includes(selectedState.toLowerCase()))
+      : null;
+    const rent = stateEntry ? Math.round(stateEntry.one * factor) : Math.round(1784 * factor);
+    return rent;
+  }
+  if (cat.id === 'gas') {
+    // State avg gas × 40 gal/mo
+    const gasPrice = selectedState ? (GAS_DATA.find(g => g.state === selectedState)?.regular || 3.45) : 3.45;
+    return Math.round(gasPrice * 40 * factor);
+  }
+  if (cat.id === 'utilities') {
+    const util = selectedState ? UTILITIES_DATA.find(u => u.state === selectedState) : null;
+    if (util) return util.monthly_elec + util.water + (util.gas === 'N/A' ? 0 : util.gas) + util.internet;
+    return Math.round(258 * factor);
+  }
+  return Math.round(cat.base * factor);
+}
+
+function colGetValue(cat) {
+  if (colValues[cat.id] !== undefined) return colValues[cat.id];
+  if (cat.linked) return colGetLinkedValue(cat);
+  return Math.round(cat.base * getPriceFactor());
+}
+
+function colCalcTotal() {
+  return COL_CATEGORIES.reduce((s, cat) => s + colGetValue(cat), 0);
+}
+
+function buildBudgetSection() {
+  const factor = getPriceFactor();
+
+  // Fill initial values for linked categories
+  COL_CATEGORIES.forEach(cat => {
+    if (cat.linked && colValues[cat.id] === undefined) {
+      colValues[cat.id] = colGetLinkedValue(cat);
+    } else if (!cat.linked && colValues[cat.id] === undefined) {
+      colValues[cat.id] = Math.round(cat.base * factor);
+    }
+  });
+
+  const total = colCalcTotal();
+  const diff = total - COL_NATIONAL_AVG;
+  const diffSign = diff >= 0 ? '+' : '';
+  const diffColor = diff > 200 ? 'var(--accent)' : diff < -200 ? 'var(--green)' : 'var(--gold)';
+
+  // Inflation hit: avg YoY change × groceries + gas
+  const avgGrocChange = GROCERY_DATA.reduce((s, g) => s + g.change, 0) / GROCERY_DATA.length;
+  const groceryVal = colGetValue(COL_CATEGORIES[0]);
+  const gasVal = colGetValue(COL_CATEGORIES[2]);
+  const inflationHit = Math.round((groceryVal * Math.max(0, avgGrocChange) / 100) + (gasVal * 0.04));
+
+  // Savings opp: sum of "wait" items × IQ qty × delta
+  let savingsOpp = 0;
+  GROCERY_DATA.filter(g => g.action === 'wait').forEach(g => {
+    const qty = (iqQty[g.id] ?? IQ_DEFAULTS[g.id] ?? 0) * 4.33;
+    savingsOpp += g.price * factor * qty * Math.abs(g.change) / 100 * 0.5;
+  });
+  savingsOpp = Math.round(savingsOpp);
+
+  // Best store for basket
+  let baseWeekly = 0;
+  GROCERY_DATA.forEach(item => {
+    const qty = iqQty[item.id] ?? IQ_DEFAULTS[item.id] ?? 0;
+    baseWeekly += item.price * factor * qty;
+  });
+  const bestStore = baseWeekly > 0
+    ? [...STORE_FACTORS].sort((a, b) => a.factor - b.factor)[0].name
+    : 'Costco';
+
+  // Update hero elements
+  const totalEl = document.getElementById('colTotal');
+  const natEl = document.getElementById('colNatAvg');
+  const diffEl = document.getElementById('colDiff');
+  const diffLblEl = document.getElementById('colDiffLbl');
+  const infEl = document.getElementById('colInflationHit');
+  const savEl = document.getElementById('colSavingOpp');
+  const storeEl = document.getElementById('colBestStore');
+  const locEl = document.getElementById('colLocationLbl');
+
+  if (totalEl) totalEl.textContent = '$' + total.toLocaleString();
+  if (diffEl) { diffEl.textContent = diffSign + '$' + Math.abs(diff).toLocaleString(); diffEl.style.color = diffColor; }
+  if (diffLblEl) diffLblEl.textContent = diff >= 0 ? 'above national avg' : 'below national avg';
+  if (infEl) infEl.textContent = '+$' + inflationHit + '/mo';
+  if (savEl) savEl.textContent = '$' + savingsOpp + '+/mo';
+  if (storeEl) storeEl.textContent = bestStore;
+  if (locEl) locEl.textContent = selectedState ? (STATES_CITIES[selectedState]?.name || selectedState) : 'National Average';
+
+  // Insight cards
+  const insightEl = document.getElementById('colInsightRow');
+  if (insightEl) {
+    const pctAbove = Math.round(((total / COL_NATIONAL_AVG) - 1) * 100);
+    const topCat = [...COL_CATEGORIES].sort((a, b) => colGetValue(b) - colGetValue(a))[0];
+    const topCatPct = Math.round((colGetValue(topCat) / total) * 100);
+    const annualSave = savingsOpp * 12;
+    insightEl.innerHTML = [
+      { icon:'📊', title: pctAbove >= 0 ? `${pctAbove}% above national avg` : `${Math.abs(pctAbove)}% below national avg`, body:`Your estimated monthly cost vs BLS Consumer Expenditure Survey 2024 median of $${COL_NATIONAL_AVG.toLocaleString()}.`, color: pctAbove > 15 ? 'var(--accent)' : 'var(--green)' },
+      { icon:'📌', title: `${topCat.emoji} ${topCat.label} is your biggest cost`, body:`At $${colGetValue(topCat).toLocaleString()}/mo that's ${topCatPct}% of your total budget — ${topCatPct > 35 ? 'significantly above' : 'roughly in line with'} BLS benchmarks.`, color: 'var(--accent2)' },
+      { icon:'💡', title: `~$${savingsOpp}/mo in savings opportunities`, body:`By acting on CartCast's "wait" signals this month, you could save $${annualSave.toLocaleString()}/year on groceries alone.`, color: 'var(--green)' },
+    ].map(c => `<div class="col-insight-card" style="--col-accent:${c.color}"><div class="col-insight-icon">${c.icon}</div><div class="col-insight-title">${c.title}</div><div class="col-insight-body">${c.body}</div></div>`).join('');
+  }
+
+  // Category rows
+  const rowsEl = document.getElementById('colCatRows');
+  if (rowsEl) {
+    rowsEl.innerHTML = COL_CATEGORIES.map(cat => {
+      const val = colGetValue(cat);
+      const pct = Math.round((val / total) * 100);
+      const natPct = Math.round((cat.base / COL_NATIONAL_AVG) * 100);
+      const delta = pct - natPct;
+      const deltaStr = (delta >= 0 ? '+' : '') + delta + 'pp vs avg';
+      const deltaColor = Math.abs(delta) > 5 ? (delta > 0 ? 'var(--accent)' : 'var(--green)') : 'var(--muted)';
+      return `<div class="col-cat-row">
+        <div class="col-cat-emoji">${cat.emoji}</div>
+        <div class="col-cat-label">${cat.label}${cat.linked ? ' <span class="col-link-badge">🔗</span>' : ''}</div>
+        <input class="col-cat-input" type="number" value="${val}" min="0" max="99999" step="10"
+          data-catid="${cat.id}" oninput="colInputChange('${cat.id}',this.value)">
+        <div class="col-cat-pct">${pct}%</div>
+        <div class="col-cat-delta" style="color:${deltaColor}">${deltaStr}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function colInputChange(id, val) {
+  colValues[id] = parseFloat(val) || 0;
+  buildBudgetSection();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ACTION PLAN — Weekly grocery action synthesis
+// ═══════════════════════════════════════════════════════════════
+function buildActionPlan() {
+  const el = document.getElementById('actionPlan');
+  if (!el) return;
+  const factor = getPriceFactor();
+  const actions = [];
+
+  // 1. Stock-up: highest deal score with buy signal
+  const buyItems = [...GROCERY_DATA].filter(g => g.action === 'buy').sort((a, b) => calcDealScore(b) - calcDealScore(a));
+  if (buyItems.length) {
+    const top = buyItems[0];
+    const score = calcDealScore(top);
+    actions.push({ type:'buy', icon:top.emoji, title:`Stock up on ${top.name.split(' (')[0]}`, body:`Deal Score ${score}/100 — up ${top.change.toFixed(1)}% YoY but price favorable now. Buy 2–3 weeks supply before next move.`, savings:'' });
+  }
+
+  // 2. Wait: biggest falling item
+  const waitItems = [...GROCERY_DATA].filter(g => g.action === 'wait').sort((a, b) => a.change - b.change);
+  if (waitItems.length) {
+    const top = waitItems[0];
+    const qty = iqQty[top.id] ?? IQ_DEFAULTS[top.id] ?? 0;
+    const saving = Math.round(top.price * factor * qty * 4.33 * Math.abs(top.change) / 100 * 0.5);
+    actions.push({ type:'wait', icon:top.emoji, title:`Hold off on ${top.name.split(' (')[0]}`, body:`Price down ${Math.abs(top.change).toFixed(1)}% YoY and forecast continues lower. Wait 2–4 more weeks.`, savings: saving > 0 ? `~$${saving}/mo` : '' });
+  }
+
+  // 3. Swap: first IQ swap with a toId (substitutable)
+  const swap = IQ_SWAPS.find(s => s[1] !== null);
+  if (swap) {
+    const fromItem = GROCERY_DATA.find(g => g.id === swap[0]);
+    const toItem = GROCERY_DATA.find(g => g.id === swap[1]);
+    if (fromItem && toItem) {
+      const qty = iqQty[fromItem.id] ?? IQ_DEFAULTS[fromItem.id] ?? 0;
+      const saving = Math.round((fromItem.price - toItem.price * swap[2]) * factor * qty * 4.33);
+      actions.push({ type:'swap', icon:fromItem.emoji, title:`Swap ${fromItem.name.split(' (')[0]} → ${toItem.name.split(' (')[0]}`, body:swap[3], savings: saving > 0 ? `~$${saving}/mo` : '' });
+    }
+  }
+
+  // 4. Timing alert: highest 4-week forecast pressure
+  const fcPressure = [...FORECAST_DATA].filter(f => f.c4).sort((a, b) => Math.abs(b.c4) - Math.abs(a.c4))[0];
+  if (fcPressure) {
+    const dir = (fcPressure.c4 || 0) > 0 ? 'rise' : 'drop';
+    const pct = Math.abs(fcPressure.c4 || 0).toFixed(1);
+    const gItem = GROCERY_DATA.find(g => g.name.startsWith(fcPressure.name?.split(' ')[0] || ''));
+    actions.push({ type:'timing', icon: gItem?.emoji || '📈', title:`${fcPressure.name?.split(' (')[0]} likely to ${dir} ~${pct}% in 4 weeks`, body:`Commodity driver: ${fcPressure.commodity || 'signals'} (${fcPressure.commChg || ''}). ${dir === 'rise' ? 'Buy extra supply before the move.' : 'Hold off — prices expected to dip.'}`, savings:'' });
+  }
+
+  // 5. Store switch recommendation
+  if (baseWeeklyForStore() > 0) {
+    const best = [...STORE_FACTORS].sort((a, b) => a.factor - b.factor)[0];
+    const worst = [...STORE_FACTORS].sort((a, b) => b.factor - a.factor)[0];
+    const weekly = baseWeeklyForStore();
+    const annualSave = Math.round((worst.factor - best.factor) * weekly * 52);
+    actions.push({ type:'store', icon:'🏪', title:`Shop at ${best.name} to save $${annualSave.toLocaleString()}/yr`, body:`Based on your basket, switching from ${worst.name} to ${best.name} on staples saves $${Math.round((worst.factor - best.factor) * weekly)}/week.`, savings:`$${annualSave.toLocaleString()}/yr` });
+  }
+
+  if (!actions.length) { el.innerHTML = ''; return; }
+
+  el.innerHTML = `<div class="action-plan">
+    <div class="action-plan-title">⚡ This Week's Action Plan</div>
+    <div class="action-plan-sub">5 personalized actions synthesized from live price signals, forecasts, and your basket.</div>
+    <div class="action-rows">
+      ${actions.map((a, i) => `<div class="action-row act-${a.type}">
+        <div class="action-num">${i + 1}</div>
+        <div class="action-icon">${a.icon}</div>
+        <div class="action-body">
+          <div class="action-title">${a.title}</div>
+          <div class="action-desc">${a.body}</div>
+        </div>
+        ${a.savings ? `<div class="action-savings">${a.savings}</div>` : ''}
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function baseWeeklyForStore() {
+  const factor = getPriceFactor();
+  let w = 0;
+  GROCERY_DATA.forEach(item => {
+    const qty = iqQty[item.id] ?? IQ_DEFAULTS[item.id] ?? 0;
+    w += item.price * factor * qty;
+  });
+  return w;
+}
+
 </script>
 </body>
 </html>
